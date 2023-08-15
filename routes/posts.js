@@ -64,7 +64,23 @@ router.post('/getPromotion', userToonta.getPromotion)
 router.post('/financeUser', userToonta.financeUser)
 router.post('/depositUserPromotion', userToonta.depositUserPromotion)
 router.post('/getDatafinanceUser/:id', userToonta.getDatafinanceUser)
+router.post('/getDataDepositStatementBank', userToonta.getDataDepositStatementBank)
+router.post('/createDepositaccount', userToonta.createDepositaccount)
+router.post('/createWithdrawalaccount', userToonta.createWithdrawalaccount)
+router.post('/addUserGroupInformation', userToonta.addUserGroupInformation)
+router.post('/getGroupccount', userToonta.getGroup)
+
+router.get('/getDepositaccount/:agent_id', userToonta.getDepositaccount)
+router.get('/getWithdrawalaccount', userToonta.getWithdrawalaccount)
+router.get('/getOneDepositaccount/:numberAccount', userToonta.getOneDepositaccount)
+router.get('/getOneWithdrawalaccount/:numberAccount', userToonta.getOneWithdrawalaccount)
+router.get('/getMenberId/:user_id', postsController.getMenberId)
+router.get('/getlistPromotion', userToonta.getlistPromotion)
 router.get('/', userToonta.getImgPromotion)
+
+router.put('/updateDepositaccount', userToonta.updateDepositaccount)
+router.put('/updateWithdrawalaccount', userToonta.updateWithdrawalaccount)
+
 // game
 router.post('/playGame/:user_id/:bet/:game_id', testGame.saveTestGame)
 router.post('/gameBuySpin/:user_id/:bet/:game_id', testGame.saveTestGameBuy)

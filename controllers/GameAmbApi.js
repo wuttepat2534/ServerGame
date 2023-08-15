@@ -24,8 +24,7 @@ exports.AuthorizationSpade_Gaming = async (req, res) => {
     const transferId = req.body.transferId;
     const amount = req.body.amount;
     const type = req.body.type;
-    let spl = `SELECT credit FROM member WHERE username ='${acctId}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${acctId}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -54,7 +53,7 @@ exports.AuthorizationSpade_Gaming = async (req, res) => {
                     } else {
                         balanceNow = balanceUser + amount;
                     }
-                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${acctId}'`;
+                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${acctId}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         if (error) { console.log(error) }
                         else {
@@ -88,8 +87,7 @@ exports.HabaneroGame = async (req, res) => {
     const token = '00tcga7cq_d4be70d1-349f-4fc1-a955-35d2a4bff244';
     const secretKey = 'your-secret-key';
     username = 'member001';
-    let spl = `SELECT credit FROM member WHERE username ='${auth.username}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${auth.username}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -122,7 +120,7 @@ exports.HabaneroGame = async (req, res) => {
                     const balanceNum = parseFloat(balanceUser);
                     const balanceNow = balanceNum + amount0
                     const balanceString = balanceNow.toString();
-                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount0}' WHERE username ='${auth.username}'`;
+                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount0}' WHERE phonenumber ='${auth.username}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         res.status(201).json({
                             fundtransferresponse: {
@@ -164,8 +162,7 @@ exports.gamingLogin = async (req, res) => {
     const playerId = req.body.playerId;
     username = 'member001';
 
-    let spl = `SELECT credit FROM member WHERE username ='${playerId}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${playerId}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             const balanceNum = parseFloat(results[0].credit);
@@ -192,8 +189,7 @@ exports.UpdateBalanceGaming = async (req, res) => {
     const amount = req.body.amount;
     const username = req.body.playerId;
 
-    let spl = `SELECT credit FROM member WHERE username ='${username}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -206,7 +202,7 @@ exports.UpdateBalanceGaming = async (req, res) => {
                 } else {
                     balanceNow = balanceUser - balanceamount;
                 }
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${0}' WHERE username ='${username}'`;
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${0}' WHERE phonenumber ='${username}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
                     else {
@@ -231,8 +227,7 @@ http://localhost:5000/post/gaming/rollback
 exports.RollbackGaming = async (req, res) => {
     const amount = req.body.amount;
     const username = req.body.playerId;
-    let spl = `SELECT credit FROM member WHERE username ='${username}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -240,7 +235,7 @@ exports.RollbackGaming = async (req, res) => {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceamount = parseFloat(amount);
                 const balanceNow = balanceUser - balanceamount;
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${username}'`;
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${username}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
                     else {
@@ -269,9 +264,8 @@ exports.EVOPLAYSeamless = async (req, res) => {
     const callback_id = req.body.callback_id;
     const name = req.body.name;
     const data = req.body.data;
-    username = 'member001';
-    let spl = `SELECT credit FROM member WHERE username ='${username}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    username = '0990825942';
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -293,7 +287,7 @@ exports.EVOPLAYSeamless = async (req, res) => {
                     const balanceNum = parseFloat(balanceUser);
                     const balanceNow = balanceNum - amount
                     const balanceString = balanceNow.toString();
-                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${username}'`;
+                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${username}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         res.status(201).json({
                             status: "ok",
@@ -309,7 +303,7 @@ exports.EVOPLAYSeamless = async (req, res) => {
                     const balanceNum = parseFloat(balanceUser);
                     const balanceNow = balanceNum + amount
                     const balanceString = balanceNow.toString();
-                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${username}'`;
+                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${username}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         res.status(201).json({
                             status: "ok",
@@ -325,7 +319,7 @@ exports.EVOPLAYSeamless = async (req, res) => {
                     const balanceNum = parseFloat(balanceUser);
                     const balanceNow = balanceNum + amount
                     const balanceString = balanceNow.toString();
-                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${username}'`;
+                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${username}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         res.status(201).json({
                             status: "ok",
@@ -352,8 +346,7 @@ exports.GetBalanceFunky = async (req, res) => {
     const authHeader = req.body.sessionId;
     username = 'member001';
 
-    let spl = `SELECT credit FROM member WHERE username ='${playerId}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${playerId}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -380,9 +373,8 @@ exports.PlaceBetFunky = async (req, res) => {
     const bet = req.body.bet;
     const sessionId = req.body.sessionId;
     const playerIp = req.body.playerIp;
-    username = 'member001';
-    let spl = `SELECT credit FROM member WHERE username ='${username}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    username = '0990825942';
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -390,7 +382,7 @@ exports.PlaceBetFunky = async (req, res) => {
                 const amount = bet.stake
                 const balanceNum = parseFloat(results[0].credit);
                 const balanceNow = balanceNum - amount
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${username}'`;
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${username}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     res.status(201).json({
                         errorCode: 0,
@@ -414,17 +406,16 @@ exports.SettleBetFunky = async (req, res) => {
     const betResultReq = req.body.betResultReq;
     const now = new Date();
     const currentDate = now.toISOString().slice(0, 10);
-    username = 'member001';
+    username = '0990825942';
 
-    let spl = `SELECT credit FROM member WHERE username ='${username}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
             else {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser + betResultReq.winAmount;
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${betResultReq.winAmount}' WHERE username ='${username}'`;
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${betResultReq.winAmount}' WHERE phonenumber ='${username}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
                     else {
@@ -453,8 +444,7 @@ exports.CancelBetFunky = async (req, res) => {
     const refNo = req.body.refNo;
     const playerId = req.body.playerId;
     username = 'member001';
-    let spl = `SELECT credit FROM member WHERE username ='${playerId}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${playerId}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -482,8 +472,7 @@ exports.CheckBetFunky = async (req, res) => {
     const currentDate = now.toISOString().slice(0, 10);
     username = 'member001';
 
-    let spl = `SELECT credit, bet_latest FROM member WHERE username ='${playerId}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit, bet_latest FROM member WHERE phonenumber ='${playerId}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -513,8 +502,7 @@ http://localhost:5000/post/Yggdrasil/playerinfo //getbalance
 exports.PlayerinfoYggdrasil = async (req, res) => {
     const usernames = req.body.username;
     username = 'member001';
-    let spl = `SELECT credit FROM member WHERE username ='${usernames}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernames}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -544,15 +532,14 @@ exports.PlaceBetYggdrasil = async (req, res) => {
     const betId = req.body.betId;
     const roundId = req.body.roundId;
     username = 'member001';
-    let spl = `SELECT credit FROM member WHERE username ='${usernames}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernames}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
             else {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser - amount;
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${usernames}'`;
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${usernames}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
                     else {
@@ -582,15 +569,14 @@ exports.CancelBetYggdrasil = async (req, res) => {
     const betId = req.body.betId;
     const roundId = req.body.roundId;
     username = 'member001';
-    let spl = `SELECT credit FROM member WHERE username ='${usernames}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernames}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
             else {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser + amount;
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${usernames}'`;
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${usernames}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
                     else {
@@ -620,8 +606,7 @@ exports.AmebaGame = async (req, res) => {
     const account_name = req.body.account_name;
     const time = req.body.time;
     username = 'member001';
-    let spl = `SELECT credit FROM member WHERE username ='${account_name}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${account_name}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -644,7 +629,7 @@ exports.AmebaGame = async (req, res) => {
                     const balanceNum = parseFloat(balanceUser);
                     const balanceNow = balanceNum - amount
                     const balanceString = balanceNow.toString();
-                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${account_name}'`;
+                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${account_name}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         res.status(201).json({
                             error_code: "OK",
@@ -665,7 +650,7 @@ exports.AmebaGame = async (req, res) => {
                     const balanceNum = parseFloat(balanceUser);
                     const balanceNow = balanceNum + amount
                     const balanceString = balanceNow.toString();
-                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${account_name}'`;
+                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${account_name}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         res.status(201).json({
                             error_code: "OK",
@@ -685,7 +670,7 @@ exports.AmebaGame = async (req, res) => {
                     const balanceNum = parseFloat(balanceUser);
                     const balanceNow = balanceNum + amount
                     const balanceString = balanceNow.toString();
-                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${account_name}'`;
+                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${account_name}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         res.status(201).json({
                             error_code: "OK",
@@ -708,8 +693,7 @@ http://localhost:5000/post/Ambslot/balance
 exports.balanceAmbslot = async (req, res) => {
     const usernames = req.body.username;
     username = 'member001';
-    let spl = `SELECT credit FROM member WHERE username ='${usernames}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernames}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -745,15 +729,14 @@ exports.PlaceBetAmbslot = async (req, res) => {
     const now = new Date();
     const formattedDate = now.toISOString();
     username = 'member001';
-    let spl = `SELECT credit FROM member WHERE username ='${usernames}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernames}' AND status_delete='N' `;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
             else {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser - amount;
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${usernames}'`;
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${usernames}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
                     else {
@@ -798,15 +781,14 @@ exports.PayoutAmbslot = async (req, res) => {
     const now = new Date();
     const formattedDate = now.toISOString();
     username = 'member001';
-    let spl = `SELECT credit FROM member WHERE username ='${usernames}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernames}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
             else {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser + amount;
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${usernames}'`;
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${usernames}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
                     else {
@@ -848,15 +830,14 @@ exports.CancelAmbslot = async (req, res) => {
     const now = new Date();
     const formattedDate = now.toISOString();
     username = 'member001';
-    let spl = `SELECT credit FROM member WHERE username ='${usernames}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernames}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
             else {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser + amount;
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${usernames}'`;
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${usernames}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
                     else {
@@ -898,15 +879,14 @@ exports.VoidAmb = async (req, res) => {
     const now = new Date();
     const formattedDate = now.toISOString();
     username = 'member001';
-    let spl = `SELECT credit FROM member WHERE username ='${usernames}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernames}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
             else {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser + amount;
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${usernames}'`;
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${usernames}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
                     else {
@@ -946,8 +926,7 @@ exports.SpadeGaming = async (req, res) => {
     const authHeaderApi = req.headers.api;
     const serialNo = req.body.serialNo;
     username = 'member001';
-    let spl = `SELECT credit FROM member WHERE username ='${acctId}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${acctId}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -1000,7 +979,7 @@ exports.SpadeGaming = async (req, res) => {
                     } else {
                         balanceNow = balanceUser + amounts;
                     }
-                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amounts}' WHERE username ='${acctId}'`;
+                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amounts}' WHERE phonenumber ='${acctId}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         res.status(201).json({
                             transferId: transferId,

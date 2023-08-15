@@ -475,8 +475,7 @@ exports.MemberSubAgent = async (require, response) => {
   const offset = (pageNumber - 1) * pageSize;
 
   if (searchKeyword === '' || searchKeyword === undefined) {
-    let sql = `SELECT id, agent_id, name, username, status, credit, created_at
-         FROM member WHERE agent_id ='${id_SubAgent}' AND status_delete='N' LIMIT ${pageSize} OFFSET ${offset}`;
+    let sql = `SELECT * FROM member WHERE agent_id ='${id_SubAgent}' AND status_delete='N' LIMIT ${pageSize} OFFSET ${offset}`;
     connection.query(sql, async (error, results) => {
       if (error) { console.log(error); }
       const totalCount = `SELECT COUNT(*) as count FROM member WHERE status_delete='N'`
@@ -492,8 +491,7 @@ exports.MemberSubAgent = async (require, response) => {
     });
   } else {
 
-    let sql = `SELECT agent_id, name, username, status, credit, created_at
-        FROM member WHERE agent_id = '${id_SubAgent}' AND status_delete='N' AND 
+    let sql = `SELECT * FROM member WHERE agent_id = '${id_SubAgent}' AND status_delete='N' AND 
         username LIKE '%${searchKeyword}%' OR name LIKE '%${searchKeyword}%' OR username LIKE '%${searchKeyword}%' LIMIT ${pageSize} OFFSET ${offset}`;
     connection.query(sql, async (error, results) => {
       if (error) { console.log(error); }
@@ -506,6 +504,21 @@ exports.MemberSubAgent = async (require, response) => {
     });
   }
 };
+
+http://localhost:5000/post/getMenberId/1 
+exports.getMenberId = async (require, response) => {
+  let user_id = require.params.user_id;
+  console.log(user_id)
+  let sql = `SELECT * FROM member WHERE id='${user_id}' AND status_delete='N'`;
+  connection.query(sql, (error, results) => {
+    if (error) { console.log(error) }
+    response.send({
+      data: results,
+    });
+    response.end();
+  });
+};
+
 
 http://localhost:5000/list_userGame/1 
 exports.getSubAgentId = async (require, response) => {

@@ -429,9 +429,8 @@ app.post('/login/agent', async (require, response, next) => {
 
 http://localhost:5000/login/member  Login Member
 app.post('/login/member', async (require, response, next) => {
-    let username = require.body.username;
+    let phoneNumber = require.body.phoneNumber;
     let password = require.body.password;
-    let ip_address = require.body.ip_address;
 
     //start check ip address
     const networkInterfaces = os.networkInterfaces();
@@ -465,9 +464,7 @@ app.post('/login/member', async (require, response, next) => {
         browser = 'Google Chrome';
     }
     // end check ip Browser
-
-    let browserName = require.body.browserName;
-    let sql = `SELECT id, credit, name, username, password FROM member WHERE username='${username}' AND status_delete='N' ORDER BY username ASC`;
+    let sql = `SELECT id, credit, name, password, phonenumber FROM member WHERE phonenumber='${phoneNumber}' AND status_delete='N'`;
     connection.query(sql, async (error, results) => {
         try {
             let update = `UPDATE member set ip_address = '${ipAddress}',browserlogin = '${browser}' WHERE id='${results[0].id}'`;
@@ -489,9 +486,9 @@ app.post('/login/member', async (require, response, next) => {
             const token = jwt.sign(
                 {
                     id: storedUser.id,
-                    username: storedUser.username,
                     credit: storedUser.credit,
                     passwordCode: hashedPassword,
+                    phonenumber: storedUser.phonenumber,
                     type: 'member',
                 },
                 'secretfortoken',
@@ -614,8 +611,7 @@ app.post('/signupMember', async (req, res, next) => {
     const accountNumber = req.body.accountNumber;
     const listCheckBox = req.body.listCheckBox.checkbox;
     //const checkboxListv2 = req.body.checkboxListv2;
-
-    console.log(listCheckBox);
+    
     let statuScheck = 'Y';
     if (listCheckBox[0] === 'เปิดใช้งาน') {
         statuScheck = 'Y'
@@ -1062,7 +1058,7 @@ app.post('/list_webgame', async (require, response) => {
 app.post('/otpRequest', async (req, res) => {
     const phone = req.body.phoneNumber
 
-    let sql_check = `SELECT * FROM member WHERE contact_number='${phone}' ORDER BY contact_number ASC`;
+    let sql_check = `SELECT * FROM member WHERE phonenumber='${phone}' ORDER BY phonenumber ASC`;
     connection.query(sql_check, async (error, results) => {
         try {
             const data = results;
@@ -1076,16 +1072,14 @@ app.post('/otpRequest', async (req, res) => {
                     .catch(err => console.error(err));
             }
             else {
-                res.send({
-                    message: "This contact_number is not available."
-                });
+                console.log('on');
+                res.json({ message: "This phonenumber is not available." });
                 res.end();
             }
         } catch (err) {
             if (!err.statusCode) {
                 err.statusCode = 500;
             }
-            next(err);
         }
     })
 
@@ -1126,3 +1120,27 @@ app.post('/image-upload', imageUpload.single("file"), (req, res) => { //ทด�
     res.json('file_dateVal_1689766490261_7.png');
 });
 //-----------------------------------------------------------------------------------------------------------------------------
+
+app.get('/latest-records', (req, res) => {
+
+    const today = new Date();
+
+    // Format the date as "yyyy-mm-dd"
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // JavaScript months are 0-based, so we add 1
+    const year = today.getFullYear();
+
+    const formattedDate = `${year}-${month}-${day}`;
+    console.log(formattedDate);
+    const query = `SELECT numberbill FROM logfinanceuser WHERE transaction_date = ? ORDER BY numberbill DESC LIMIT 1`;
+
+    connection.query(query, [formattedDate], (err, results) => {
+        if (err) {
+            console.error('Error fetching latest records: ', err);
+            res.status(500).json({ error: 'Error fetching latest records' });
+            return;
+        }
+
+        res.json(results);
+    });
+});

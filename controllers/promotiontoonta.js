@@ -48,14 +48,15 @@ module.exports = class Post {
                                     if (balancebunus > resultPromotion[0].maxbunus) {
                                         balancebunus = resultPromotion[0].maxbunus
                                     }
+                                    const balance = quantity + balancebunus
                                     const turnover = balancebunus * resultPromotion[0].multiplier;
-                                    let sql = `UPDATE member set bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}', turnover = '${turnover}'
+                                    let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}', turnover = '${turnover}'
                                      WHERE id='${dataUser.id}'`;
                                     connection.query(sql, (error, result) => {
                                         if (error) {
                                             console.log(error)
                                         } else {
-                                            let sqlBound = `UPDATE logfinanceuser set creditbonus = '${balancebunus}' WHERE bill_number='${bill_number}'`;
+                                            let sqlBound = `UPDATE logfinanceuser set credit = '${balance}',  creditbonus = '${balancebunus}' WHERE bill_number='${bill_number}'`;
                                             connection.query(sqlBound, (error, sqlBound) => {
                                                 if (error) {
                                                     console.log(error);
@@ -72,13 +73,13 @@ module.exports = class Post {
                                 if (quantity > resultPromotion[0].valusbunus) {
                                     const balancebunus = quantity + resultPromotion[0].bunus;
                                     const turnover = balancebunus * resultPromotion[0].multiplier;
-                                    let sql = `UPDATE member set bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}', turnover = '${turnover} 
+                                    let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}', turnover = '${turnover} 
                                     WHERE id='${dataUser.id}'`;
                                     connection.query(sql, (error, result) => {
                                         if (error) {
                                             console.log(error)
                                         } else {
-                                            let sqlBound = `UPDATE logfinanceuser set creditbonus = '${balancebunus}' WHERE bill_number='${bill_number}'`;
+                                            let sqlBound = `UPDATE logfinanceuser set credit = '${quantity}', creditbonus = '${balancebunus}' WHERE bill_number='${bill_number}'`;
                                             connection.query(sqlBound, (error, resultAfter) => {
                                                 if (error) {
                                                     console.log(error);
@@ -111,12 +112,12 @@ module.exports = class Post {
                                                 balancebunus = resultPromotion[0].maxbunus
                                             }
                                             const balance = quantity + balancebunus
-                                            let sql = `UPDATE member set bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}' WHERE id='${dataUser.id}'`;
+                                            let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}' WHERE id='${dataUser.id}'`;
                                             connection.query(sql, (error, result) => {
                                                 if (error) {
                                                     console.log(error)
                                                 } else {
-                                                    let sqlBound = `UPDATE logfinanceuser set creditbonus = '${balancebunus}' WHERE bill_number='${bill_number}'`;
+                                                    let sqlBound = `UPDATE logfinanceuser set credit = '${balance}', creditbonus = '${balancebunus}' WHERE bill_number='${bill_number}'`;
                                                     connection.query(sql_before, (error, sqlBound) => {
                                                         if (error) {
                                                             console.log(error);
@@ -133,13 +134,13 @@ module.exports = class Post {
                                         if (quantity > resultPromotion[0].valusbunus) {
                                             const balancebunus = quantity * resultPromotion[0].bunus;
                                             const balance = quantity + balancebunus
-                                            let sql = `UPDATE member set bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}',  
+                                            let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}',  
                                             WHERE id='${dataUser.id}'`;
                                             connection.query(sql, (error, result) => {
                                                 if (error) {
                                                     console.log(error)
                                                 } else {
-                                                    let sqlBound = `UPDATE logfinanceuser set creditbonus = '${balancebunus}' WHERE bill_number='${bill_number}'`;
+                                                    let sqlBound = `UPDATE logfinanceuser set credit = '${balance}', creditbonus = '${balancebunus}' WHERE bill_number='${bill_number}'`;
                                                     connection.query(sql_before, (error, sqlBound) => {
                                                         if (error) {
                                                             console.log(error);

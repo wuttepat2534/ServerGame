@@ -316,7 +316,7 @@ exports.financeUser = (req, res) => {
                             let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
                             balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber, trans_ref, qrcodeData, nameimg) value 
                             ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${accountNumber}','${phonenumber}','${'ฝาก'}','${quantity}','${0}','${resultUser[0].credit}'
-                            ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${statusFinance}',now(),now(),'${resultUser[0].bank}','${resultUser[0].imgBank}'
+                            ,'${balance}','${formattedDate}${formattedNumber}','${billnum}','${statusFinance}',now(),now(),'${resultUser[0].bank}','${resultUser[0].imgBank}'
                             ,'${destinationAccount}','${destinationAccountNumber}','${transRef}', '${qrcodeData}', '${nameimg}')`;
                             if (statusFinance === "สำเร็จ") {
                                 let totalamountdaily = logTotalAmount(resultUser, formattedDateBill, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
@@ -326,17 +326,18 @@ exports.financeUser = (req, res) => {
                                     } else {
                                         if (typePromotion !== '0') {
                                             let postpromotionDeposit = promotiontoonta.promotionDeposit(quantity, resultUser[0], typePromotion, formattedNumber);
-                                        }
-                                        let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}' WHERE phonenumber ='${phonenumber}'`;
-                                        connection.query(sql, (error, resultAfter) => {
-                                            if (error) {
-                                                console.log(error);
-                                            }
-                                            res.send({
-                                                message: "เติมเงินสำเร็จ",
+                                        } else {
+                                            let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}' WHERE phonenumber ='${phonenumber}'`;
+                                            connection.query(sql, (error, resultAfter) => {
+                                                if (error) {
+                                                    console.log(error);
+                                                }
+                                                res.send({
+                                                    message: "เติมเงินสำเร็จ",
+                                                });
+                                                res.end();
                                             });
-                                            res.end();
-                                        });
+                                        }
                                     }
                                 });
                             } else {

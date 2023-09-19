@@ -35,6 +35,7 @@ services:
       DB_USER: gggame
       DB_PASSWORD: P@ssword1234
       DB_DATABASE: db_gggame
+    restart: always
     ports:
       - '5000:5000'
     depends_on:

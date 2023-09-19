@@ -7,6 +7,12 @@ const os = require('os');
 const md5 = require('md5');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const useragent = require('express-useragent')
+
+const logEdit = require('./logEditAll')
+const promotiontoonta = require('./promotiontoonta')
+const repostGame = require('./repostGame')
+
 const app = express();
 app.use(express.static('public'));
 require('dotenv').config()
@@ -26,7 +32,7 @@ exports.signupMember = async (req, res, next) => {
     const credit = req.body.credit;
     const firstName = req.body.accountName;
     const lastName = req.body.accountName;
-    const customerGroup = "NEW ALL";
+    const customerGroup = "NewMember";
     const Rank = "Bronze";
     const contact_number = req.body.contact_number;
     const IDLIne = "";
@@ -46,9 +52,9 @@ exports.signupMember = async (req, res, next) => {
             if (error) {
                 console.log(error)
             } else {
-                let sql = `INSERT INTO member (agent_id, username_agent, member_code, name, username, password, credit, created_at, updated_at, customerGroup, 	userrank, lineid, status,
+                let sql = `INSERT INTO member (agent_id, username_agent, member_code, name, username, password, credit, created_attime, created_at, updated_at, groupmember, userrank, lineid, status,
                         note, currency, bank, accountName, accountNumber, phonenumber, lastName) 
-                value ('${agent_id}','${usernameAgent[0].username}','${agent_id}','${firstName}','${username}','${hashedPassword}','${credit}',now(), now(), '${customerGroup}', '${Rank}',
+                value ('${agent_id}','${usernameAgent[0].username}','${agent_id}','${firstName}','${username}','${hashedPassword}','${credit}' ,now() ,now(), now(), '${customerGroup}', '${Rank}',
                 '${IDLIne}','${statuScheck}', '${note}', '${currency}','${bank}', '${accountName}', '${accountNumber}', '${contact_number}', '${lastName}')`;
                 connection.query(sql, (error, result) => {
                     if (error) { console.log(error) }
@@ -269,11 +275,15 @@ exports.financeUser = (req, res) => {
     const type = req.body.type;
     const quantity = req.body.quantity;
     const accountNumber = req.body.accountNumber;
-    const destinationAccount = req.body.destinationAccountName
-    const destinationAccountNumber = req.body.destinationAccountNumber
-    const phonenumber = req.body.phonenumber
+    const destinationAccount = req.body.destinationAccountName;
+    const destinationAccountNumber = req.body.destinationAccountNumber;
+    const phonenumber = req.body.phonenumber;
     const accountNumberInt = parseInt(accountNumber);
-    const statusFinance = req.body.statusFinance
+    const statusFinance = req.body.statusFinance;
+    const nameimg = req.body.nameimg;
+    const transRef = req.body.transRef;
+    const qrcodeData = req.body.qrcodeData;
+    const typePromotion = req.body.typePromotion;
     const today = new Date();
     // Format the date as "ddmmyyyy"
     const day = String(today.getDate()).padStart(2, '0');
@@ -281,34 +291,80 @@ exports.financeUser = (req, res) => {
     const year = today.getFullYear();
     const formattedDate = year + month + day;
     const formattedDateBill = `${year}-${month}-${day}`;
-
+    //console.log(statusFinance);
     try {
-        let sql_before = `SELECT id, agent_id, credit, accountName, accountNumber, recharge_times, bank, imgBank FROM member WHERE phonenumber ='${phonenumber}' ORDER BY phonenumber ASC`;
+        let sql_before = `SELECT * FROM member WHERE phonenumber ='${phonenumber}' ORDER BY phonenumber ASC`;
         connection.query(sql_before, (error, resultUser) => {
             if (error) {
                 console.log(error)
             } else {
-                if (resultUser[0].accountNumber === accountNumberInt) {
-                    if (type === 'deposit') {
-                        let bill = `SELECT numberbill FROM logfinanceuser WHERE transaction_date = ?  AND tpyefinance = 'ฝาก' ORDER BY numberbill DESC LIMIT 1`;
+                //console.log(resultUser[0].accountNumber, accountNumberInt)
+                if (type === 'deposit') {
+                    let bill = `SELECT numberbill FROM logfinanceuser WHERE transaction_date = ?  AND tpyefinance = 'ฝาก' ORDER BY numberbill DESC LIMIT 1`;
+                    connection.query(bill, [formattedDateBill], (error, resultBill) => {
+                        if (error) {
+                            console.log(error)
+                        } else {
+                            let billnum = 0
+                            if (resultBill.length !== 0) {
+                                billnum = resultBill[0].numberbill + 1;
+                            } else {
+                                billnum += 1;
+                            }
+                            const formattedNumber = formatNumber(billnum);
+                            const balance = quantity + resultUser[0].credit;
+                            let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
+                            balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber, trans_ref, qrcodeData, nameimg) value 
+                            ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${accountNumber}','${phonenumber}','${'ฝาก'}','${quantity}','${0}','${resultUser[0].credit}'
+                            ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${statusFinance}',now(),now(),'${resultUser[0].bank}','${resultUser[0].imgBank}'
+                            ,'${destinationAccount}','${destinationAccountNumber}','${transRef}', '${qrcodeData}', '${nameimg}')`;
+                            if (statusFinance === "สำเร็จ") {
+                                let totalamountdaily = logTotalAmount(resultUser, formattedDateBill, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
+                                connection.query(sql_before, (error, result) => {
+                                    if (error) {
+                                        console.log(error)
+                                    } else {
+                                        if (typePromotion !== '0') {
+                                            let postpromotionDeposit = promotiontoonta.promotionDeposit(quantity, resultUser[0], typePromotion, formattedNumber);
+                                        }
+                                        let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}' WHERE phonenumber ='${phonenumber}'`;
+                                        connection.query(sql, (error, resultAfter) => {
+                                            if (error) {
+                                                console.log(error);
+                                            }
+                                            res.send({
+                                                message: "เติมเงินสำเร็จ",
+                                            });
+                                            res.end();
+                                        });
+                                    }
+                                });
+                            } else {
+                                res.send({
+                                    message: "เติมเงินไม่สำเร็จ",
+                                });
+                            }
+                        }
+                    })
+                } else {
+                    if (resultUser[0].credit > quantity) {
+                        let totalamountdaily = logTotalAmountWithdraw(resultUser, formattedDateBill, 'ถอน', destinationAccount, destinationAccountNumber, quantity, statusFinance)
+                        let bill = `SELECT numberbill FROM logfinanceuser WHERE transaction_date = ? AND tpyefinance = 'ถอน' ORDER BY numberbill DESC LIMIT 1`;
                         connection.query(bill, [formattedDateBill], (error, resultBill) => {
                             if (error) {
                                 console.log(error)
                             } else {
-                                let totalamountdaily = logTotalAmount(resultUser, formattedDateBill, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
                                 let billnum = 0
                                 if (resultBill.length !== 0) {
                                     billnum = resultBill[0].numberbill + 1;
-                                } else {
-                                    billnum += 1;
-                                }
+                                } else { billnum += 1; }
                                 const formattedNumber = formatNumber(billnum);
-                                const balance = quantity + resultUser[0].credit;
+                                const balance = resultUser[0].credit - quantity;
                                 let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
-                            balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value 
-                            ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${accountNumber}','${phonenumber}','${'ฝาก'}','${quantity}','${0}','${resultUser[0].credit}'
-                            ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${statusFinance}',now(),now(),'${resultUser[0].bank}','${resultUser[0].imgBank}'
-                            ,'${destinationAccount}','${destinationAccountNumber}')`;
+                                    balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value 
+                                ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${accountNumber}','${phonenumber}','${'ถอน'}','${quantity}','${0}','${resultUser[0].credit}'
+                                ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${statusFinance}',now(),now(),'${resultUser[0].bank}','${resultUser[0].imgBank}'
+                                ,'${destinationAccount}','${destinationAccountNumber}')`;
                                 if (statusFinance === "สำเร็จ") {
                                     connection.query(sql_before, (error, result) => {
                                         if (error) {
@@ -320,7 +376,7 @@ exports.financeUser = (req, res) => {
                                                     console.log(error);
                                                 }
                                                 res.send({
-                                                    message: "เติมเงินสำเร็จ",
+                                                    message: "ถอนเงินสำเร็จ",
                                                 });
                                                 res.end();
                                             });
@@ -328,64 +384,16 @@ exports.financeUser = (req, res) => {
                                     });
                                 } else {
                                     res.send({
-                                        message: "เติมเงินไม่สำเร็จ",
+                                        message: "ยอดเงินมีไม่เพียงพอ",
                                     });
                                 }
                             }
                         })
                     } else {
-                        if (resultUser[0].credit > quantity) {
-                            let totalamountdaily = logTotalAmountWithdraw(resultUser, formattedDateBill, 'ถอน', destinationAccount, destinationAccountNumber, quantity, statusFinance)
-                            let bill = `SELECT numberbill FROM logfinanceuser WHERE transaction_date = ? AND tpyefinance = 'ถอน' ORDER BY numberbill DESC LIMIT 1`;
-                            connection.query(bill, [formattedDateBill], (error, resultBill) => {
-                                if (error) {
-                                    console.log(error)
-                                } else {
-                                    let billnum = 0
-                                    if (resultBill.length !== 0) {
-                                        billnum = resultBill[0].numberbill + 1;
-                                    } else { billnum += 1; }
-                                    const formattedNumber = formatNumber(billnum);
-                                    const balance = resultUser[0].credit - quantity;
-                                    let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
-                                    balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value 
-                                ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${accountNumber}','${phonenumber}','${'ถอน'}','${quantity}','${0}','${resultUser[0].credit}'
-                                ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${statusFinance}',now(),now(),'${resultUser[0].bank}','${resultUser[0].imgBank}'
-                                ,'${destinationAccount}','${destinationAccountNumber}')`;
-                                    if (statusFinance === "สำเร็จ") {
-                                        connection.query(sql_before, (error, result) => {
-                                            if (error) {
-                                                console.log(error)
-                                            } else {
-                                                let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}' WHERE phonenumber ='${phonenumber}'`;
-                                                connection.query(sql, (error, resultAfter) => {
-                                                    if (error) {
-                                                        console.log(error);
-                                                    }
-                                                    res.send({
-                                                        message: "ถอนเงินสำเร็จ",
-                                                    });
-                                                    res.end();
-                                                });
-                                            }
-                                        });
-                                    } else {
-                                        res.send({
-                                            message: "ยอดเงินมีไม่เพียงพอ",
-                                        });
-                                    }
-                                }
-                            })
-                        } else {
-                            res.send({
-                                message: "ยอดเงินมีไม่เพียงพอ",
-                            });
-                        }
+                        res.send({
+                            message: "ยอดเงินมีไม่เพียงพอ",
+                        });
                     }
-                } else {
-                    res.send({
-                        message: "เลขบัญชีไม่ถูกต้อง",
-                    });
                 }
             }
         });
@@ -398,242 +406,229 @@ exports.financeUser = (req, res) => {
 };
 
 function logTotalAmount(resultUser, formattedDateBill, type, destinationAccount, destinationAccountNumber, quantity, statusFinance) {
-    console.log(destinationAccount, destinationAccountNumber);
-    let sql_deposit = `SELECT * FROM depositaccount WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
+    let sql_deposit = `SELECT billmatched, complated, bankName, balance, imgbank FROM depositaccount WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
     let sql_before = `SELECT * FROM totalamountdaily WHERE date ='${formattedDateBill}' AND typeaction = '${type}' ORDER BY date ASC`;
     connection.query(sql_before, (error, resulttotal) => {
         if (error) {
             console.log(error)
         } else {
-            if (resulttotal.length === 0) {
-                if (statusFinance === ('สำเร็จ')) {
-                    let sql_before = `INSERT INTO totalamountdaily (agentid, accountName, accountNumber, billmatched, complated, date, time, typeaction) value 
-                    ('${resultUser[0].agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${quantity}',now() ,now(),'${type}')`;
-                    connection.query(sql_before, (error, result) => {
-                        if (error) {
-                            console.log(error)
-                        } else {
-                            connection.query(sql_deposit, (error, resulttotaldeposit) => {
-                                if (error) {
-                                    console.log(error)
-                                } else {
-                                    console.log(resulttotaldeposit);
-                                    let sql = `UPDATE depositaccount set billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated + quantity}'
-                                    WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
-                                    connection.query(sql, (error, resultDeposit) => {
-                                        if (error) {
-                                            console.log(error);
-                                        } else {
-                                            let success = 'Success'
-                                            return success
-                                        }
-                                    });
-                                }
-                            })
-                        }
-                    });
-                } else {
-                    let sql_before = `INSERT INTO totalamountdaily (agentid, accountName, accountNumber, billmatched, complated, date, time, typeaction) value 
-                    ('${resultUser[0].agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${0}',now() ,now(),'${type}')`;
-                    connection.query(sql_before, (error, result) => {
-                        if (error) {
-                            console.log(error)
-                        } else {
-                            connection.query(sql_deposit, (error, resulttotaldeposit) => {
-                                if (error) {
-                                    console.log(error)
-                                } else {
-                                    let sql = `UPDATE depositaccount set billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated}'
-                                    WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
-                                    connection.query(sql, (error, resultDeposit) => {
-                                        if (error) {
-                                            console.log(error);
-                                        } else {
-                                            let success = 'Success'
-                                            return success
-                                        }
-                                    });
-                                }
-                            })
-                        }
-                    });
-                }
+            connection.query(sql_deposit, (error, resulttotaldeposit) => {
+                if (resulttotal.length === 0) {
+                    if (statusFinance === ('สำเร็จ')) {
+                        //console.log(destinationAccount, destinationAccountNumber)
+                        let sql = `UPDATE depositaccount set balance = '${resulttotaldeposit[0].billmatched + quantity}', billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated + quantity}'
+                    WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
+                        connection.query(sql, (error, result) => {
+                            if (error) {
+                                console.log(error)
+                            } else {
+                                let sql_before = `INSERT INTO totalamountdaily (agentid, accountName, accountNumber, billmatched, complated, balance, bankname, date, time, typeaction, imgbank) value 
+                                ('${resultUser[0].agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${quantity}','${resulttotaldeposit[0].balance}','${resulttotaldeposit[0].bankName}',now() ,now(),'${type}','${resulttotaldeposit[0].imgbank}')`;
 
-            } else {
-                if (statusFinance === ('สำเร็จ')) {
-                    let sql = `UPDATE totalamountdaily set billmatched = '${resulttotal[0].billmatched + quantity}', complated = '${resulttotal[0].complated + quantity}'
-                    WHERE date ='${formattedDateBill}' AND typeaction = '${type}' ORDER BY date ASC`;
-                    connection.query(sql, (error, resultUpdate) => {
-                        console.log(resultUpdate)
-                        if (error) {
-                            console.log(error);
-                        } else {
-                            connection.query(sql_deposit, (error, resulttotaldeposit) => {
-                                if (error) {
-                                    console.log(error)
-                                } else {
-                                    let sql = `UPDATE depositaccount set billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated + quantity}'
-                                    WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
-                                    connection.query(sql, (error, resultDeposit) => {
-                                        if (error) {
-                                            console.log(error);
-                                        } else {
-                                            let success = 'Success'
-                                            return success
-                                        }
-                                    });
-                                }
-                            })
-                        }
-                    });
+                                connection.query(sql_before, (error, resultDeposit) => {
+                                    if (error) {
+                                        console.log(error);
+                                    } else {
+                                        let success = 'Success'
+                                        return success
+                                    }
+                                });
+                            }
+                        });
+
+                    } else {
+                        let sql = `UPDATE depositaccount set balance = '${resulttotaldeposit[0].billmatched + quantity}', billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated}'
+                        WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
+                        connection.query(sql, (error, result) => {
+                            if (error) {
+                                console.log(error)
+                            } else {
+                                let sql_before = `INSERT INTO totalamountdaily (agentid, accountName, accountNumber, billmatched, complated, balance, bankname, date, time, typeaction, imgbank) value 
+                                    ('${resultUser[0].agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${0}','${resulttotaldeposit[0].balance}','${resulttotaldeposit[0].bankName}',now() ,now(),'${type}','${resulttotaldeposit[0].imgbank}')`;
+
+                                connection.query(sql_before, (error, resultDeposit) => {
+                                    if (error) {
+                                        console.log(error);
+                                    } else {
+                                        let success = 'Success'
+                                        return success
+                                    }
+                                });
+                            }
+                        });
+                    }
+
                 } else {
-                    let sql = `UPDATE totalamountdaily set billmatched = '${resulttotal[0].billmatched + quantity}', complated = '${resulttotal[0].complated}',
-                    WHERE date ='${formattedDateBill}' AND typeaction = '${type}' ORDER BY date ASC`;
-                    connection.query(sql, (error, resultUpdate) => {
-                        if (error) {
-                            console.log(error);
-                        } else {
-                            connection.query(sql_deposit, (error, resulttotaldeposit) => {
-                                if (error) {
-                                    console.log(error)
-                                } else {
-                                    let sql = `UPDATE depositaccount set billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated}'
+                    if (statusFinance === ('สำเร็จ')) {
+                        let sql = `UPDATE totalamountdaily set billmatched = '${resulttotal[0].billmatched + quantity}', complated = '${resulttotal[0].complated + quantity}',
+                        balance = '${resulttotal[0].complated + quantity}' WHERE date ='${formattedDateBill}' AND typeaction = '${type}' ORDER BY date ASC`;
+                        connection.query(sql, (error, resultUpdate) => {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                connection.query(sql_deposit, (error, resulttotaldeposit) => {
+                                    if (error) {
+                                        console.log(error)
+                                    } else {
+                                        console.log(resulttotaldeposit)
+                                        let sql = `UPDATE depositaccount set balance = '${resulttotaldeposit[0].billmatched + quantity}', billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated + quantity}'
                                     WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
-                                    connection.query(sql, (error, resultDeposit) => {
-                                        if (error) {
-                                            console.log(error);
-                                        } else {
-                                            let success = 'Success'
-                                            return success
-                                        }
-                                    });
-                                }
-                            })
-                        }
-                    });
+                                        connection.query(sql, (error, resultDeposit) => {
+                                            if (error) {
+                                                console.log(error);
+                                            } else {
+                                                let success = 'Success'
+                                                return success
+                                            }
+                                        });
+                                    }
+                                })
+                            }
+                        });
+                    } else {
+                        let sql = `UPDATE totalamountdaily set billmatched = '${resulttotal[0].billmatched + quantity}', complated = '${resulttotal[0].complated + 0}',
+                        balance = '${resulttotal[0].complated + 0}' WHERE date ='${formattedDateBill}' AND typeaction = '${type}' ORDER BY date ASC`;
+                        connection.query(sql, (error, resultUpdate) => {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                connection.query(sql_deposit, (error, resulttotaldeposit) => {
+                                    if (error) {
+                                        console.log(error)
+                                    } else {
+                                        console.log(resulttotaldeposit)
+                                        let sql = `UPDATE depositaccount set balance = '${resulttotaldeposit[0].billmatched + 0}', billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated + 0}'
+                                    WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
+                                        connection.query(sql, (error, resultDeposit) => {
+                                            if (error) {
+                                                console.log(error);
+                                            } else {
+                                                let success = 'Success'
+                                                return success
+                                            }
+                                        });
+                                    }
+                                })
+                            }
+                        });
+                    }
                 }
-            }
+            })
         }
-    });
+    })
 }
 
 function logTotalAmountWithdraw(resultUser, formattedDateBill, type, destinationAccount, destinationAccountNumber, quantity, statusFinance) {
-    let sql_deposit = `SELECT billmatched, complated FROM withdrawalaccount WHERE accountName ='${destinationAccount}' AND 	accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
+    let sql_deposit = `SELECT billmatched, complated, bankName, balance, imgbank FROM withdrawalaccount WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
     let sql_before = `SELECT * FROM totalamountdaily WHERE date ='${formattedDateBill}' AND typeaction = '${type}' ORDER BY date ASC`;
     connection.query(sql_before, (error, resulttotal) => {
         if (error) {
             console.log(error)
         } else {
-            if (resulttotal.length === 0) {
-                if (statusFinance === ('สำเร็จ')) {
-                    let sql_before = `INSERT INTO totalamountdaily (agentid, accountName, accountNumber, billmatched, complated, date, time, typeaction) value 
-                    ('${resultUser[0].agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${quantity}',now() ,now(),'${type}')`;
-                    connection.query(sql_before, (error, result) => {
-                        if (error) {
-                            console.log(error)
-                        } else {
-                            connection.query(sql_deposit, (error, resulttotaldeposit) => {
-                                if (error) {
-                                    console.log(error)
-                                } else {
+            connection.query(sql_deposit, (error, resulttotaldeposit) => {
+                if (resulttotal.length === 0) {
+                    if (statusFinance === ('สำเร็จ')) {
+                        let sql = `UPDATE withdrawalaccount set balance = '${resulttotaldeposit[0].billmatched + quantity}', billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated + quantity}'
+                    WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
+                        connection.query(sql, (error, result) => {
+                            if (error) {
+                                console.log(error)
+                            } else {
+                                let sql_before = `INSERT INTO totalamountdaily (agentid, accountName, accountNumber, billmatched, complated, bankname, balance, date, time, typeaction, imgbank) value 
+                                ('${resultUser[0].agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${quantity}','${resulttotaldeposit[0].bankName}','${resulttotaldeposit[0].balance}',now() ,now(),'${type}','${resulttotaldeposit[0].imgbank}')`;
 
-                                    let sql = `UPDATE withdrawalaccount set billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated + quantity}'
-                                    WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
-                                    connection.query(sql, (error, resultDeposit) => {
-                                        if (error) {
-                                            console.log(error);
-                                        } else {
-                                            let success = 'Success'
-                                            return success
-                                        }
-                                    });
-                                }
-                            })
-                        }
-                    });
-                } else {
-                    let sql_before = `INSERT INTO totalamountdaily (agentid, accountName, accountNumber, billmatched, complated, date, time, typeaction) value 
-                    ('${resultUser[0].agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${0}',now() ,now(),'${type}')`;
-                    connection.query(sql_before, (error, result) => {
-                        if (error) {
-                            console.log(error)
-                        } else {
-                            connection.query(sql_deposit, (error, resulttotaldeposit) => {
-                                if (error) {
-                                    console.log(error)
-                                } else {
-                                    let sql = `UPDATE withdrawalaccount set billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated}'
-                                    WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
-                                    connection.query(sql, (error, resultDeposit) => {
-                                        if (error) {
-                                            console.log(error);
-                                        } else {
-                                            let success = 'Success'
-                                            return success
-                                        }
-                                    });
-                                }
-                            })
-                        }
-                    });
-                }
+                                connection.query(sql_before, (error, resultDeposit) => {
+                                    if (error) {
+                                        console.log(error);
+                                    } else {
+                                        let success = 'Success'
+                                        return success
+                                    }
+                                });
+                            }
+                        });
 
-            } else {
-                if (statusFinance === ('สำเร็จ')) {
-                    let sql = `UPDATE totalamountdaily set billmatched = '${resulttotal[0].billmatched + quantity}', complated = '${resulttotal[0].complated + quantity}'
-                    WHERE date ='${formattedDateBill}' AND typeaction = '${type}' ORDER BY date ASC`;
-                    connection.query(sql, (error, resultUpdate) => {
-                        if (error) {
-                            console.log(error);
-                        } else {
-                            connection.query(sql_deposit, (error, resulttotaldeposit) => {
-                                if (error) {
-                                    console.log(error)
-                                } else {
-                                    console.log(resulttotaldeposit)
-                                    let sql = `UPDATE withdrawalaccount set billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated + quantity}'
-                                    WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
-                                    connection.query(sql, (error, resultDeposit) => {
-                                        if (error) {
-                                            console.log(error);
-                                        } else {
-                                            let success = 'Success'
-                                            return success
-                                        }
-                                    });
-                                }
-                            })
-                        }
-                    });
+                    } else {
+                        let sql = `UPDATE withdrawalaccount set balance = '${resulttotaldeposit[0].billmatched + quantity}', billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated}'
+                        WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
+                        connection.query(sql, (error, result) => {
+                            if (error) {
+                                console.log(error)
+                            } else {
+                                let sql_before = `INSERT INTO totalamountdaily (agentid, accountName, accountNumber, billmatched, complated, bankname, balance, date, time, typeaction, imgbank) value 
+                                    ('${resultUser[0].agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${0}','${resulttotaldeposit[0].bankName}','${resulttotaldeposit[0].balance}',now() ,now(),'${type}','${resulttotaldeposit[0].imgbank}')`;
+
+                                connection.query(sql_before, (error, resultDeposit) => {
+                                    if (error) {
+                                        console.log(error);
+                                    } else {
+                                        let success = 'Success'
+                                        return success
+                                    }
+                                });
+                            }
+                        });
+
+                    }
+
                 } else {
-                    let sql = `UPDATE totalamountdaily set billmatched = '${resulttotal[0].billmatched + quantity}', complated = '${resulttotal[0].complated}',
-                    WHERE date ='${formattedDateBill}' AND typeaction = '${type}' ORDER BY date ASC`;
-                    connection.query(sql, (error, resultUpdate) => {
-                        if (error) {
-                            console.log(error);
-                        } else {
-                            connection.query(sql_deposit, (error, resulttotaldeposit) => {
-                                if (error) {
-                                    console.log(error)
-                                } else {
-                                    let sql = `UPDATE withdrawalaccount set billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated}'
+                    if (statusFinance === ('สำเร็จ')) {
+                        let sql = `UPDATE totalamountdaily set billmatched = '${resulttotal[0].billmatched + quantity}', complated = '${resulttotal[0].complated + quantity}',
+                        balance = '${resulttotal[0].complated + quantity}' WHERE date ='${formattedDateBill}' AND typeaction = '${type}' ORDER BY date ASC`;
+                        connection.query(sql, (error, resultUpdate) => {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                connection.query(sql_deposit, (error, resulttotaldeposit) => {
+                                    if (error) {
+                                        console.log(error)
+                                    } else {
+                                        console.log(resulttotaldeposit)
+                                        let sql = `UPDATE withdrawalaccount set balance = '${resulttotaldeposit[0].billmatched + quantity}', billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated + quantity}'
                                     WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
-                                    connection.query(sql, (error, resultDeposit) => {
-                                        if (error) {
-                                            console.log(error);
-                                        } else {
-                                            let success = 'Success'
-                                            return success
-                                        }
-                                    });
-                                }
-                            })
-                        }
-                    });
+                                        connection.query(sql, (error, resultDeposit) => {
+                                            if (error) {
+                                                console.log(error);
+                                            } else {
+                                                let success = 'Success'
+                                                return success
+                                            }
+                                        });
+                                    }
+                                })
+                            }
+                        });
+                    } else {
+                        let sql = `UPDATE totalamountdaily set billmatched = '${resulttotal[0].billmatched + quantity}', complated = '${resulttotal[0].complated + 0}',
+                        balance = '${resulttotal[0].complated + 0}' WHERE date ='${formattedDateBill}' AND typeaction = '${type}' ORDER BY date ASC`;
+                        connection.query(sql, (error, resultUpdate) => {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                connection.query(sql_deposit, (error, resulttotaldeposit) => {
+                                    if (error) {
+                                        console.log(error)
+                                    } else {
+                                        console.log(resulttotaldeposit)
+                                        let sql = `UPDATE withdrawalaccount set balance = '${resulttotaldeposit[0].billmatched + 0}', billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated + 0}'
+                                    WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
+                                        connection.query(sql, (error, resultDeposit) => {
+                                            if (error) {
+                                                console.log(error);
+                                            } else {
+                                                let success = 'Success'
+                                                return success
+                                            }
+                                        });
+                                    }
+                                })
+                            }
+                        });
+                    }
                 }
-            }
+            })
         }
-    });
+    })
 }
 
 //http://localhost:5000/post/depositUserPromotion financeUserMoney
@@ -976,7 +971,7 @@ exports.getDataDepositStatementBank = (req, res) => {
                             connection.query(sql_statusFalse, (error, resultstatusFalse) => {
                                 if (error) {
                                     console.log(error)
-                                } 
+                                }
                                 else {
                                     let sql_statusUnbound = `SELECT * FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND transaction_date ='${date}' AND status ='ที่ยังไม่ผูก'
                                     AND accountName LIKE '%${searchKeyword}%' OR accountNumber LIKE '%${searchKeyword}%'LIMIT ${pageSize} OFFSET ${offset}`;
@@ -1151,7 +1146,7 @@ exports.getDataDepositStatementBank = (req, res) => {
 //http://localhost:5000/post/getDepositaccount/:agent_id getDepositaccount
 exports.getDepositaccount = (req, res) => {
     const agent_id = req.params.agent_id;
-    let sql = `SELECT * FROM depositaccount WHERE agent_id = "${agent_id}"`;
+    let sql = `SELECT * FROM depositaccount WHERE webname = "${agent_id}" AND activestatus = "เปิดใช้งาน"`;
     connection.query(sql, (error, results) => {
         if (error) { console.log(error) }
         res.send({
@@ -1353,9 +1348,9 @@ exports.addUserGroupInformation = async (req, res, next) => {
     connection.query(sql_depositaccount, (error, results) => {
         if (error) { console.log(error) } else {
             let sql = `INSERT INTO mastergroup (agent_id, color, password, minwithdrawal, withdrawalday, nameaccoun, mindeposit, withdrawalsperday, groupmaster,
-            depositaccount, secondaryaccount, secondaryaccountII, secondaryaccountIII, account_name, account_number, imgbank) 
-            value ('${agent_id}','${color}','${password}','${minimumWithdrawal}','${withdrawalday}','${nameaccoun}','${minimumDeposit}','${withdrawalsperday}','${groupmaster}',
-            '${results[0].accountName}','${secondaryaccount}','${secondaryaccountII}','${secondaryaccountIII}','${results[0].accountName}','${account_number}','${results[0].imgbank}')`;
+                depositaccount, secondaryaccount, secondaryaccountII, secondaryaccountIII, account_name, account_number, imgbank) 
+                value ('${agent_id}','${color}','${password}','${minimumWithdrawal}','${withdrawalday}','${nameaccoun}','${minimumDeposit}','${withdrawalsperday}','${groupmaster}',
+                '${results[0].accountName}','${secondaryaccount}','${secondaryaccountII}','${secondaryaccountIII}','${results[0].accountName}','${account_number}','${results[0].imgbank}')`;
             connection.query(sql, (error, result) => {
                 try {
                     if (error) { console.log(error) }
@@ -1373,6 +1368,51 @@ exports.addUserGroupInformation = async (req, res, next) => {
         }
     });
 };
+
+http: //localhost:5000/post/PutUserGroupInformation Put PutUserGroupInformation
+exports.PutUserGroupInformation = async (req, res, next) => {
+    const id = req.body.id;
+    const agent_id = req.body.agent_id;
+    const color = req.body.color;
+    const password = req.body.password;
+    const minimumWithdrawal = req.body.minimumWithdrawal;
+    const withdrawalday = req.body.withdrawalday;
+    const nameaccoun = req.body.nameaccoun;
+    const minimumDeposit = req.body.minimumDeposit;
+    const withdrawalsperday = req.body.withdrawalsperday;
+    const groupmaster = req.body.groupmaster;
+    const secondaryaccount = req.body.secondaryaccount;
+    const secondaryaccountII = req.body.secondaryaccountII;
+    const secondaryaccountIII = req.body.secondaryaccountIII;
+    const account_number = req.body.account_number;
+
+    let sql_depositaccount = `SELECT * FROM depositaccount WHERE accountNumber = "${account_number}"`;
+
+    connection.query(sql_depositaccount, (error, results) => {
+        if (error) { console.log(error) } else {
+            let sql = `UPDATE mastergroup set agent_id = '${agent_id}', color = '${color}', password = '${password}', minwithdrawal = '${minimumWithdrawal}',
+            withdrawalday = '${withdrawalday}', nameaccoun = '${nameaccoun}', mindeposit = '${minimumDeposit}', withdrawalsperday = '${withdrawalsperday}', groupmaster = '${groupmaster}', depositaccount = '${results[0].accountName}', 
+            secondaryaccount = '${secondaryaccount}', secondaryaccountII = '${secondaryaccountII}', secondaryaccountIII = '${secondaryaccountIII}', account_name = '${results[0].accountName}', account_number = '${account_number}', imgbank = '${results[0].imgbank}'
+        WHERE id ='${id}'`;
+
+            connection.query(sql, (error, result) => {
+                try {
+                    if (error) { console.log(error) }
+                    res.send({
+                        message: "Data Edit Success"
+                    });
+                    res.end();
+                } catch (err) {
+                    if (!err.statusCode) {
+                        err.statusCode = 500;
+                    }
+                    next(err);
+                }
+            });
+        }
+    });
+};
+
 
 //http://localhost:5000/post/getGroupccount/:agent_id getGroupccount
 exports.getGroup = (require, response) => {
@@ -1398,8 +1438,10 @@ exports.getGroup = (require, response) => {
             });
         });
     } else {
-        let sql = `SELECT * FROM mastergroup WHERE agent_id = "${agent_id}" AND 
-        depositaccount LIKE '%${searchKeyword}%' OR account_number LIKE '%${searchKeyword}%' LIMIT ${pageSize} OFFSET ${offset}`;
+        let sql_statusWait = `SELECT * FROM mastergroup WHERE tpyefinance = ? AND transaction_date = ? AND status = ?
+        AND accountName LIKE ? OR accountNumber LIKE ? OR phonenumber LIKE ? LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searchPhones}%`;
+        const values = [depositwithdrawal, date, "รอ", searchKeyword, searchKeyword, searchPattern, pageSize, offset];
         connection.query(sql, async (error, results) => {
             if (error) { console.log(error); }
             response.send({
@@ -1409,4 +1451,642 @@ exports.getGroup = (require, response) => {
             response.end();
         });
     }
+}
+
+//http://localhost:5000/post/getOneGroup getOneGroup
+exports.getOneGroup = (req, res) => {
+    const idGroup = req.params.idGroup;
+    let sql = `SELECT * FROM mastergroup WHERE id = ${idGroup}`;
+    connection.query(sql, (error, results) => {
+        if (error) { console.log(error) }
+        console.log(results)
+        res.send({
+            data: results
+        });
+        res.end();
+    });
+}
+
+
+http://localhost:5000/post/resetPasswordUserToonta put resetPasswordUserToonta
+exports.resetPasswordUserToonta = async (require, response, next) => {
+    const username = require.body.username;
+    const newPassword = require.body.newPassword
+    const idUser = require.body.idUser;
+    const idedit = require.body.idedit;
+    const typeedit = require.body.typeedit;
+
+    const hashedPassword = md5(newPassword);
+    const logFuntion = logEdit.uploadLogResetPasswordMenber(idUser, idedit, username, typeedit);
+    let sql = `UPDATE member set password = '${hashedPassword}' WHERE username = "${username}"`;
+    connection.query(sql, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            response.send({
+                message: "User Member editPassword Success"
+            });
+            response.end();
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+    });
+};
+
+http://localhost:5000/post/resetPasswordUserToontaWeb put resetPasswordUserToontaWeb
+exports.resetPasswordUserToontaWeb = async (require, response, next) => {
+    const username = require.body.useranme;
+    const newPassword = require.body.passwordConfirm;
+    const passwordOle = require.body.passwordOle;
+    const typeedit = require.body.typeedit;
+
+    const hashedPassword = md5(newPassword);
+    const olePassword = md5(passwordOle);
+
+    let sqluser = `SELECT id, password FROM member WHERE username = "${username}"`;
+    connection.query(sqluser, (error, resultID) => {
+        console.log(olePassword, resultID[0].password)
+        if (olePassword === resultID[0].password) {
+            const logFuntion = logEdit.uploadLogResetPasswordMenber(resultID[0].id, resultID[0].id, username, typeedit);
+
+            let sql = `UPDATE member set password = '${hashedPassword}' WHERE username = "${username}"`;
+            connection.query(sql, (error, result) => {
+                try {
+                    if (error) { console.log(error) }
+                    response.send({
+                        message: "เปลียนรหัสผ่านสำเร็จ"
+                    });
+                    response.end();
+                } catch (err) {
+                    if (!err.statusCode) {
+                        err.statusCode = 500;
+                    }
+                    next(err);
+                }
+            });
+        } else {
+            response.send({
+                message: "รหัสผ่านของคุณผิด"
+            });
+            response.end();
+        }
+    });
+};
+
+http://localhost:5000/post/putCreditUserToonta put putCreditUserToonta
+exports.PutCreditUserToonta = async (require, response, next) => {
+    const useranme = require.body.username;
+    const idUser = require.body.idUser;
+    const idedit = require.body.idedit;
+    const typeedit = require.body.typeedit;
+    const creditnew = require.body.credit;
+    const creditBefore = require.body.creditBefore;
+
+    const logFuntion = logEdit.uploadLogEditCredit(idUser, idedit, typeedit, creditnew, creditBefore);
+    let sql = `UPDATE member set  credit = '${creditnew}' WHERE username = "${useranme}"`;
+    connection.query(sql, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            response.send({
+                message: "User Member editPassword Success"
+            });
+            response.end();
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+    });
+};
+
+http://localhost:5000/post/banUserToonta put banUserToonta
+exports.banUserToonta = async (require, response) => {
+    const useranme = require.params.username;
+    const notinfo = require.body.notinfo
+
+    let sql = `UPDATE member set  ban = 'Y', noteinfo = '${notinfo}' WHERE username = "${useranme}"`;
+    connection.query(sql, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            response.send({
+                message: "User Member editPassword Success"
+            });
+            res.end();
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+    });
+};
+
+//http://localhost:5000/post/getTransaction_History getTransaction_History
+exports.getTransaction_History = (require, response) => {
+    const usernanme = require.body.username;
+    const searchPhones = require.body.searchPhone;
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+    const date = require.body.dataDate;
+    if (searchPhones === '') {
+        let sql = `SELECT * FROM logfinanceuser WHERE phonenumber = "${usernanme}" LIMIT ${pageSize} OFFSET ${offset}`;
+        connection.query(sql, async (error, results) => {
+            if (error) { console.log(error); }
+            const totalCount = `SELECT COUNT(*) as count FROM logfinanceuser WHERE phonenumber = "${usernanme}" `
+            connection.query(totalCount, (error, res) => {
+                if (error) { console.log(error); }
+                else {
+                    let sqlmember = `SELECT * FROM member WHERE username = "${usernanme}"`;
+                    connection.query(sqlmember, async (error, resultsdataMenber) => {
+                        if (error) { console.log(error); }
+                        response.send({
+                            data: results,
+                            memberdata: resultsdataMenber,
+                            total: res[0].count
+                        });
+                        response.end();
+                    })
+                }
+            });
+        });
+    } else {
+        //console.log(searchPhones);
+        let sql_ = `SELECT * FROM logfinanceuser WHERE  phonenumber = ? AND transaction_date = ?
+        AND phonenumber LIKE ? LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searchPhones}%`;
+        const values = [usernanme, date, searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, resultstatusFalse) => {
+            if (error) { console.log(error); }
+            else {
+                let sqlmember = `SELECT * FROM member WHERE username = "${usernanme}"`;
+                connection.query(sqlmember, async (error, resultsdataMenber) => {
+                    if (error) { console.log(error); }
+                    response.send({
+                        data: resultstatusFalse,
+                        datamenber: resultsdataMenber,
+                        total: resultstatusFalse.length
+                    });
+                    response.end();
+                })
+            }
+        });
+    }
+}
+
+// http://localhost:5000/post/resetPasswordUserToonta put resetPasswordUserToonta
+exports.testFuntion = async (require, response) => {
+    try {
+        const logFuntion = logEdit.TestTest();
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+//http://localhost:5000/post/getTransaction_History getTransaction_History
+exports.getRepostGame = (require, response) => {
+    const searchPhones = require.body.searchPhone;
+    const searcGameCamp = require.body.searcGameCamp;
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+    const date = require.body.dataDate;
+    const endDate = require.body.dataEndDate;
+    let win = 0;
+    let bet = 0
+    const post = {
+        startdate: date, endDate: endDate
+    }
+    repostGame.valuewinbet(post)
+        .then(calculatedValues => {
+            win = calculatedValues.win
+            bet = calculatedValues.bet
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    setTimeout(() => {
+        if (searchPhones === '' && searcGameCamp === '') {
+            let sql = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
+            connection.query(sql, async (error, results) => {
+                if (error) { console.log(error); }
+                const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count,
+                            wingame: win,
+                            betGame: bet,
+                            startdate: date,
+                            enddate: endDate
+                        });
+                        response.end();
+                    }
+                });
+            });
+        } else if (searchPhones !== '' && searcGameCamp === '') {
+            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND username LIKE ? LIMIT ? OFFSET ?`;
+            const searchPattern = `%${searchPhones}%`;
+            const values = [searchPattern, pageSize, offset];
+            connection.query(sql_, values, (error, results) => {
+                if (error) { console.log(error); }
+                else {
+                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`
+                    connection.query(totalCount, (error, res) => {
+                        if (error) { console.log(error); }
+                        else {
+                            response.send({
+                                data: results,
+                                valusData: results.length,
+                                total: res[0].count
+                            });
+                            response.end();
+                        }
+                    })
+                }
+            });
+        } else if (searchPhones === '' && searcGameCamp !== '') {
+            //console.log(searcGameCamp, searchPhones)
+            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >= ? AND created_atdate <= ? AND gameid LIKE ? LIMIT ? OFFSET ?`;
+            const searchPattern = `%${searcGameCamp}%`;
+            const values = [date, endDate, searchPattern, pageSize, offset];
+            connection.query(sql_, values, (error, results) => {
+                if (error) { console.log(error); }
+                else {
+                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`
+                    connection.query(totalCount, (error, res) => {
+                        if (error) { console.log(error); }
+                        else {
+                            response.send({
+                                data: results,
+                                valusData: results.length,
+                                total: res[0].count
+                            });
+                            response.end();
+                        }
+                    })
+                }
+            });
+        } else if (searchPhones === undefined && searcGameCamp === undefined) {
+            let sql = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' LIMIT ${pageSize} OFFSET ${offset}`;
+            connection.query(sql, async (error, results) => {
+                if (error) { console.log(error); }
+                else {
+                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`
+                    connection.query(totalCount, (error, res) => {
+                        if (error) { console.log(error); }
+                        else {
+                            response.send({
+                                data: results,
+                                valusData: results.length,
+                                total: res[0].count
+                            });
+                            response.end();
+                        }
+                    })
+                }
+            });
+        } else if (searchPhones !== undefined && searcGameCamp === undefined) {
+            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND username LIKE ? LIMIT ? OFFSET ?`;
+            const searchPattern = `%${searchPhones}%`;
+            const values = [date, searchPattern, pageSize, offset];
+            connection.query(sql_, values, (error, results) => {
+                if (error) { console.log(error); }
+                else {
+                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`
+                    connection.query(totalCount, (error, res) => {
+                        if (error) { console.log(error); }
+                        else {
+                            response.send({
+                                data: results,
+                                valusData: results.length,
+                                total: res[0].count
+                            });
+                            response.end();
+                        }
+                    })
+                }
+            });
+        } else if (searchPhones === undefined && searcGameCamp !== undefined) {
+            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND gameid LIKE ? LIMIT ? OFFSET ?`;
+            const values = [searcGameCamp, pageSize, offset];
+            connection.query(sql_, values, (error, results) => {
+                if (error) { console.log(error); }
+                else {
+                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`
+                    connection.query(totalCount, (error, res) => {
+                        if (error) { console.log(error); }
+                        else {
+                            response.send({
+                                data: results,
+                                valusData: results.length,
+                                total: res[0].count
+                            });
+                            response.end();
+                        }
+                    })
+                }
+            });
+        } else {
+            //console.log(searcGameCamp, searchPhones)
+            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND gameid LIKE '%${searcGameCamp}%' AND username LIKE ? LIMIT ? OFFSET ?`;
+            const searchPattern = `%${searchPhones}%`;
+            //const searchPatternKey = `%${searcGameCamp}%`;
+            const values = [searchPattern, pageSize, offset];
+            connection.query(sql_, values, (error, results) => {
+                if (error) { console.log(error); }
+                else {
+                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`
+                    connection.query(totalCount, (error, res) => {
+                        if (error) { console.log(error); }
+                        else {
+                            response.send({
+                                data: results,
+                                valusData: results.length,
+                                total: res[0].count
+                            });
+                            response.end();
+                        }
+                    })
+                }
+            });
+        }
+    }, 500);
+}
+
+//http://localhost:5000/post/getMemberRegiter getMemberRegiter
+exports.getMemberRegiter = (require, response) => {
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+    const date = require.body.dataDate;
+    const endDate = require.body.dataEndDate;
+
+    let sql = `SELECT * FROM member WHERE created_at >='${date}' AND created_at <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
+    connection.query(sql, async (error, results) => {
+        if (error) { console.log(error); }
+        const totalCount = `SELECT COUNT(*) as count FROM member WHERE created_at >='${date}' AND created_at <= '${endDate}'`
+        connection.query(totalCount, (error, res) => {
+            if (error) { console.log(error); }
+            else {
+                response.send({
+                    data: results,
+                    valusData: results.length,
+                    total: res[0].count
+                });
+                response.end();
+            }
+        });
+    });
+}
+
+
+//http://localhost:5000/post/getRepostDeposit getRepostDeposit
+exports.getRepostDeposit = (require, response) => {
+    const searchPhones = require.body.searchPhone;
+    const searcKey = require.body.searcKey;
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+    const date = require.body.dataDate;
+    const endDate = require.body.dataEndDate;
+    const depositwithdrawal = require.body.depositwithdrawal;
+
+    if (searchPhones === '' && searcKey === '') {
+        let sql = `SELECT * FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND transaction_date >='${date}' AND transaction_date <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
+        connection.query(sql, async (error, results) => {
+            if (error) { console.log(error); }
+            const totalCount = `SELECT COUNT(*) as count FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND transaction_date >='${date}' AND transaction_date <= '${endDate}'`
+            connection.query(totalCount, (error, res) => {
+                if (error) { console.log(error); }
+                else {
+                    response.send({
+                        data: results,
+                        valusData: results.length,
+                        total: res[0].count
+                    });
+                    response.end();
+                }
+            });
+        });
+    } else if (searchPhones !== '' && searcKey === '') {
+        let sql_deposit = `SELECT * FROM logfinanceuser WHERE tpyefinance = ? AND transaction_date >='${date}' AND transaction_date <= '${endDate}' AND phonenumber LIKE ?
+                LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searchPhones}%`;
+        const values = [depositwithdrawal, searchPattern, pageSize, offset];
+        connection.query(sql_deposit, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND transaction_date >='${date}' AND transaction_date <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: results.length
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else if (searchPhones === '' && searcKey !== '') {
+        //console.log(endDate, date)
+        let sql_ = `SELECT * FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND transaction_date >= ? AND transaction_date <= ? AND accountName LIKE ? LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searcKey}%`;
+        const values = [date, endDate, searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND transaction_date >='${date}' AND transaction_date <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: results.length
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else if (searchPhones === undefined && searcKey === undefined) {
+        let sql = `SELECT * FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND transaction_date >='${date}' AND transaction_date <= '${endDate}' LIMIT ${pageSize} OFFSET ${offset}`;
+        connection.query(sql, async (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND transaction_date >='${date}' AND transaction_date <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: results.length
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else if (searchPhones !== undefined && searcKey === undefined) {
+        let sql_ = `SELECT * FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND transaction_date >='${date}' AND transaction_date <= '${endDate}' AND phonenumber LIKE ? LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searchPhones}%`;
+        const values = [date, searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND transaction_date >='${date}' AND transaction_date <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: results.length
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else if (searchPhones === undefined && searcKey !== undefined) {
+        let sql_ = `SELECT * FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND transaction_date >='${date}' AND transaction_date <= '${endDate}' AND accountName LIKE ? LIMIT ? OFFSET ?`;
+        const values = [searcKey, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND transaction_date >='${date}' AND transaction_date <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: results.length
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else {
+        //console.log(searcKey, searchPhones)
+        let sql_ = `SELECT * FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND transaction_date >='${date}' AND transaction_date <= '${endDate}' AND phonenumber LIKE ? AND accountName LIKE '%${searcKey}%' LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searchPhones}%`;
+        const values = [searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND transaction_date >='${date}' AND transaction_date <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: results.length
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    }
+}
+
+//http://localhost:5000/post/getRepostWebdaily getRepostWebdaily
+exports.getRepostWebdaily = (require, response) => {
+    const date = require.body.dataDate;
+    const endDate = require.body.dataEndDate;
+    let win = 0;
+    let bet = 0;
+    let membervalue = 0;
+    let allmember = 0;
+    let depositvalut = 0;
+    let withdrawvalue = 0;
+    let depositvalutTotal = 0;
+    let withdrawvalueTotal = 0;
+
+    const post = {
+        startdate: date, endDate: endDate
+    }
+    repostGame.valuewinbet(post)
+        .then(calculatedValues => {
+            win = calculatedValues.win
+            bet = calculatedValues.bet
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    repostGame.valuedailyRegisterMamber(post)
+        .then(calculatedValues => {
+            membervalue = calculatedValues.membervalue
+            allmember = calculatedValues.allmember
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    repostGame.valuedailyFinanceDeposit(post)
+        .then(calculatedValues => {
+            depositvalut = calculatedValues.depositvalut
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    repostGame.valuedailyFinanceWithdraw(post)
+        .then(calculatedValues => {
+            withdrawvalue = calculatedValues.withdrawvalue
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    repostGame.valuedailyFinanceDepositTotal()
+        .then(calculatedValues => {
+            depositvalutTotal = calculatedValues.depositvalutTotal
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    repostGame.valuedailyFinanceWithdrawTotal()
+        .then(calculatedValues => {
+            withdrawvalueTotal = calculatedValues.withdrawvalueTotal
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    setTimeout(() => {
+        response.send({
+            wingame: win,
+            betGame: bet,
+            membervalueday: membervalue,
+            allmember: allmember,
+            depositvalut: depositvalut,
+            withdrawvalue: withdrawvalue,
+            depositvalutTotal: depositvalutTotal,
+            withdrawvalueTotal: withdrawvalueTotal,
+            startdate: date,
+            enddate: endDate
+        });
+        response.end();
+    }, 500);
 }

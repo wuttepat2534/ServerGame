@@ -28,6 +28,7 @@ exports.saveTestGame = async (require, response) => {
             if (user_credit == "") { user_credit = 0; }
             user_credit -= bet
             let jsonGame = MainGame(user_credit, bet, true);
+            console.log(jsonGame)
             let isWinFreeSpin = jsonGame.isWinFreeSpin;
             let credit = jsonGame.credit;
             let win = jsonGame.win;
@@ -529,13 +530,13 @@ exports.saveTestGame = async (require, response) => {
         let win = 0//เงินที่ชนะในรอบนี้
         let tile15 = []//tile 15 ชิ้นใน playarea
         let reels = [[], [], [], [], []]//5 reel ที่อยู่ในเกมจริงๆ
-        let slotTemp = []//ข้อมูลที่ก็อบมาจาก slot สำหรับดึงข้อมูลไปใช้คำนวณ
-        let highestWinLine = [];//เส้นนั้นชนะ 3 4 5
         let winLine = [];
         let winStyle = [];
         let winCount = 0;
         let isWinFreeSpin = false//ชนะ freespin มั้ยรอบนี้
 
+        let highestWinLine = [];//เส้นนั้นชนะ 3 4 5
+        let winingTile = []
         const tileIndexLine = [
             [1, 4, 7, 10, 13], [0, 3, 6, 9, 12], [2, 5, 8, 11, 14], [0, 4, 8, 10, 12], [2, 4, 6, 10, 14], [0, 3, 7, 9, 12],
             [2, 5, 7, 11, 14], [1, 5, 8, 11, 13], [1, 3, 6, 9, 13], [0, 4, 7, 10, 12], [2, 4, 7, 10, 14], [1, 4, 6, 10, 13], [1, 4, 8, 10, 13],
@@ -545,31 +546,40 @@ exports.saveTestGame = async (require, response) => {
         ];
 
         const slot = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 12, 12, 12, 11],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 9, 10, 10, 10, 10, 12, 12, 12, 11],
-            [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 12, 12, 12, 11],
-            [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 9, 10, 10, 10, 10, 12, 12, 11, 11],
-            [0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 12, 11, 11, 11]
+            [7, 9, 5, 0, 1, 4, 12, 0, 10, 3, 6, 0, 9, 5, 2, 8, 7, 1, 0, 10, 4, 3, 5, 9, 0, 12, 1, 6, 3, 4, 8, 5, 2, 0, 9, 4, 3, 10, 0, 5, 7, 4, 8, 2, 5, 1, 9, 3, 2, 6, 8, 4, 10, 2, 7, 0, 5, 3, 4, 8, 0, 1, 5, 12, 4, 3, 2, 6, 2, 5, 9, 4, 0, 7, 3, 10, 1, 5, 11, 8],
+            [2, 6, 9, 10, 5, 1, 0, 2, 4, 8, 3, 5, 9, 0, 1, 4, 5, 2, 7, 0, 3, 6, 5, 10, 4, 12, 2, 1, 3, 8, 4, 0, 10, 5, 11, 6, 0, 9, 1, 5, 0, 7, 2, 8, 0, 5, 12, 9, 1, 3, 2, 4, 7, 0, 6, 5, 1, 3, 2, 4, 5, 9, 6, 12, 5, 8, 4, 3, 1, 10, 0, 2, 5, 6, 4],
+            [12, 8, 2, 5, 4, 10, 1, 7, 0, 2, 3, 9, 4, 5, 0, 1, 2, 9, 4, 6, 5, 10, 2, 0, 7, 11, 3, 1, 5, 4, 9, 3, 10, 6, 2, 12, 5, 3, 1, 4, 7, 0, 6, 5, 3, 8, 4, 2, 5, 3, 12, 1, 0, 7, 2, 5, 1, 4, 6, 0, 8, 5, 2, 7, 3, 10, 5, 1, 8, 4, 2, 3, 5, 0, 9, 4, 8, 1, 7, 0, 5],
+            [6, 4, 5, 9, 3, 12, 4, 2, 5, 1, 11, 0, 6, 4, 2, 1, 5, 3, 9, 0, 4, 8, 1, 5, 10, 2, 3, 1, 9, 4, 6, 2, 0, 5, 1, 4, 10, 7, 2, 5, 8, 0, 2, 1, 6, 5, 0, 3, 7, 10, 5, 4, 0, 2, 8, 1, 11, 9, 2, 0, 4, 3, 5, 1, 6, 5, 9, 5, 3, 10, 12, 7, 1, 8],
+            [8, 0, 9, 4, 10, 5, 7, 6, 8, 5, 2, 11, 7, 2, 5, 3, 8, 10, 4, 5, 12, 6, 2, 7, 3, 5, 8, 3, 4, 9, 5, 6, 10, 1, 4, 7, 5, 9, 3, 1, 8, 6, 11, 7, 5, 4, 9, 5, 11, 6, 0, 10, 5]
         ];
+        
+        var slotTemp = JSON.parse(JSON.stringify(slot))//ดีง array มาใช้ไม่ให้กระทบต้นฉบับ
 
         if (bet <= credit) {
             isWinFreeSpin = false
-            reels = [[], [], [], [], []]
-            slotTemp = slot
             for (let i = 0; i < 5; i++)//5reel
             {
-                for (let j = 0; j < 6; j++)//6tile
+                let r = Math.random()
+                let rand = Math.floor(r * slotTemp[i].length);//สุ่มเลข ตามจำนวณ tile ใน reel นั้น
+                
+                //เก็บข้อมูล
+                reels[i].push(slotTemp[i][rand])//push ตัวแรก
+                //push อีก 5 ตัวที่เหลือไล่ตามลำดับ
+                let x = i;
+                for (let j = 0; j < 5; j++)//5tile
                 {
-                    let r = Math.random()
-                    let rand = Math.floor(r * slotTemp[i].length);//สุ่มเลข ตามจำนวณ tile ใน reel นั้น
-                    reels[i].push(slotTemp[i][rand])//ใน reel
-
-                    if (j < 3) {
+                    rand++//เริ่มตัวต่อไป
+                    if (rand > slotTemp[i].length - 1){//ถ้าเกินreel เริ่มใหม่
+                        rand = 0
+                    }
+                    reels[i].push(slotTemp[i][rand])//push
+                    
+                    if (j > 1) {
                         tile15.push(reels[i][j])//ใน playarea
                     }
-                    slotTemp[i].splice(rand, 1)
+                    //slotTemp[i].splice(rand, 1)
                 }
-                slotTemp[i] = [];
+                //slotTemp[i] = [];
             }
 
             for (let j = 0; j < 30; j++) {//วน 30 รอบสำหรับเช็ค Win ทั้ง 30 แบบ
@@ -578,17 +588,19 @@ exports.saveTestGame = async (require, response) => {
                     currentPayline[x] = tileIndexLine[j][x]
                 }
 
-                let left3 = CheckArrange(0, 2, currentPayline, j, bet, highestWinLine, tile15)
-                let middle3 = CheckArrange(1, 3, currentPayline, j, bet, highestWinLine, tile15)
-                let right3 = CheckArrange(2, 4, currentPayline, j, bet, highestWinLine, tile15)
-                let left4 = CheckArrange(0, 3, currentPayline, j, bet, highestWinLine, tile15)
-                let right4 = CheckArrange(1, 4, currentPayline, j, bet, highestWinLine, tile15)
-                let left5 = CheckArrange(0, 4, currentPayline, j, bet, highestWinLine, tile15)
+                let left3 = CheckArrange(0, 2, currentPayline, j, bet, highestWinLine, tile15, winingTile)
+                let middle3 = CheckArrange(1, 3, currentPayline, j, bet, highestWinLine, tile15, winingTile)
+                let right3 = CheckArrange(2, 4, currentPayline, j, bet, highestWinLine, tile15, winingTile)
+                let left4 = CheckArrange(0, 3, currentPayline, j, bet, highestWinLine, tile15, winingTile)
+                let right4 = CheckArrange(1, 4, currentPayline, j, bet, highestWinLine, tile15, winingTile)
+                let left5 = CheckArrange(0, 4, currentPayline, j, bet, highestWinLine, tile15, winingTile)
 
                 let m = Math.max(left3, middle3, right3, left4, right4, left5)
 
-                if (m != 0) {//hit
+                if (m != 0) 
+                {//hit
                     winLine.push(j)
+                    winCount++
                     if (m == left3)
                         winStyle.push("left3")
                     else if (m == middle3)
@@ -620,14 +632,17 @@ exports.saveTestGame = async (require, response) => {
             }
             //-----------------------------------------------------
 
-            for (let j = 0; j < 30; j++) {
-                if (highestWinLine[j] != 0) {
-                    winLine.push(j)
-                }
-            }
-            winCount = winLine.length;
+            // for (let j = 0; j < 30; j++) {
+            //     if (highestWinLine[j] != 0) {
+            //         winLine.push(j)
+            //     }
+            // }
+
+            //winCount = winLine.length;
             credit += win;
             //
+
+            //console.log(winStyle);
             jsArray = '{"credit": \"' + credit + '\","bet":\"' + bet + '\","win":\"' + win + '\","tiles":\"' + tile15 + '\","winline":\"' + winLine + '\","winStyle":\"' +
                 winStyle + '\","winCount":\"' + winCount + '\","isWinFreeSpin":\"' + isWinFreeSpin + '\"}';
             //
@@ -635,17 +650,30 @@ exports.saveTestGame = async (require, response) => {
             return jsArray;
         }
     }
-    function CheckArrange(start, end, currentPayline, j, bet, highestWinLine, tile15) {
+    function CheckArrange(start, end, currentPayline, j, bet, highestWinLine, tile15, winingTile) {
         let lastestTile = 100;
         let tileCount = 0
         let once = 0
         let lineCost = bet / 30
-        let winingTile = []
+      
         highestWinLine[j] = 0
 
-        const RewardTable = [
-            [3, 8, 15], [3, 8, 15], [5, 15, 30], [5, 15, 30], [5, 15, 30], [5, 15, 30], [10, 20, 50], [10, 20, 50], [15, 30, 80], [15, 30, 80], [20, 50, 150], [50, 150, 500], [0, 0, 0] //มี
-        ];
+        const RewardTable =
+            [
+                [3, 8, 15],//สัญลักษณ์ 9 ถ้าเรียง 3,4,5
+                [5, 15, 30],//10
+                [10, 20, 50],//J
+                [12, 25, 70],//Q
+                [15, 30, 80],//K
+                [18, 40, 100],//A
+                [20, 50, 150],//H_Blue
+                [30, 75, 200],//H_Green
+                [50, 100, 250],//H_Orange
+                [75, 150, 300],//H_Pink
+                [100, 300, 750],//H_Purple
+                [250, 500, 1000],//Wild
+                [0, 0, 0]//Scatter
+            ];
 
         //หาสัญลักษณ์แรก
         for (let i = start; i <= end; i++) {
@@ -681,8 +709,7 @@ exports.saveTestGame = async (require, response) => {
 
         if (winingTile[j] == null)//ถ้าเส้นนี้ไม่ถูกก็ไม่ต้องมี winingTile
             winingTile[j] = undefined
-
-
+         
         //เช็คว่าชนะ 3 4 5
         if (highestWinLine[j] == 3) {
             return lineCost * RewardTable[winingTile[j]][0]
@@ -942,7 +969,6 @@ exports.saveTestGameBuy = async (require, response) => {
         let win = 0//เงินที่ชนะในรอบนี้
         let tile15 = []//tile 15 ชิ้นใน playarea
         let reels = [[], [], [], [], []]//5 reel ที่อยู่ในเกมจริงๆ
-        let slotTemp = []//ข้อมูลที่ก็อบมาจาก slot สำหรับดึงข้อมูลไปใช้คำนวณ
         let highestWinLine = [];//เส้นนั้นชนะ 3 4 5
         let winLine = [];
         let winStyle = [];
@@ -958,23 +984,37 @@ exports.saveTestGameBuy = async (require, response) => {
         ];
 
         const slot = [
-            [5, 4, 5, 2, 4, 0, 1, 3, 6, 0, 7, 8, 9, 10, 11], [5, 4, 6, 2, 0, 0, 1, 3, 6, 1, 7, 8, 9, 10, 11, 11],
-            [5, 4, 5, 2, 4, 0, 1, 3, 6, 6, 5, 0, 0, 7, 8, 9, 10, 11], [5, 4, 5, 2, 6, 0, 1, 3, 6, 4, 7, 8, 9, 10, 11],
-            [5, 4, 5, 2, 4, 0, 1, 5, 6, 3, 7, 8, 9, 10, 11, 11]
+            [7, 9, 5, 0, 1, 4, 12, 0, 10, 3, 6, 0, 9, 5, 2, 8, 7, 1, 0, 10, 4, 3, 5, 9, 0, 12, 1, 6, 3, 4, 8, 5, 2, 0, 9, 4, 3, 10, 0, 5, 7, 4, 8, 2, 5, 1, 9, 3, 2, 6, 8, 4, 10, 2, 7, 0, 5, 3, 4, 8, 0, 1, 5, 12, 4, 3, 2, 6, 2, 5, 9, 4, 0, 7, 3, 10, 1, 5, 11, 8],
+            [2, 6, 9, 10, 5, 1, 0, 2, 4, 8, 3, 5, 9, 0, 1, 4, 5, 2, 7, 0, 3, 6, 5, 10, 4, 12, 2, 1, 3, 8, 4, 0, 10, 5, 11, 6, 0, 9, 1, 5, 0, 7, 2, 8, 0, 5, 12, 9, 1, 3, 2, 4, 7, 0, 6, 5, 1, 3, 2, 4, 5, 9, 6, 12, 5, 8, 4, 3, 1, 10, 0, 2, 5, 6, 4],
+            [12, 8, 2, 5, 4, 10, 1, 7, 0, 2, 3, 9, 4, 5, 0, 1, 2, 9, 4, 6, 5, 10, 2, 0, 7, 11, 3, 1, 5, 4, 9, 3, 10, 6, 2, 12, 5, 3, 1, 4, 7, 0, 6, 5, 3, 8, 4, 2, 5, 3, 12, 1, 0, 7, 2, 5, 1, 4, 6, 0, 8, 5, 2, 7, 3, 10, 5, 1, 8, 4, 2, 3, 5, 0, 9, 4, 8, 1, 7, 0, 5],
+            [6, 4, 5, 9, 3, 12, 4, 2, 5, 1, 11, 0, 6, 4, 2, 1, 5, 3, 9, 0, 4, 8, 1, 5, 10, 2, 3, 1, 9, 4, 6, 2, 0, 5, 1, 4, 10, 7, 2, 5, 8, 0, 2, 1, 6, 5, 0, 3, 7, 10, 5, 4, 0, 2, 8, 1, 11, 9, 2, 0, 4, 3, 5, 1, 6, 5, 9, 5, 3, 10, 12, 7, 1, 8],
+            [8, 0, 9, 4, 10, 5, 7, 6, 8, 5, 2, 11, 7, 2, 5, 3, 8, 10, 4, 5, 12, 6, 2, 7, 3, 5, 8, 3, 4, 9, 5, 6, 10, 1, 4, 7, 5, 9, 3, 1, 8, 6, 11, 7, 5, 4, 9, 5, 11, 6, 0, 10, 5]
         ];
+
+        let slotTemp = JSON.parse(JSON.stringify(slot))//ดีง array มาใช้ไม่ให้กระทบต้นฉบับ
+
         if (bet <= credit) {
             isWinFreeSpin = false
             reels = [[], [], [], [], []]
             slotTemp = slot
             for (let i = 0; i < 5; i++)//5reel
             {
-                for (let j = 0; j < 6; j++)//6tile
-                {
-                    let r = Math.random()
-                    let rand = Math.floor(r * slotTemp[i].length);//สุ่มเลข ตามจำนวณ tile ใน reel นั้น
-                    reels[i].push(slotTemp[i][rand])//ใน reel
+                let r = Math.random()
+                let rand = Math.floor(r * slotTemp[i].length);//สุ่มเลข ตามจำนวณ tile ใน reel นั้น
 
-                    if (j < 3) {
+                //เก็บข้อมูล
+                reels[i].push(slotTemp[i][rand])//push ตัวแรก
+
+                //push อีก 5 ตัวที่เหลือไล่ตามลำดับ
+                for (let j = 0; j < 5; j++)//5tile
+                {
+                    rand++//เริ่มตัวต่อไป
+                    if (rand > slotTemp[i].length - 1)//ถ้าเกินreel เริ่มใหม่
+                        rand = 0
+
+                    reels[i].push(slotTemp[i][rand])//push
+
+                    if (j > 1) {
                         tile15.push(reels[i][j])//ใน playarea
                     }
                     slotTemp[i].splice(rand, 1)
@@ -994,7 +1034,7 @@ exports.saveTestGameBuy = async (require, response) => {
                 let left4 = CheckArrange(0, 3, currentPayline, j, bet, highestWinLine, tile15)
                 let right4 = CheckArrange(1, 4, currentPayline, j, bet, highestWinLine, tile15)
                 let left5 = CheckArrange(0, 4, currentPayline, j, bet, highestWinLine, tile15)
-
+    
                 let m = Math.max(left3, middle3, right3, left4, right4, left5)
 
                 if (m != 0) {//hit
@@ -1021,7 +1061,7 @@ exports.saveTestGameBuy = async (require, response) => {
                     winLine.push(j)
                 }
             }
-
+            winCount = winLine.length;
             credit += win;
             //
             jsArray = '{"credit": \"' + credit + '\","bet":\"' + bet + '\","win":\"' + win + '\","tiles":\"' + tile15 + '\","winline":\"' + winLine + '\","winStyle":\"' +
@@ -1039,8 +1079,21 @@ exports.saveTestGameBuy = async (require, response) => {
         let winingTile = []
         highestWinLine[j] = 0
 
-        const RewardTable = [
-            [3, 8, 15], [3, 8, 15], [5, 15, 30], [5, 15, 30], [5, 15, 30], [5, 15, 30], [10, 20, 50], [10, 20, 50], [15, 30, 80], [15, 30, 80], [20, 50, 150], [50, 150, 500], [0, 0, 0] //มี
+        const RewardTable =
+        [
+            [3, 8, 15],//สัญลักษณ์ 9 ถ้าเรียง 3,4,5
+            [5, 15, 30],//10
+            [10, 20, 50],//J
+            [12, 25, 70],//Q
+            [15, 30, 80],//K
+            [18, 40, 100],//A
+            [20, 50, 150],//H_Blue
+            [30, 75, 200],//H_Green
+            [50, 100, 250],//H_Orange
+            [75, 150, 300],//H_Pink
+            [100, 300, 750],//H_Purple
+            [250, 500, 1000],//Wild
+            [0, 0, 0]//Scatter
         ];
 
         //หาสัญลักษณ์แรก
@@ -1094,242 +1147,3 @@ exports.saveTestGameBuy = async (require, response) => {
         }
     }
 };
-
-/*
-function MainGame(credit, bet, buyFreeSpin) {
-    let win = 0//เงินที่ชนะในรอบนี้
-    let tile15 = []//tile 15 ชิ้นใน playarea
-    let reels = [[], [], [], [], []]//5 reel ที่อยู่ในเกมจริงๆ
-    let slotTemp = []//ข้อมูลที่ก็อบมาจาก slot สำหรับดึงข้อมูลไปใช้คำนวณ
-    let highestWinLine = [];//เส้นนั้นชนะ 3 4 5
-    let winLine = []
-    let isWinFreeSpin = false//ชนะ freespin มั้ยรอบนี้
-    let totalWin = 0  //--ส่งไป client
-    let isBuyFreeSpin = buyFreeSpin//freespin เริ่มทำงาน --ส่งไป server
-    let betFreeSpin = bet * 50//ราคาของการซื้อ freespin
-
-    const tileIndexLine =
-        [
-            [1, 4, 7, 10, 13], [0, 3, 6, 9, 12], [2, 5, 8, 11, 14], [0, 4, 8, 10, 12], [2, 4, 6, 10, 14], [0, 3, 7, 9, 12],
-            [2, 5, 7, 11, 14], [1, 5, 8, 11, 13], [1, 3, 6, 9, 13], [0, 4, 7, 10, 12], [2, 4, 7, 10, 14], [1, 4, 6, 10, 13], [1, 4, 8, 10, 13],
-            [0, 5, 8, 11, 12], [2, 3, 6, 9, 14], [1, 3, 7, 9, 13], [1, 5, 7, 11, 13], [0, 5, 6, 11, 12], [2, 3, 8, 9, 14], [0, 4, 6, 10, 12],
-            [2, 4, 8, 10, 14], [0, 5, 7, 11, 12], [2, 3, 7, 9, 14], [1, 3, 8, 9, 13], [1, 5, 6, 11, 13], [0, 3, 8, 9, 12], [2, 5, 6, 11, 14],
-            [0, 3, 6, 9, 14], [2, 5, 8, 11, 13], [1, 4, 7, 10, 12]
-        ]
-
-    const slot = [
-        [5, 4, 5, 2, 4, 0, 1, 3, 6, 0, 7, 8, 9, 10, 11, 12], [5, 4, 6, 2, 0, 0, 1, 3, 6, 1, 7, 8, 9, 10, 11, 11, 12],
-        [5, 4, 5, 2, 4, 0, 1, 3, 6, 6, 5, 0, 0, 7, 8, 9, 10, 11, 12], [5, 4, 5, 2, 6, 0, 1, 3, 6, 4, 7, 8, 9, 10, 11, 12],
-        [5, 4, 5, 2, 4, 0, 1, 5, 6, 3, 7, 8, 9, 10, 11, 11, 12]
-    ];
-    if (bet <= credit) {
-        if (isBuyFreeSpin === 'true') {
-            if (betFreeSpin <= credit) {
-                credit -= betFreeSpin
-                isWinFreeSpin = true;
-                if (isWinFreeSpin) {
-                    totalWin = 0
-                    for (let a = 0; a < 10; a++) {                    
-                        //resetSlot
-                        reels = [[], [], [], [], []]
-                        slotTemp = JSON.parse(JSON.stringify(slot))//ดีง array มาใช้ไม่ให้กระทบต้นฉบับ
-                        tile15 = []
-                        winingTile = []
-                        win = 0
-                        winLine = []
-                        //resetSlot
-
-                        //Random_AddTile_AllReel()
-                        slotTemp = slot
-
-                        for (let i = 0; i < 5; i++)//5reel
-                        {
-                            for (let j = 0; j < 6; j++)//6tile
-                            {
-                                let r = Math.random()
-                                let rand = Math.floor(r * slotTemp[i].length);//สุ่มเลข ตามจำนวณ tile ใน reel นั้น
-                                reels[i].push(slotTemp[i][rand])//ใน reel
-
-                                if (j < 3) {
-                                    tile15.push(reels[i][j])//ใน playarea
-                                }
-                                slotTemp[i].splice(rand, 1)
-                            }
-                            slotTemp[i] = [];
-                        }
-
-                        for (let j = 0; j < 30; j++) {//วน 30 รอบสำหรับเช็ค Win ทั้ง 30 แบบ
-                            let currentPayline = []//เช่น payline1 มี [1,4,7,10,13]
-                            for (let x = 0; x < 5; x++) {
-                                currentPayline[x] = tileIndexLine[j][x]
-                            }
-
-                            let left3 = CheckArrange(0, 2, currentPayline, j, bet, highestWinLine, tile15)
-                            let middle3 = CheckArrange(1, 3, currentPayline, j, bet, highestWinLine, tile15)
-                            let right3 = CheckArrange(2, 4, currentPayline, j, bet, highestWinLine, tile15)
-                            let left4 = CheckArrange(0, 3, currentPayline, j, bet, highestWinLine, tile15)
-                            let right4 = CheckArrange(1, 4, currentPayline, j, bet, highestWinLine, tile15)
-                            let left5 = CheckArrange(0, 4, currentPayline, j, bet, highestWinLine, tile15)
-
-                            win += Math.max(left3, middle3, right3, left4, right4, left5)
-                        }
-
-                        for (let j = 0; j < 30; j++) {
-                            if (highestWinLine[j] != 0) {
-                                winLine.push(j)
-                            }
-                        }
-                        console.log(a);
-                        credit += win;
-                        totalWin += win
-                        jsArray = '{"credit": \"' + credit + '\","bet":\"' + bet + '\","win":\"' + win + '\","tiles":\"' + tile15 + '\","winline":\"' + winLine + '\","isWinFreeSpin":\"' + isWinFreeSpin + '\"}';
-                        jsArray = JSON.parse(jsArray);
-                    }
-                    return jsArray;
-                }
-            }
-        } else {
-            isWinFreeSpin = false
-            credit -= bet
-            reels = [[], [], [], [], []]
-            slotTemp = slot
-            for (let i = 0; i < 5; i++)//5reel
-            {
-                for (let j = 0; j < 6; j++)//6tile
-                {
-                    let r = Math.random()
-                    let rand = Math.floor(r * slotTemp[i].length);//สุ่มเลข ตามจำนวณ tile ใน reel นั้น
-                    reels[i].push(slotTemp[i][rand])//ใน reel
-
-                    if (j < 3) {
-                        tile15.push(reels[i][j])//ใน playarea
-                    }
-                    slotTemp[i].splice(rand, 1)
-                }
-                slotTemp[i] = [];
-            }
-
-            for (let j = 0; j < 30; j++) {//วน 30 รอบสำหรับเช็ค Win ทั้ง 30 แบบ
-                let currentPayline = []//เช่น payline1 มี [1,4,7,10,13]
-                for (let x = 0; x < 5; x++) {
-                    currentPayline[x] = tileIndexLine[j][x]
-                }
-
-                let left3 = CheckArrange(0, 2, currentPayline, j, bet, highestWinLine, tile15)
-                let middle3 = CheckArrange(1, 3, currentPayline, j, bet, highestWinLine, tile15)
-                let right3 = CheckArrange(2, 4, currentPayline, j, bet, highestWinLine, tile15)
-                let left4 = CheckArrange(0, 3, currentPayline, j, bet, highestWinLine, tile15)
-                let right4 = CheckArrange(1, 4, currentPayline, j, bet, highestWinLine, tile15)
-                let left5 = CheckArrange(0, 4, currentPayline, j, bet, highestWinLine, tile15)
-
-                win += Math.max(left3, middle3, right3, left4, right4, left5)
-            }
-
-            for (let j = 0; j < 30; j++) {
-                if (highestWinLine[j] != 0) {
-                    winLine.push(j)
-                }
-            }
-
-            credit += win;
-
-            jsArray = '{"credit": \"' + credit + '\","bet":\"' + bet + '\","win":\"' + win + '\","tiles":\"' + tile15 + '\","winline":\"' + winLine + '\","isWinFreeSpin":\"' + isWinFreeSpin + '\"}';
-            jsArray = JSON.parse(jsArray);
-            return jsArray;
-        }
-    }
-
-}
-function CheckArrange(start, end, currentPayline, j, bet, highestWinLine, tile15) {
-    let lastestTile = 100;
-    let scatterCount = 0
-    let tileCount = 0
-    let once = 0
-    let lineCost = bet / 30
-    let winingTile = []
-    highestWinLine[j] = 0
-
-    const RewardTable = [
-        [3, 8, 15], [3, 8, 15], [5, 15, 30], [5, 15, 30], [5, 15, 30], [5, 15, 30], [10, 20, 50], [10, 20, 50], [15, 30, 80], [15, 30, 80], [20, 50, 150], [50, 150, 500], [0, 0, 0] //มี
-    ];
-
-    //หาสัญลักษณ์แรก
-    for (let i = start; i <= end; i++) {
-        if (tile15[currentPayline[i]] != 11 && once == 0 && tile15[currentPayline[i]] != 12)//หาตัวแรกที่ไม่ใช่ wild
-        {
-            lastestTile = tile15[currentPayline[i]]
-            once = 1
-        }
-        if (i == end && lastestTile == 100) {
-            lastestTile = 11//wild
-        }
-    }
-    for (let i = start; i <= end; i++) {
-        if (tile15[currentPayline[i]] == lastestTile || tile15[currentPayline[i]] == 11 && tile15[currentPayline[i]] != 12)//ถ้า tile ตัวล่าสุดเหมือนตัวก่อนหน้า
-        {
-            tileCount += 1;
-
-            if (tileCount == 3 && end - start == 2)//เรียงมากกว่า 3 ก็คือชนะแล้ว
-            {
-                highestWinLine[j] = tileCount//เก็บว่าเรียงได้มากสุดเท่าไหร่
-                winingTile[j] = lastestTile
-            }
-            if (tileCount == 4 && end - start == 3) {
-                highestWinLine[j] = tileCount//เก็บว่าเรียงได้มากสุดเท่าไหร่
-                winingTile[j] = lastestTile
-            }
-            if (tileCount == 5 && end - start == 4) {
-                highestWinLine[j] = tileCount//เก็บว่าเรียงได้มากสุดเท่าไหร่
-                winingTile[j] = lastestTile
-            }
-        }
-    }
-
-    if (winingTile[j] == null)//ถ้าเส้นนี้ไม่ถูกก็ไม่ต้องมี winingTile
-        winingTile[j] = undefined
-
-
-    //------------- เช็ค scatter อยู่ตำแหน่งไหนก็ได้ -----------
-    for (let k = 0; k < 15; k++) {
-        if (tile15[k] == 12) {
-            scatterCount += 1
-        }
-    }
-    if (scatterCount >= 3) {
-        isWinFreeSpin = true
-    }
-    scatterCount = 0
-    //-----------------------------------------------------
-
-    //เช็คว่าชนะ 3 4 5
-    if (highestWinLine[j] == 3) {
-        return lineCost * RewardTable[winingTile[j]][0]
-    }
-    else if (highestWinLine[j] == 4) {
-        return lineCost * RewardTable[winingTile[j]][1]
-    }
-    else if (highestWinLine[j] == 5) {
-        return lineCost * RewardTable[winingTile[j]][2]
-    }
-    else {
-        return 0
-    }
-}
-
-function CombinationCal(slot,tileNum,fromReel,toReel){
-    let combi = 1;
-    let count = 0;
-
-    for(fromReel; fromReel < toReel; fromReel++){
-        for(let j = 0; j < slot[fromReel].length; j++){
-            if(slot[fromReel][j] == tileNum){
-                count++;
-            }
-        }
-        combi *= count;
-        count = 0;
-    }
-
-    return combi;
-}*/
-

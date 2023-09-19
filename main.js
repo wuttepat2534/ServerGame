@@ -16,8 +16,14 @@ const auth = require('./middleware/auth');
 const sdk = require('api')('@thaibulksms/v1.0#1of51jl4qvzac3');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
-
+const logEdit = require('./controllers/logEditAll');
+const FInance = require('./controllers/Finance');
+//const promotion = require('./controllers/promotiontoonta')
 var cors = require('cors');
+const cron = require('node-cron');
+// const fs = require('fs');
+// const path = require('path');
+// const FormData = require('form-data');
 
 require('dotenv').config()
 app.engine("html", ejs.renderFile);
@@ -233,7 +239,20 @@ app.get('/list_user/:user_id', (require, response) => {
             message: 'member id',
             data: results
         });
+        response.end();
+    });
+});
 
+http://localhost:5000/list_user/1
+app.get('/list_userWeb/:user_phone', (require, response) => {
+    let user_phone = require.params.user_phone;
+    let sql = `SELECT id, accountNumber, accountName FROM member WHERE username ='${user_phone}' AND status_delete='N'`;
+    connection.query(sql, (error, results) => {
+        if (error) { console.log(error) }
+        response.send({
+            message: 'member id',
+            data: results
+        });
         response.end();
     });
 });
@@ -249,7 +268,6 @@ app.get('/list_userGame/:user_id', (require, response) => {
         response.json(results[0]);
     });
 });
-
 
 app.post('/user/add', (require, response) => {
     let member_code = require.member_code;
@@ -492,7 +510,7 @@ app.post('/login/member', async (require, response, next) => {
                     type: 'member',
                 },
                 'secretfortoken',
-                { expiresIn: '5h' }
+                { expiresIn: '24h' }
             );
             response.status(201).json({ token: token });
         } catch (err) {
@@ -611,7 +629,7 @@ app.post('/signupMember', async (req, res, next) => {
     const accountNumber = req.body.accountNumber;
     const listCheckBox = req.body.listCheckBox.checkbox;
     //const checkboxListv2 = req.body.checkboxListv2;
-    
+
     let statuScheck = 'Y';
     if (listCheckBox[0] === 'เปิดใช้งาน') {
         statuScheck = 'Y'
@@ -765,12 +783,8 @@ app.put('/admin/:id', async (req, res, next) => {
 app.put('/member/:id', async (req, res, next) => {
     const id = req.params.id;
     const edittype = req.body.edittype;
-    const idedit = 2;
-    const member_code = req.body.member_code;
+    const idedit = req.body.idedit;
     const username = req.body.username;
-    const password = req.body.password;
-    const status = req.body.status;
-    const credit = req.body.credit;
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const customerGroup = req.body.customerGroup;
@@ -778,51 +792,54 @@ app.put('/member/:id', async (req, res, next) => {
     const contact_number = req.body.contact_number;
     const IDLIne = req.body.IDLIne;
     const note = req.body.note;
-    const currency = req.body.currency;
     const bank = req.body.bank;
     const accountName = req.body.accountName;
     const accountNumber = req.body.accountNumber;
     const listCheckBox = req.body.listCheckBox;
-    const checkboxListv2 = req.body.checkboxListv2;
+
     let statuscheck = 'N';
     if (listCheckBox === 'เปิดใช้งาน') {
         statuscheck = 'Y'
     } else {
         statuscheck = 'N'
     }
-    try {
-        let sql_before = `SELECT * FROM member WHERE id ='${id}' ORDER BY username ASC`;
-        connection.query(sql_before, (error, resultBefore) => {
+
+    const post = {
+        id: id, edittype: edittype, idedit: idedit, firstName: firstName, edittype: edittype, lastName: lastName, customerGroup: customerGroup,
+        Rank: Rank, contact_number: contact_number, IDLIne: IDLIne, note: note, bank: bank, accountName: accountName, accountNumber: accountNumber,
+        status: statuscheck,
+    };
+
+    let sql_before = `SELECT * FROM member WHERE id ='${id}'`;
+    connection.query(sql_before, (error, resultBefore) => {
+        try {
             if (error) { console.log(error) }
             else {
-                let sql = `UPDATE member set member_code = '${member_code}', name = '${firstName}', username = '${username}', status = '${statuscheck}', credit = '${credit}',
-                password = '${password}', lastName = '${lastName}', customerGroup = '${customerGroup}', userrank = '${Rank}', phonenumber = '${contact_number}',
-                lineid = '${IDLIne}', note = '${note}', currency = '${currency}', bank = '${bank}', accountName = '${accountName}', accountNumber = '${accountNumber}'
-        WHERE id='${id}'`;
+                const dataMenber = resultBefore[0]
+                const logFuntion = logEdit.uploadLogEditUser(post, dataMenber);
+
+                let sql = `UPDATE member set name = '${firstName}', username = '${contact_number}', status = '${statuscheck}',
+                 lastName = '${lastName}', groupmember = '${customerGroup}', userrank = '${Rank}', phonenumber = '${contact_number}',
+                lineid = '${IDLIne}', note = '${note}', bank = '${bank}', accountName = '${accountName}', accountNumber = '${accountNumber}'
+                WHERE id='${id}'`;
                 connection.query(sql, (error, result) => {
                     if (error) { console.log(error) }
                     else {
-                        let sql_before = `INSERT INTO logedit (edittype, idedit, idmember, name, editbefore, editafter, created_at) value 
-                ('${edittype}','${idedit}','${id}','${firstName}','${'member_code : ' + resultBefore.member_code + ' , ' + 'status : ' + resultBefore.status + ' , ' + 'credit : ' + resultBefore.credit}
-                ','${'member_code : ' + member_code + ' , ' + 'status : ' + status + ' , ' + 'credit : ' + credit}',now())`;
-
-                        connection.query(sql_before, (error, resultAfter) => {
-                            if (error) { console.log(error); }
-                            res.send({
-                                message: "Data Update Success",
-                            });
-                            res.end();
+                        res.send({
+                            message: "Data Update Success",
                         });
+                        res.end();
                     }
                 });
             }
-        });
-    } catch (err) {
-        if (!err.statusCode) {
-            err.statusCode = 500;
+
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
         }
-        next(err);
-    }
+    });
 });
 
 //http://localhost:5000/deleteMember/1  Delete users
@@ -861,8 +878,7 @@ app.post('/logEdit/:user_id', (require, response) => {
     const typeLog = require.body.typeLog;
 
     if (typeLog === 'member') {
-        let sql = `SELECT edittype, idedit, editbefore, editafter, created_at FROM logedit
-    WHERE idmember = '${user_id}' LIMIT ${pageSize} OFFSET ${offset}`;
+        let sql = `SELECT * FROM logedit WHERE idmember = '${user_id}' LIMIT ${pageSize} OFFSET ${offset}`;
         connection.query(sql, (error, results) => {
             const dataLog = results;
             if (error) { console.log(error) }
@@ -1057,7 +1073,6 @@ app.post('/list_webgame', async (require, response) => {
 
 app.post('/otpRequest', async (req, res) => {
     const phone = req.body.phoneNumber
-
     let sql_check = `SELECT * FROM member WHERE phonenumber='${phone}' ORDER BY phonenumber ASC`;
     connection.query(sql_check, async (error, results) => {
         try {
@@ -1086,7 +1101,6 @@ app.post('/otpRequest', async (req, res) => {
 
 });
 
-
 app.post('/otpVerify', async (req, res) => {
     const token = req.body.token;
     const pin = req.body.pin;
@@ -1111,14 +1125,61 @@ const storage = multer.diskStorage({
         cb(null, `${file.fieldname}_dateVal_${Date.now()}_${file.originalname}`)
     }
 })
+
 const imageUpload = multer({
     storage: storage,
     limits: { fileSize: 5 * 1024 * 1024 },
 });
-app.post('/image-upload', imageUpload.single("file"), (req, res) => { //ทดลองอัพโหลดรูปภาพขึ้น Server
-    console.log('Axios POST body: ', req.file);
-    res.json('file_dateVal_1689766490261_7.png');
+app.post('/image-upload', imageUpload.single("file"), async (req, res) => { //ทดลองอัพโหลดรูปภาพขึ้น Server
+    //console.log('Axios POST body: ', req.file);
+    res.json({ nameImg: req.file.filename });
 });
+
+//-----------------------------------------------------------------------------------------------------------------------------
+app.post('/depositToonta', async (req, res) => { //ทดลองอัพโหลดรูปภาพขึ้น Server
+    // const imagePath = path.join(__dirname, 'public/images', 'testimg.jpg');
+    // const imageBuffer = fs.readFileSync(imagePath);
+
+    // const formData = new FormData();
+    // formData.append('file', imageBuffer, { filename: 'test.jpg' });
+
+   /* const financeToonta = FInance.CheckInformation()  
+    .then(calculatedValues => {
+        res.send({ message: calculatedValues});
+    })
+    .catch(error => {
+        console.error(error.data);
+    });*/
+    try {
+        const YOUR_FILE_LOCATION = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/368441991_669600238379027_8438505471397569485_n.jpg';
+        //const SletTest = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/slip/377334005_1411687959690621_3265644401220670990_n.jpg';
+        const Url = `https://relaxtimecafe.fun/images/${req.body.filename}`
+        //const Url = `http://localhost:5000/images/${req.body.filename}`
+        //console.log(Url);
+        const restest = await axios.post(
+            'https://api.slipok.com/api/line/apikey/9496',
+            { url: Url },
+            {
+                headers: {
+                    'x-authorization': 'SLIPOKCJ8CI5X',
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        )
+            const financeToonta = FInance.CheckInformation(restest.data, req.body)  
+            .then(calculatedValues => {
+                //console.log(calculatedValues);
+                res.send({ message: calculatedValues});
+            })
+            .catch(error => {
+                console.error(error.data);
+            });
+    } catch (err) {
+        console.log(err.response.data)
+        res.json({ message: "QR Code หมดอายุ หรือ ไม่มีรายการอยู่จริง", status: err.response.data.data.success });
+    }
+});
+
 //-----------------------------------------------------------------------------------------------------------------------------
 
 app.get('/latest-records', (req, res) => {
@@ -1144,3 +1205,90 @@ app.get('/latest-records', (req, res) => {
         res.json(results);
     });
 });
+
+function automaticFunction() {
+    console.log('Automatic function is running at 03:44 PM.');
+    cron.schedule('53 15 * * *', () => {
+        automaticFunctionTest();
+    });
+}
+
+function automaticFunctionTest() {
+    //const startPromotion = promotion.promotionPlayLoseMoneyBack()
+}
+// Schedule the function to run every day at 02:50 PM
+cron.schedule('52 15 * * *', () => {
+    automaticFunction();
+});
+
+
+//-----------------------------------------------------------------------------------------------------------------------------
+
+/*const SleetUploadPath = 'public/images';
+const storageimg = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, imageUploadPath)
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${file.fieldname}_dateVal_${Date.now()}_${file.originalname}`)
+    }
+})
+const SleetUpload = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 },
+});
+
+app.post('/image-uploadSleet', imageUpload.single("file"), (req, res) => { //ทดลองอัพโหลดรูปภาพขึ้น Server
+    const url = 'https://verify.ptrdc.xyz/api/verify';
+    const data = {
+        qrcode_text: 'https://websitehui.s3.ap-southeast-1.amazonaws.com/368441991_669600238379027_8438505471397569485_n.jpg',
+        key_api: 'PTRDC-JDYjFUghOPHraA1yftWuBv7',//ToonTaApiKeyTest
+        ip: '',
+    };
+    axios.post(url, data)
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+});
+
+app.post('/testQR', (req, res) => {
+    const url = 'https://verify.ptrdc.xyz/api/verify';
+    const data = {
+        qrcode_text: '0046000600000101030140225202308231Bvr3VeN49LIa3twr5102TH9104289A',
+        key_api: 'PTRDC-JDYjFUghOPHraA1yftWuBv7',//ToonTaApiKeyTest
+        ip: '124.120.33.63',
+    };
+    axios.post(url, data)
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+})
+//-----------------------------------------------------------------------------------------------------------------------------
+
+app.post('/testQRimg', async (req, res) => {
+    try {
+        const buffer = fs.readFileSync('https://websitehui.s3.ap-southeast-1.amazonaws.com/368441991_669600238379027_8438505471397569485_n.jpg')
+        const restest = await axios.post(
+            'https://api.slipok.com/api/line/apikey/9496',
+            {
+                files: buffer,
+            },
+            {
+                headers: {
+                    'x-authorization': 'SLIPOKCJ8CI5X',
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        )
+        console.log(restest.data)
+    } catch (err) {
+        console.log(err.restest.data)
+    }
+
+})*/

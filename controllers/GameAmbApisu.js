@@ -3,6 +3,9 @@ const mysql = require('mysql2') //npm install mysql2
 const jwt = require('jsonwebtoken');
 const os = require('os');
 require('dotenv').config()
+const useragent = require('express-useragent')
+
+const repostGame = require('./repostGame')
 
 const connection = mysql.createPool({
     host: process.env.DB_HOST,
@@ -90,9 +93,9 @@ exports.GameCheckBalance = async (req, res) => {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
             else {
-                console.log(results)
+                //console.log(results)
                 const balanceUser = parseFloat(results[0].credit);
-                console.log(usernameGame, results[0].credit, balanceUser )
+                //console.log(usernameGame, results[0].credit, balanceUser)
                 res.status(201).json({
                     id: id,
                     statusCode: 0,
@@ -118,16 +121,17 @@ exports.GamePlaceBets = async (req, res) => {
     const currency = req.body.currency;
     const usernameGame = req.body.username;
     const txnsGame = req.body.txns;
-    username = 'member001';
-    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N' ORDER BY phonenumber ASC`;
+    //username = 'member001';
+    console.log(usernameGame)
+    let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N' ORDER BY phonenumber ASC`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
             else {
+                console.log(results)
                 const balanceUser = parseFloat(results[0].credit);
                 const betPlay = txnsGame[0].betAmount;
                 const balanceNow = balanceUser - betPlay;
-                console.log(balanceUser, betPlay, balanceNow)
                 const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${betPlay}' WHERE phonenumber ='${usernameGame}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
@@ -152,7 +156,6 @@ exports.GamePlaceBets = async (req, res) => {
     }
 };
 
-
 http://localhost:5000/post/game/settleBets 
 exports.GameSettleBets = async (req, res) => {
     const id = req.body.id;
@@ -161,8 +164,11 @@ exports.GameSettleBets = async (req, res) => {
     const currency = req.body.currency;
     const usernameGame = req.body.username;
     const txnsGame = req.body.txns;
+    const userAgent = req.headers['user-agent'];
+    const userAgentt = req.useragent;
+    //console.log(usernameGame)
     username = 'member001';
-    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
+    let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -171,7 +177,20 @@ exports.GameSettleBets = async (req, res) => {
                 const betAmount = txnsGame[0].payoutAmount;
                 const betPlay = txnsGame[0].betAmount;
                 const balanceNow = (balanceUser - betPlay) + betAmount;
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${betPlay}' WHERE phonenumber ='${usernameGame}'`;
+
+                let postTurnover = results[0].turnover - betPlay;
+                if (postTurnover < 0){
+                    postTurnover = 0;
+                }
+                
+                const post = {
+                    username: usernameGame, gameid: productId, bet: betPlay, win: betAmount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgentt
+                }
+                let repost = repostGame.uploadLogRepostGame(post)
+
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${betPlay}', turnover='${postTurnover}'
+                WHERE phonenumber ='${usernameGame}'`;
+
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
                     else {
@@ -244,7 +263,7 @@ exports.GameAdjustBets = async (req, res) => {
     const currency = req.body.currency;
     const usernameGame = req.body.username;
     const txnsGame = req.body.txns;
-    username = 'member001';
+    //username = 'member001';
     let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {

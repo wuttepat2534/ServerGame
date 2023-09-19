@@ -2,6 +2,7 @@ const { response } = require("express");
 const mysql = require('mysql2') //npm install mysql2
 const jwt = require('jsonwebtoken');
 const os = require('os');
+const repostGame = require('./repostGame')
 require('dotenv').config()
 
 const connection = mysql.createPool({
@@ -52,15 +53,27 @@ exports.BetLive = async (req, res) => {
     const Currency = req.body.Currency;
     const ExchangeRate = req.body.ExchangeRate;
     const usernameGame = req.body.PlayerId;
-
-    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
+    const userAgent = req.headers['user-agent'];
+    let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
             else {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser - BetAmount;
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${BetAmount}' WHERE phonenumber ='${usernameGame}'`;
+
+                let postTurnover = results[0].turnover - BetAmount;
+                if (postTurnover < 0) {
+                    postTurnover = 0;
+                }
+
+                const post = {
+                    username: usernameGame, gameid: GameId, bet: BetAmount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: TranDateTime
+                }
+                let repost = repostGame.uploadLogRepostGameAsk(post)
+
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${BetAmount}', turnover='${postTurnover}'
+                WHERE phonenumber ='${usernameGame}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
                     else {
@@ -88,7 +101,7 @@ exports.GameResultLive = async (req, res) => {
     const WinLose = req.body.WinLose;
     const ExchangeRate = req.body.ExchangeRate;
     const usernameGame = req.body.PlayerId;
-
+    const userAgent = req.headers['user-agent'];
     let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
@@ -96,6 +109,10 @@ exports.GameResultLive = async (req, res) => {
             else {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser + Payout;
+                const post = {
+                    username: usernameGame, gameid: ExchangeRate, bet: 0, win: Payout, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: RequestDateTime
+                }
+                let repost = repostGame.uploadLogRepostGameAsk(post)
                 const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${0}' WHERE phonenumber ='${usernameGame}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
@@ -290,9 +307,11 @@ exports.WithdrawManna = async (req, res) => {
     const account = req.body.account;
     const transaction_id = req.body.transaction_id;
     const amount = req.body.amount;
+    const game_id = req.body.game_id;
     username = 'member001';
+    const userAgent = req.headers['user-agent'];
 
-    let spl = `SELECT credit FROM member WHERE username ='${account}' AND status_delete='N' 
+    let spl = `SELECT credit, turnover FROM member WHERE username ='${account}' AND status_delete='N' 
   ORDER BY member_code ASC`;
     try {
         connection.query(spl, (error, results) => {
@@ -300,7 +319,16 @@ exports.WithdrawManna = async (req, res) => {
             else {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser - amount;
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${account}'`;
+                let postTurnover = results[0].turnover - amount;
+                if (postTurnover < 0) {
+                    postTurnover = 0;
+                }
+                const post = {
+                    username: account, gameid: game_id, bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transaction_id
+                }
+                let repost = repostGame.uploadLogRepostGameAsk(post)
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${postTurnover}'
+                WHERE username ='${account}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
                     else {
@@ -327,7 +355,8 @@ exports.DepositManna = async (req, res) => {
     const transaction_id = req.body.transaction_id;
     const amount = req.body.amount;
     const jp_win = req.body.jp_win;
-    username = 'member001';
+    const game_id = req.body.game_id;
+    const userAgent = req.headers['user-agent'];
 
     let spl = `SELECT credit FROM member WHERE username ='${account}' AND status_delete='N' 
   ORDER BY member_code ASC`;
@@ -337,6 +366,10 @@ exports.DepositManna = async (req, res) => {
             else {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser + amount + jp_win;
+                const post = {
+                    username: account, gameid: game_id, bet: 0, win: jp_win, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: game_id
+                }
+                let repost = repostGame.uploadLogRepostGameAsk(post)
                 const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${account}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
@@ -460,8 +493,8 @@ exports.PlaceBetSimplePlay = async (req, res) => {
     const transaction_id = req.body.transaction_id;
     const amount = req.body.amount;
     const currency = req.body.currency;
-    username = 'member001';
-
+    const userAgent = req.headers['user-agent'];
+    const game_id = req.body.gameid;
     let spl = `SELECT credit FROM member WHERE username ='${usernames}' AND status_delete='N' 
   ORDER BY member_code ASC`;
     try {
@@ -471,7 +504,17 @@ exports.PlaceBetSimplePlay = async (req, res) => {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceamount = parseFloat(amount);
                 const balanceNow = balanceUser - balanceamount;
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${balanceamount}' WHERE username ='${usernames}'`;
+                let postTurnover = results[0].turnover - balanceamount;
+                if (postTurnover < 0) {
+                    postTurnover = 0;
+                }
+                const post = {
+                    username: usernames, gameid: game_id, bet: balanceamount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transaction_id
+                }
+                let repost = repostGame.uploadLogRepostGameAsk(post)
+
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${balanceamount}', turnover='${postTurnover}'
+                WHERE username ='${usernames}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
                     else {
@@ -499,7 +542,8 @@ exports.PlayerWinSimplePlay = async (req, res) => {
     const transaction_id = req.body.transaction_id;
     const amount = req.body.amount;
     const currency = req.body.currency;
-    username = 'member001';
+    const userAgent = req.headers['user-agent'];
+    const game_id = req.body.gameid;
 
     let spl = `SELECT credit FROM member WHERE username ='${usernames}' AND status_delete='N' 
   ORDER BY member_code ASC`;
@@ -510,6 +554,10 @@ exports.PlayerWinSimplePlay = async (req, res) => {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceamount = parseFloat(amount);
                 const balanceNow = balanceUser + balanceamount;
+                const post = {
+                    username: usernames, gameid: game_id, bet: 0, win: balanceamount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transaction_id
+                }
+                let repost = repostGame.uploadLogRepostGameAsk(post)
                 const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${0}' WHERE username ='${usernames}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }

@@ -107,23 +107,24 @@ exports.convertToken = async (req, res) => {
   if (decodedToken.type === 'member') {
     try {
 
-      let splip = `SELECT ip_address, browserlogin FROM member WHERE username ='${decodedToken.username}' AND status_delete='N' 
+      let splip = `SELECT * FROM member WHERE username ='${decodedToken.phonenumber}' AND status_delete='N' 
       ORDER BY member_code ASC`;
       connection.query(splip, (error, resultsIp) => {
         if (error) { console.log(error) }
-        if (resultsIp[0].ip_address !== ipAddress) {
+
+        if (resultsIp[0].ip_address === ipAddress) {
           const error = new Error('A user with this ip_address could not be found.');
           error.statusCode = 500;
           res.json({ status: "A user with this ip_address could not be found." });
         }
         else {
-          if (resultsIp[0].browserlogin !== browser) {
+          if (resultsIp[0].browserlogin === browser) {
             const error = new Error('A user with this browserlogin could not be found.');
             error.statusCode = 500;
             res.json({ status: "A user with this browserlogin could not be found." });
           }
           else {
-            let sql = `SELECT id, credit, bet_latest, name FROM member WHERE username ='${decodedToken.username}' AND status_delete='N' 
+            let sql = `SELECT id, credit, bet_latest, name FROM member WHERE username ='${decodedToken.phonenumber}' AND status_delete='N' 
             ORDER BY member_code ASC`;
             connection.query(sql, (error, results) => {
               if (error) { console.log(error) }
@@ -138,9 +139,9 @@ exports.convertToken = async (req, res) => {
       err.statusCode = 500;
       res.json({ status: "A user with this Token could not be found." });
     }
-  }else{
+  } else {
     res.json({
-      id:1,
+      id: 1,
       credit: 100000,
       bet_latest: 9,
       name: 'testgaem'

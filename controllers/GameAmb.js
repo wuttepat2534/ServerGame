@@ -306,6 +306,7 @@ http://localhost:5000/post/Manna/withdraw
 exports.WithdrawManna = async (req, res) => {
     const account = req.body.account;
     const transaction_id = req.body.transaction_id;
+    const sessionId = req.body.sessionId;
     const amount = req.body.amount;
     const game_id = req.body.game_id;
     username = 'member001';
@@ -324,7 +325,7 @@ exports.WithdrawManna = async (req, res) => {
                     postTurnover = 0;
                 }
                 const post = {
-                    username: account, gameid: game_id, bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transaction_id
+                    username: account, gameid: game_id, bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: sessionId
                 }
                 let repost = repostGame.uploadLogRepostGameAsk(post)
                 const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${postTurnover}'
@@ -353,6 +354,7 @@ http://localhost:5000/post/Manna/deposit
 exports.DepositManna = async (req, res) => {
     const account = req.body.account;
     const transaction_id = req.body.transaction_id;
+    const sessionId = req.body.sessionId;
     const amount = req.body.amount;
     const jp_win = req.body.jp_win;
     const game_id = req.body.game_id;
@@ -367,7 +369,7 @@ exports.DepositManna = async (req, res) => {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser + amount + jp_win;
                 const post = {
-                    username: account, gameid: game_id, bet: 0, win: jp_win, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: game_id
+                    username: account, gameid: game_id, bet: 0, win: jp_win, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: sessionId
                 }
                 let repost = repostGame.uploadLogRepostGameAsk(post)
                 const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE username ='${account}'`;

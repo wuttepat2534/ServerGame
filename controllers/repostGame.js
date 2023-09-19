@@ -46,11 +46,11 @@ module.exports = class Post {
             browser = 'Google Chrome';
         }
         const isMobile = /Mobile|Android/.test(post.userAgent);
-        let platform = 'mobile';
+        let platform = 'Mobile';
         if (isMobile) {
-            platform = 'mobile';
+            platform = 'Mobile';
         } else {
-            platform = 'computer pc';
+            platform = 'PC';
         }
 
         const sql = `SELECT * FROM member WHERE username = ?`;
@@ -95,11 +95,11 @@ module.exports = class Post {
         }
 
         const isMobile = /Mobile|Android/.test(post.userAgent);
-        let platform = 'mobile';
+        let platform = 'Mobile';
         if (isMobile) {
-            platform = 'mobile';
+            platform = 'Mobile';
         } else {
-            platform = 'computer pc';
+            platform = 'PC';
         }
 
         const sql = `SELECT * FROM member WHERE username = ?`;

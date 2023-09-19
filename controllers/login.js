@@ -162,7 +162,7 @@ exports.PlaceBetSlotXo = async (req, res) => {
   const roundid = req.body.roundid;
   const usernameGame = req.body.username;
   const gamecode = req.body.gamecode;
-  username = 'member001';
+  const userAgent = req.headers['user-agent'];
 
   let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
   try {
@@ -173,7 +173,10 @@ exports.PlaceBetSlotXo = async (req, res) => {
         const balanceNow = balanceUser - amount;
         let postTurnover = results[0].turnover - amount;
         if (postTurnover < 0) { postTurnover = 0; }
-
+        const post = {
+          username: usernameGame, gameid: gamecode, bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: roundid
+        }
+        let repost = repostGame.uploadLogRepostGameAsk(post)
         const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${postTurnover}'
         WHERE phonenumber ='${usernameGame}'`;
         connection.query(sql_update, (error, resultsGame) => {
@@ -199,7 +202,10 @@ http://localhost:5000/post/settle-bet
 exports.SettlePlaySlotXo = async (req, res) => {
   const amount = req.body.amount;
   const usernameGame = req.body.username;
-  username = 'member001';
+  const gamecode = req.body.gamecode;
+  const userAgent = req.headers['user-agent'];
+  const timestamp = req.body.timestamp;
+  const roundid = req.body.roundid;
 
   let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
   try {
@@ -208,6 +214,10 @@ exports.SettlePlaySlotXo = async (req, res) => {
       else {
         const balanceUser = parseFloat(results[0].credit);
         const balanceNow = balanceUser + amount;
+        const post = {
+          username: usernameGame, gameid: gamecode, bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: roundid
+        }
+        let repost = repostGame.uploadLogRepostGameAsk(post)
         const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${usernameGame}'`;
         connection.query(sql_update, (error, resultsGame) => {
           if (error) { console.log(error) }
@@ -359,9 +369,13 @@ exports.TransactionSlotXo = async (req, res) => {
 
 http://localhost:5000/post/withdraw
 exports.WithdrawSlotXo = async (req, res) => {
+  const id = req.body.id;
   const amount = req.body.amount;
+  const timestamp = req.body.timestamp;
+  const roundid = req.body.roundid;
   const usernameGame = req.body.username;
-  username = 'member001';
+  const gamecode = req.body.gamecode;
+  const userAgent = req.headers['user-agent'];
 
   let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
   try {
@@ -370,6 +384,10 @@ exports.WithdrawSlotXo = async (req, res) => {
       else {
         const balanceUser = parseFloat(results[0].credit);
         const balanceNow = balanceUser - amount;
+        const post = {
+          username: usernameGame, gameid: gamecode, bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: timestamp
+        }
+        let repost = repostGame.uploadLogRepostGameAsk(post)
         const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${0}' WHERE phonenumber ='${usernameGame}'`;
         connection.query(sql_update, (error, resultsGame) => {
           if (error) { console.log(error) }
@@ -392,9 +410,13 @@ exports.WithdrawSlotXo = async (req, res) => {
 
 http://localhost:5000/post/deposit
 exports.DepositSlotXo = async (req, res) => {
+  const id = req.body.id;
   const amount = req.body.amount;
+  const timestamp = req.body.timestamp;
+  const roundid = req.body.roundid;
   const usernameGame = req.body.username;
-  username = 'member001';
+  const gamecode = req.body.gamecode;
+  const userAgent = req.headers['user-agent'];
 
   let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
   try {
@@ -403,6 +425,10 @@ exports.DepositSlotXo = async (req, res) => {
       else {
         const balanceUser = parseFloat(results[0].credit);
         const balanceNow = balanceUser + amount;
+        const post = {
+          username: usernameGame, gameid: gamecode, bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: timestamp
+        }
+        let repost = repostGame.uploadLogRepostGameAsk(post)
         const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${0}' WHERE phonenumber ='${usernameGame}'`;
         connection.query(sql_update, (error, resultsGame) => {
           if (error) { console.log(error) }
@@ -647,8 +673,8 @@ http://localhost:5000/post/Jili/auth
 exports.PlayerAuthenticationJili = async (req, res) => {
   const reqId = req.body.reqId;
   const authHeader = req.body.token;
-  username = 'member001';
-
+  username = '0990825941';
+  console.log(authHeader);
   let spl = `SELECT credit FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
   try {
     connection.query(spl, (error, results) => {
@@ -676,22 +702,43 @@ exports.PlayerBetJili = async (req, res) => {
   const reqId = req.body.reqId;
   const authHeader = req.body.token;
   const round = req.body.round;
-  username = 'member001';
-
-  let spl = `SELECT credit FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
+  const username = '0990825941';
+  const isFreeRound = req.body.isFreeRound;
+  const betAmount = req.body.betAmount;
+  const winloseAmount = req.body.winloseAmount;
+  const userAgent = req.headers['user-agent'];
+  const game= req.body.game;
+  let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
   try {
     connection.query(spl, (error, results) => {
       if (error) { console.log(error) }
       else {
         const balanceUser = parseFloat(results[0].credit);
-        res.status(201).json({
-          errorCode: 0,
-          message: "success",
-          username: "victest2",
-          currency: "THB",
-          balance: balanceUser,
-          txId: round,
-          token: authHeader
+        const balanceNow = balanceUser - betAmount;
+        const balanceNowwit = balanceNow + winloseAmount
+        let postTurnover = results[0].turnover - betAmount;
+        if (postTurnover < 0) {
+          postTurnover = 0;
+        }
+        const post = {
+          username: username, gameid: game, bet: betAmount, win: winloseAmount, balance_credit: balanceNowwit, userAgent: userAgent, platform: userAgent
+        }
+        let repost = repostGame.uploadLogRepostGame(post)
+        const sql_update = `UPDATE member set credit='${balanceNowwit}',bet_latest='${betAmount}', turnover='${postTurnover}'
+        WHERE phonenumber ='${username}'`;
+        connection.query(sql_update, (error, resultsGame) => {
+          if (error) { console.log(error) }
+          else {
+            res.status(201).json({
+              errorCode: 0,
+              message: "success",
+              username: username,
+              currency: "THB",
+              balance: balanceNowwit,
+              txId: round,
+              token: authHeader
+            });
+          }
         });
       }
     })

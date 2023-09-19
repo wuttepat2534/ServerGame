@@ -497,7 +497,7 @@ exports.PlaceBetSimplePlay = async (req, res) => {
     const currency = req.body.currency;
     const userAgent = req.headers['user-agent'];
     const game_id = req.body.gameid;
-    let spl = `SELECT credit FROM member WHERE username ='${usernames}' AND status_delete='N' 
+    let spl = `SELECT credit, turnover FROM member WHERE username ='${usernames}' AND status_delete='N' 
   ORDER BY member_code ASC`;
     try {
         connection.query(spl, (error, results) => {

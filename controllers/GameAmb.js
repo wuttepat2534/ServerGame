@@ -492,11 +492,11 @@ exports.GetUserBalanceSimplePlay = async (req, res) => {
 http://localhost:5000/post/SimplePlay/PlaceBet
 exports.PlaceBetSimplePlay = async (req, res) => {
     const usernames = req.body.username;
-    const transaction_id = req.body.transaction_id;
+    const transaction_id = req.body.txnid;
     const amount = req.body.amount;
     const currency = req.body.currency;
     const userAgent = req.headers['user-agent'];
-    const game_id = req.body.gameid;
+    const game_id = req.body.gamecode;
     let spl = `SELECT credit, turnover FROM member WHERE username ='${usernames}' AND status_delete='N' 
   ORDER BY member_code ASC`;
     try {
@@ -541,11 +541,11 @@ exports.PlaceBetSimplePlay = async (req, res) => {
 http://localhost:5000/post/SimplePlay/PlayerWin
 exports.PlayerWinSimplePlay = async (req, res) => {
     const usernames = req.body.username;
-    const transaction_id = req.body.transaction_id;
+    const transaction_id = req.body.txnid;
     const amount = req.body.amount;
     const currency = req.body.currency;
     const userAgent = req.headers['user-agent'];
-    const game_id = req.body.gameid;
+    const game_id = req.body.gamecode;
 
     let spl = `SELECT credit FROM member WHERE username ='${usernames}' AND status_delete='N' 
   ORDER BY member_code ASC`;

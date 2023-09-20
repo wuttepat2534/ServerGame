@@ -107,9 +107,8 @@ exports.HabaneroGame = async (req, res) => {
     const gameTokenV = req.body.playerdetailresponse.token;
     console.log(gameToken);
     console.log(gameTokenV);
-    const server = req.url;
-    console.log(server);
-    let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${auth.username}' AND status_delete='N'`;
+    console.log(req.body);
+    let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${'0990825941'}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }

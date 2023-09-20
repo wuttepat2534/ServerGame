@@ -107,7 +107,8 @@ exports.HabaneroGame = async (req, res) => {
     const gameTokenV = req.body.playerdetailresponse.token;
     console.log(gameToken);
     console.log(gameTokenV);
-    console.log(auth.username);
+    const server = req.url;
+    console.log(server);
     let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${auth.username}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
@@ -486,6 +487,7 @@ exports.SettleBetFunky = async (req, res) => {
     const currentDate = now.toISOString().slice(0, 10);
     const username = '0990825941';
     const userAgent = req.headers['user-agent'];
+    
     let spl = `SELECT credit FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {

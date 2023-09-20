@@ -121,8 +121,7 @@ exports.GamePlaceBets = async (req, res) => {
     const currency = req.body.currency;
     const usernameGame = req.body.username;
     const txnsGame = req.body.txns;
-    //username = 'member001';
-    console.log(usernameGame)
+
     let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N' ORDER BY phonenumber ASC`;
     try {
         connection.query(spl, (error, results) => {
@@ -132,6 +131,9 @@ exports.GamePlaceBets = async (req, res) => {
                 const balanceUser = parseFloat(results[0].credit);
                 const betPlay = txnsGame[0].betAmount;
                 const balanceNow = balanceUser - betPlay;
+                if(balanceNow < 0){
+                    balanceNow = 0;
+                }
                 const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${betPlay}' WHERE phonenumber ='${usernameGame}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
@@ -182,7 +184,9 @@ exports.GameSettleBets = async (req, res) => {
                 if (postTurnover < 0){
                     postTurnover = 0;
                 }
-                
+                if(balanceNow < 0){
+                    balanceNow = 0;
+                }
                 const post = {
                     username: usernameGame, gameid: productId, bet: betPlay, win: betAmount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgentt
                 }

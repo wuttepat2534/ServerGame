@@ -175,6 +175,10 @@ module.exports = class Post {
             next(err);
         }
     }
+
+    static promotionDay(quantity, dataUser, idPromotion, bill_number) {
+
+    }
 };
 
 function automaticFunctionTest() {

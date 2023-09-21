@@ -196,7 +196,7 @@ function ShootBalloon(userId, bet, choose, paaswordRound) {
                             tilesArray.splice(rand, 1)//remove from array
                             const tilesString = tilesArray.join(',');
                             const num = parseInt(choose, 10);
-                            console.log(winBalloonId , num)
+                            //console.log(winBalloonId , num)
                             if (winBalloonId === num)
                             {
                                 win = bet * multipliers[tilesArray.length - 2];//win = bet*ตัวคูณตามจำนวนลูกโป่งที่เหลืออยู่

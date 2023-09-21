@@ -65,8 +65,9 @@ exports.saveTestGame = async (require, response) => {
                     console.error("Error:", error);
                 });
             break;
-        case '1':
+        case '3':
             const randomPassword = generateRandomPassword(13);
+            
             const multipliers = [1.84, 2.76, 3.68, 4.60]
             const allBalloonId = [0, 1, 2, 3, 4]
             let sql_insert = `INSERT INTO user_play (member_id, game_id, bet, win, tiles, winline, winstyle, winCount, credit, created_at, game_feespin) 
@@ -85,10 +86,7 @@ exports.saveTestGame = async (require, response) => {
                 }
             });
             break;
-        case '2':
-            let state_reset = ResetData()
-            break;
-        case '3':
+        case '1':
             let state_delete = DeleteBalloon(paaswordRound)
                 .then(data => {
                     const arrayBalloonid = data.allBalloonId;
@@ -104,7 +102,7 @@ exports.saveTestGame = async (require, response) => {
                     console.error("Error:", error);
                 });
             break;
-        case '4':
+        case '2':
             let state_shoot = ShootBalloon(user_id, bet, choose, paaswordRound)
                 .then(data => {
                     const winBalloonId = data.winBalloonId;

@@ -37,13 +37,14 @@ exports.saveTestGame = async (require, response) => {
 
     switch (stateGame) {
         case '0':
-            let state_initialize = stareOne(authHeader)
+            let state_Start = stareOne(authHeader)
                 .then(data => {
                     const randomPassword = generateRandomPassword(13);
-                    const multipliers = [1.84, 2.76, 3.68, 4.60]
-                    const allBalloonId = [0, 1, 2, 3, 4]
+                    const multipliers = [1.84, 2.76, 3.68, 4.60];
+                    const allBalloonId = [0, 1, 2, 3, 4];
+                    const idUser = data.id;
                     let sql_insert = `INSERT INTO user_play (member_id, game_id, bet, win, tiles, winline, winstyle, winCount, credit, created_at, game_feespin) 
-                value ('${data.id}','${game_id}','${bet}','${0}','${allBalloonId}','${0}','${randomPassword}','${0}','${data.credit}',now(), '${false}')`;
+                 value ('${idUser}','${game_id}','${bet}','${0}','${allBalloonId}','${0}','${randomPassword}','${0}','${data.credit}',now(), '${false}')`;
                     connection.query(sql_insert, (error, result_feesPin) => {
                         if (error) {
                             response.sendStatus(500);
@@ -53,7 +54,8 @@ exports.saveTestGame = async (require, response) => {
                                 multipliers: multipliers,
                                 gameVersion: 1.0,
                                 balance: data.credit,
-                                paaswordRound: randomPassword
+                                paaswordRound: randomPassword,
+                                userId: idUser
                             });
                             response.end();
                         }
@@ -64,9 +66,29 @@ exports.saveTestGame = async (require, response) => {
                 });
             break;
         case '1':
-            let state_reset = ResetData()
+            const randomPassword = generateRandomPassword(13);
+            const multipliers = [1.84, 2.76, 3.68, 4.60]
+            const allBalloonId = [0, 1, 2, 3, 4]
+            let sql_insert = `INSERT INTO user_play (member_id, game_id, bet, win, tiles, winline, winstyle, winCount, credit, created_at, game_feespin) 
+                value ('${user_id}','${game_id}','${bet}','${0}','${allBalloonId}','${0}','${randomPassword}','${0}','${0}',now(), '${false}')`;
+            connection.query(sql_insert, (error, result_feesPin) => {
+                if (error) {
+                    response.sendStatus(500);
+                    return;
+                } else {
+                    response.status(200).json({
+                        multipliers: multipliers,
+                        gameVersion: 1.0,
+                        paaswordRound: randomPassword
+                    });
+                    response.end();
+                }
+            });
             break;
         case '2':
+            let state_reset = ResetData()
+            break;
+        case '3':
             let state_delete = DeleteBalloon(paaswordRound)
                 .then(data => {
                     const arrayBalloonid = data.allBalloonId;
@@ -82,7 +104,7 @@ exports.saveTestGame = async (require, response) => {
                     console.error("Error:", error);
                 });
             break;
-        case '3':
+        case '4':
             let state_shoot = ShootBalloon(user_id, bet, choose, paaswordRound)
                 .then(data => {
                     const winBalloonId = data.winBalloonId;
@@ -197,8 +219,7 @@ function ShootBalloon(userId, bet, choose, paaswordRound) {
                             const tilesString = tilesArray.join(',');
                             const num = parseInt(choose, 10);
                             //console.log(winBalloonId , num)
-                            if (winBalloonId === num)
-                            {
+                            if (winBalloonId === num) {
                                 win = bet * multipliers[tilesArray.length - 2];//win = bet*ตัวคูณตามจำนวนลูกโป่งที่เหลืออยู่
                                 isWin = true;
                                 user_credit += win;//บวกเงิน

@@ -1143,13 +1143,13 @@ app.post('/depositToonta', async (req, res) => { //ทดลองอัพโ�
     // const formData = new FormData();
     // formData.append('file', imageBuffer, { filename: 'test.jpg' });
 
-   /* const financeToonta = FInance.CheckInformation()  
-    .then(calculatedValues => {
-        res.send({ message: calculatedValues});
-    })
-    .catch(error => {
-        console.error(error.data);
-    });*/
+    /* const financeToonta = FInance.CheckInformation()  
+     .then(calculatedValues => {
+         res.send({ message: calculatedValues});
+     })
+     .catch(error => {
+         console.error(error.data);
+     });*/
     try {
         const YOUR_FILE_LOCATION = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/368441991_669600238379027_8438505471397569485_n.jpg';
         //const SletTest = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/slip/377334005_1411687959690621_3265644401220670990_n.jpg';
@@ -1166,10 +1166,10 @@ app.post('/depositToonta', async (req, res) => { //ทดลองอัพโ�
                 },
             }
         )
-            const financeToonta = FInance.CheckInformation(restest.data, req.body)  
+        const financeToonta = FInance.CheckInformation(restest.data, req.body)
             .then(calculatedValues => {
                 //console.log(calculatedValues);
-                res.send({ message: calculatedValues});
+                res.send({ message: calculatedValues });
             })
             .catch(error => {
                 console.error(error.data);
@@ -1270,25 +1270,12 @@ app.post('/testQR', (req, res) => {
         });
 })
 //-----------------------------------------------------------------------------------------------------------------------------
+*/
+function getItem(key) {
+    return storage[key];
+}
 
-app.post('/testQRimg', async (req, res) => {
-    try {
-        const buffer = fs.readFileSync('https://websitehui.s3.ap-southeast-1.amazonaws.com/368441991_669600238379027_8438505471397569485_n.jpg')
-        const restest = await axios.post(
-            'https://api.slipok.com/api/line/apikey/9496',
-            {
-                files: buffer,
-            },
-            {
-                headers: {
-                    'x-authorization': 'SLIPOKCJ8CI5X',
-                    'Content-Type': 'multipart/form-data',
-                },
-            }
-        )
-        console.log(restest.data)
-    } catch (err) {
-        console.log(err.restest.data)
-    }
-
-})*/
+app.post('/testToken', async (req, res) => {
+    const token = getItem('id');
+    console.log(token); // Outputs: your-token-value
+})

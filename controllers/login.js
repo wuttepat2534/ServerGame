@@ -673,7 +673,7 @@ http://localhost:5000/post/Jili/auth
 exports.PlayerAuthenticationJili = async (req, res) => {
   const reqId = req.body.reqId;
   const authHeader = req.body.token;
-  username = '0990825941';
+  const username = '0990825941';
   console.log(authHeader);
   let spl = `SELECT credit FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
   try {
@@ -684,7 +684,7 @@ exports.PlayerAuthenticationJili = async (req, res) => {
         res.status(201).json({
           errorCode: 0,
           message: "success",
-          username: "victest2",
+          username: username,
           currency: "THB",
           balance: balanceUser,
           token: authHeader

@@ -7,6 +7,7 @@ const loginController = require('../controllers/login');
 const getCommission = require('../controllers/getcommission');
 const postsController = require('../controllers/posts');
 const testGame = require('../controllers/testgame');
+const balloonGame = require('../controllers/balloonGame')
 const gameAmb = require('../controllers/GameAmb')
 const gameAmbApi = require('../controllers/GameAmbApi')
 const gameAmbApiSu = require('../controllers/GameAmbApisu')
@@ -95,6 +96,7 @@ router.put('/resetPasswordUserToontaWeb', userToonta.resetPasswordUserToontaWeb)
 // game
 router.post('/playGame/:user_id/:bet/:game_id', testGame.saveTestGame)
 router.post('/gameBuySpin/:user_id/:bet/:game_id', testGame.saveTestGameBuy)
+router.post('/balloonGame/:state/:user_id/:bet/:game_id/:choose', balloonGame.saveTestGame)
 // game
 
 // routerSubAgent

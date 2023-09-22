@@ -50,6 +50,7 @@ exports.saveTestGame = async (require, response) => {
                             response.sendStatus(500);
                             return;
                         } else {
+                            console.log(randomPassword);
                             response.status(200).json({
                                 multipliers: multipliers,
                                 gameVersion: 1.0,

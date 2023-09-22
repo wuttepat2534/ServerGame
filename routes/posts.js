@@ -76,6 +76,7 @@ router.post('/getRepostDeposit', userToonta.getRepostDeposit)
 router.post('/getTransactionHistory', userToonta.getTransaction_History)
 router.post('/getRepostWebdaily', userToonta.getRepostWebdaily)
 router.post('/getRepostTotalTurnOver', userToonta.getRepostTurnover)
+router.post('/getRepostTurnoverGameCamp', userToonta.getRepostTurnoverGameCamp)
 
 router.get('/getDepositaccount/:agent_id', userToonta.getDepositaccount)
 router.get('/getWithdrawalaccount', userToonta.getWithdrawalaccount)

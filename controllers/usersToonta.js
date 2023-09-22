@@ -1807,8 +1807,9 @@ exports.getRepostGame = (require, response) => {
             connection.query(sql_, values, (error, results) => {
                 if (error) { console.log(error); }
                 else {
-                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`
-                    connection.query(totalCount, (error, res) => {
+                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND username LIKE ? AND gameid LIKE '%${searcGameCamp}%'`
+                    const values = [searchPattern];
+                    connection.query(totalCount, values, (error, res) => {
                         if (error) { console.log(error); }
                         else {
                             response.send({
@@ -2095,7 +2096,6 @@ exports.getRepostWebdaily = (require, response) => {
 //http://localhost:5000/post/getRepostDeposit getRepostDeposit
 exports.getRepostTurnover = (require, response) => {
     const searchPhones = require.body.searchPhone;
-    const searcKey = require.body.searcKey;
     const pageSize = require.body.pageSize;
     const pageNumber = require.body.pageIndex;
     const offset = (pageNumber - 1) * pageSize;
@@ -2103,7 +2103,8 @@ exports.getRepostTurnover = (require, response) => {
     const endDate = require.body.dataEndDate;
     const depositwithdrawal = require.body.depositwithdrawal;
 
-    if (searchPhones === '' && searcKey === '') {
+    //console.log(searchPhones, pageSize, offset, date, endDate)
+    if (searchPhones === '') {
         let sql = `SELECT * FROM totalturnoverrepost WHERE day >='${date}' AND day <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
         connection.query(sql, async (error, results) => {
             if (error) { console.log(error); }
@@ -2120,7 +2121,7 @@ exports.getRepostTurnover = (require, response) => {
                 }
             });
         });
-    } else if (searchPhones !== '' && searcKey === '') {
+    } else if (searchPhones !== '') {
         let sql_deposit = `SELECT * FROM totalturnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND usernameuser LIKE ?
                 LIMIT ? OFFSET ?`;
         const searchPattern = `%${searchPhones}%`;
@@ -2142,10 +2143,10 @@ exports.getRepostTurnover = (require, response) => {
                 })
             }
         });
-    } else if (searchPhones === '' && searcKey !== '') {
+    } else if (searchPhones === '') {
         //console.log(endDate, date)
         let sql_ = `SELECT * FROM totalturnoverrepost WHERE day >= ? AND day <= ? AND usernameuser LIKE ? LIMIT ? OFFSET ?`;
-        const searchPattern = `%${searcKey}%`;
+        const searchPattern = `%${searchPhones}%`;
         const values = [date, endDate, searchPattern, pageSize, offset];
         connection.query(sql_, values, (error, results) => {
             if (error) { console.log(error); }
@@ -2164,7 +2165,7 @@ exports.getRepostTurnover = (require, response) => {
                 })
             }
         });
-    } else if (searchPhones === undefined && searcKey === undefined) {
+    } else if (searchPhones === undefined) {
         let sql = `SELECT * FROM totalturnoverrepost WHERE day >= '${date}' AND day <= '${endDate}' LIMIT ${pageSize} OFFSET ${offset}`;
         connection.query(sql, async (error, results) => {
             if (error) { console.log(error); }
@@ -2183,7 +2184,7 @@ exports.getRepostTurnover = (require, response) => {
                 })
             }
         });
-    } else if (searchPhones !== undefined && searcKey === undefined) {
+    } else if (searchPhones !== undefined) {
         let sql_ = `SELECT * FROM totalturnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND usernameuser LIKE ? LIMIT ? OFFSET ?`;
         const searchPattern = `%${searchPhones}%`;
         const values = [searchPattern, pageSize, offset];
@@ -2204,9 +2205,9 @@ exports.getRepostTurnover = (require, response) => {
                 })
             }
         });
-    } else if (searchPhones === undefined && searcKey !== undefined) {
+    } else if (searchPhones === undefined) {
         let sql_ = `SELECT * FROM totalturnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND usernameuser LIKE ? LIMIT ? OFFSET ?`;
-        const values = [searcKey, pageSize, offset];
+        const values = [searchPhones, pageSize, offset];
         connection.query(sql_, values, (error, results) => {
             if (error) { console.log(error); }
             else {
@@ -2240,6 +2241,164 @@ exports.getRepostTurnover = (require, response) => {
                             data: results,
                             valusData: results.length,
                             total: results.length
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    }
+}
+
+//http://localhost:5000/post/getRepostTurnoverGameCamp getRepostTurnoverGameCamp
+exports.getRepostTurnoverGameCamp = (require, response) => {
+    const searchPhones = require.body.searchPhone;
+    const searcGameCamp = require.body.searcGameCamp;
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+    const date = require.body.dataDate;
+    const endDate = require.body.dataEndDate;
+
+    if (searchPhones === '' && searcGameCamp === '') {
+        let sql = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
+        connection.query(sql, async (error, results) => {
+            if (error) { console.log(error); }
+            const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'`
+            connection.query(totalCount, (error, res) => {
+                if (error) { console.log(error); }
+                else {
+                    response.send({
+                        data: results,
+                        valusData: results.length,
+                        total: res[0].count,
+                        startdate: date,
+                        enddate: endDate
+                    });
+                    response.end();
+                }
+            });
+        });
+    } else if (searchPhones !== '' && searcGameCamp === '') {
+        let sql_ = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND 	usernameuser LIKE ? LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searchPhones}%`;
+        const values = [searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else if (searchPhones === '' && searcGameCamp !== '') {
+        //console.log(searcGameCamp, searchPhones)
+        let sql_ = `SELECT * FROM turnoverrepost WHERE day >= ? AND day <= ? AND gamecamp LIKE ? LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searcGameCamp}%`;
+        const values = [date, endDate, searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else if (searchPhones === undefined && searcGameCamp === undefined) {
+        let sql = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' LIMIT ${pageSize} OFFSET ${offset}`;
+        connection.query(sql, async (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else if (searchPhones !== undefined && searcGameCamp === undefined) {
+        let sql_ = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND usernameuser LIKE ? LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searchPhones}%`;
+        const values = [date, searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else if (searchPhones === undefined && searcGameCamp !== undefined) {
+        let sql_ = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND gamecamp LIKE ? LIMIT ? OFFSET ?`;
+        const values = [searcGameCamp, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else {
+        //console.log(searcGameCamp, searchPhones)
+        let sql_ = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND gamecamp LIKE '%${searcGameCamp}%' AND usernameuser LIKE ? LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searchPhones}%`;
+        //const searchPatternKey = `%${searcGameCamp}%`;
+        const values = [searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
                         });
                         response.end();
                     }

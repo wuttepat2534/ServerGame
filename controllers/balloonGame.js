@@ -182,6 +182,7 @@ async function DeleteBalloon(paaswordRound) {
 
 function ShootBalloon(userId, bet, choose, paaswordRound) {
     return new Promise((resolve, reject) => {
+        console.log(userId, bet, choose, paaswordRound);
         let sql_check = `SELECT * FROM member WHERE id ='${userId}' AND status_delete='N'`;
         connection.query(sql_check, (error, results_check) => {
             if (results_check.length > 0) {

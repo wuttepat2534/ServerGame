@@ -168,8 +168,7 @@ exports.GameSettleBets = async (req, res) => {
     const txnsGame = req.body.txns;
     const userAgent = req.headers['user-agent'];
     const userAgentt = req.useragent;
-    //console.log(usernameGame)
-    username = 'member001';
+
     let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
@@ -179,7 +178,7 @@ exports.GameSettleBets = async (req, res) => {
                 const betAmount = txnsGame[0].payoutAmount;
                 const betPlay = txnsGame[0].betAmount;
                 const balanceNow = (balanceUser - betPlay) + betAmount;
-
+                console.log(betAmount, betPlay)
                 let postTurnover = results[0].turnover - betPlay;
                 if (postTurnover < 0){
                     postTurnover = 0;

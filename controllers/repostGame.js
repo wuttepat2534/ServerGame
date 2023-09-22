@@ -58,6 +58,7 @@ module.exports = class Post {
             try {
                 if (error) { console.log(error) }
                 else {
+                    let turnoverrepostfun = turnoverrepost(post)
                     let datausername = result[0];
                     let sql_before = `INSERT INTO repostgame (iduser, username, gameid, bet, win, balance_credit, get_browser, platform, created_atdate, created_attime) value 
               ('${datausername.id}','${post.username}','${post.gameid}','${post.bet}','${post.win}','${post.balance_credit}','${browser}','${platform}',now(), now())`;
@@ -114,6 +115,7 @@ module.exports = class Post {
                         else {
                             console.log(resulttransID.length);
                             if (resulttransID.length !== 0) {
+                                let turnoverrepostfun = turnoverrepost(post)
                                 let sql = `UPDATE repostgame set  win = '${post.win}', balance_credit = '${post.balance_credit}' WHERE trans_id = "${post.trans_id}"`;
                                 connection.query(sql, (error, resultAfter) => {
                                     if (error) { console.log(error); }
@@ -284,3 +286,69 @@ module.exports = class Post {
     }
     /*--------------------------------------------------------------------------------- reports Game All End*/
 };
+
+
+function turnoverrepost(post) {
+    const lose = post.bet - post.win;
+    let total = totalTurnoverrepost(post)
+    let sql = `SELECT * FROM turnoverrepost WHERE day = now() AND usernameuser = '${post.username}' AND gamecamp = '${post.gameid}'`;
+    connection.query(sql, (error, results) => {
+        if (error) {
+            console.log(error);
+            reject(error);
+        } else {
+            if (results.length > 0) {
+                const numberWin = post.win + results[0].win; 
+                const turnover = post.bet + results[0].turnover;
+                const numberlose = lose + results[0].lose;
+
+                let sql = `UPDATE turnoverrepost set  turnover = '${turnover}',  win = '${numberWin}', lose = '${numberlose}' 
+                WHERE day = now() AND usernameuser = '${post.username}' AND gamecamp = '${post.gameid}'`;
+                connection.query(sql, (error, resultAfter) => {
+                    if (error) { console.log(error); }
+                    return 'OK';
+                });
+            } else {
+                let sql_before = `INSERT INTO turnoverrepost (usernameuser, gamecamp, turnover, win, lose, day) value 
+                ('${post.username}','${post.gameid}','${post.bet}','${post.win}','${lose}', now())`;
+                connection.query(sql_before, (error, resultAfter) => {
+                    if (error) { console.log(error); }
+                    return 'OK';
+                });
+            }
+        }
+    })
+}
+
+
+function totalTurnoverrepost(post) {
+    const lose = post.bet - post.win;
+
+    let sql = `SELECT * FROM totalturnoverrepost WHERE day = now() AND usernameuser = '${post.username}'`;
+    connection.query(sql, (error, results) => {
+        if (error) {
+            console.log(error);
+            reject(error);
+        } else {
+            if (results.length > 0) {
+                const numberWin = post.win + results[0].win; 
+                const turnover = post.bet + results[0].turnover;
+                const numberlose = lose + results[0].lose;
+
+                let sql = `UPDATE totalturnoverrepost set  turnover = '${turnover}',  win = '${numberWin}', lose = '${numberlose}' 
+                WHERE day = now() AND usernameuser = '${post.username}'`;
+                connection.query(sql, (error, resultAfter) => {
+                    if (error) { console.log(error); }
+                    return 'OK';
+                });
+            } else {
+                let sql_before = `INSERT INTO totalturnoverrepost (	usernameuser, turnover, win, lose, day) value 
+                ('${post.username}','${post.bet}','${post.win}','${lose}', now())`;
+                connection.query(sql_before, (error, resultAfter) => {
+                    if (error) { console.log(error); }
+                    return 'OK';
+                });
+            }
+        }
+    })
+}

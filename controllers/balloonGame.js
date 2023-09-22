@@ -43,7 +43,7 @@ exports.saveTestGame = async (require, response) => {
                     const multipliers = [1.84, 2.76, 3.68, 4.60];
                     const allBalloonId = [0, 1, 2, 3, 4];
                     const idUser = data.id;
-                    
+
                     let sql_insert = `INSERT INTO user_play (member_id, game_id, bet, win, tiles, winline, winstyle, winCount, credit, created_at, game_feespin) 
                  value ('${idUser}','${game_id}','${bet}','${0}','${allBalloonId}','${0}','${randomPassword}','${0}','${data.credit}',now(), '${false}')`;
                     connection.query(sql_insert, (error, result_feesPin) => {
@@ -52,7 +52,7 @@ exports.saveTestGame = async (require, response) => {
                             return;
                         } else {
                             console.log(data);
-                            response.status(200).json({
+                            response.json({
                                 multipliers: multipliers,
                                 gameVersion: 1.0,
                                 balance: data.credit,
@@ -79,7 +79,7 @@ exports.saveTestGame = async (require, response) => {
                     response.sendStatus(500);
                     return;
                 } else {
-                    response.status(200).json({
+                    response.json({
                         multipliers: multipliers,
                         gameVersion: 1.0,
                         paaswordRound: randomPassword
@@ -93,7 +93,7 @@ exports.saveTestGame = async (require, response) => {
                 .then(data => {
                     const arrayBalloonid = data.allBalloonId;
                     const deleteBalloon = data.deleteBalloonId;
-                    response.status(200).json({
+                    response.json({
                         allBalloonId: arrayBalloonid,
                         deleteBalloonId: deleteBalloon,
                         paaswordRound: paaswordRound
@@ -113,7 +113,7 @@ exports.saveTestGame = async (require, response) => {
                     const win = data.winGame;
                     const balance = data.balanceNow;
 
-                    response.status(200).json({
+                    response.json({
                         winBalloonId: winBalloonId,
                         allBalloonId: allBalloonId,
                         isWin: isWin,

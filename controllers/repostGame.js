@@ -297,6 +297,7 @@ function turnoverrepost(post) {
             console.log(error);
             reject(error);
         } else {
+            console.log(results.length);
             if (results.length > 0) {
                 const numberWin = post.win + results[0].win; 
                 const turnover = post.bet + results[0].turnover;

@@ -34,7 +34,7 @@ exports.saveTestGame = async (require, response) => {
     const choose = require.params.choose;
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
-
+    console.log(authHeader);
     switch (stateGame) {
         case '0':
             let state_Start = stareOne(authHeader)

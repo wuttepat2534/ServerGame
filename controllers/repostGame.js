@@ -306,7 +306,7 @@ function turnoverrepost(post) {
                 const numberlose = lose + results[0].lose;
 
                 let sql = `UPDATE turnoverrepost set  turnover = '${turnover}',  win = '${numberWin}', lose = '${numberlose}' 
-                WHERE day = now() AND usernameuser = '${post.username}' AND gamecamp = '${post.gameid}'`;
+                WHERE day = '${date}' AND usernameuser = '${post.username}' AND gamecamp = '${post.gameid}'`;
                 connection.query(sql, (error, resultAfter) => {
                     if (error) { console.log(error); }
                     return 'OK';
@@ -326,8 +326,9 @@ function turnoverrepost(post) {
 
 function totalTurnoverrepost(post) {
     const lose = post.bet - post.win;
-
-    let sql = `SELECT * FROM totalturnoverrepost WHERE day = now() AND usernameuser = '${post.username}'`;
+    const today = new Date();
+    const date = today.toISOString().slice(0, 10);
+    let sql = `SELECT * FROM totalturnoverrepost WHERE day = '${date}' AND usernameuser = '${post.username}'`;
     connection.query(sql, (error, results) => {
         if (error) {
             console.log(error);
@@ -339,7 +340,7 @@ function totalTurnoverrepost(post) {
                 const numberlose = lose + results[0].lose;
 
                 let sql = `UPDATE totalturnoverrepost set  turnover = '${turnover}',  win = '${numberWin}', lose = '${numberlose}' 
-                WHERE day = now() AND usernameuser = '${post.username}'`;
+                WHERE day = '${date}' AND usernameuser = '${post.username}'`;
                 connection.query(sql, (error, resultAfter) => {
                     if (error) { console.log(error); }
                     return 'OK';

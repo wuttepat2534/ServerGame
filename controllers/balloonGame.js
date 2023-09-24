@@ -30,7 +30,7 @@ exports.saveTestGame = async (require, response) => {
     const bet = require.params.bet;
     const game_id = require.params.game_id;
     const authHeader = require.body.Authorization;
-    const paaswordRound = require.body.paaswordRound;
+    const paaswordRound = require.params.paaswordRound;
     const choose = require.params.choose;
     const today = new Date();
     const date = today.toISOString().slice(0, 10);

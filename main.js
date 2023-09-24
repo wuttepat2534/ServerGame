@@ -1275,7 +1275,23 @@ function getItem(key) {
     return storage[key];
 }
 
+// app.post('/testToken', async (req, res) => {
+//     const token = getItem('id');
+//     console.log(token); // Outputs: your-token-value
+// })
+
 app.post('/testToken', async (req, res) => {
-    const token = getItem('id');
-    console.log(token); // Outputs: your-token-value
+    const today = new Date();
+    const date = '2023-08-20';
+    const sql = 'SELECT * FROM repostgame WHERE created_atdate = ? ORDER BY win DESC LIMIT 10';
+
+    connection.query(sql, [date], (err, results) => {
+        if (err) throw err;
+
+        console.log('Top 10 Highest Balances:');
+        results.forEach((row, index) => {
+            console.log(`${index + 1}. Account: ${row.username}, Balance: ${row.win}`);
+        });
+        connection.end();
+    });
 })

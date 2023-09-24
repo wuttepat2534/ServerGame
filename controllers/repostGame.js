@@ -284,6 +284,55 @@ module.exports = class Post {
             });
         });
     }
+
+    static async topwit(post) {
+        return new Promise((resolve, reject) => {
+            const sql = 'SELECT * FROM repostgame WHERE created_atdate = ? ORDER BY win DESC LIMIT 10';
+            connection.query(sql, [post.startdate], (err, results) => {
+                if (error) {
+                    console.log(error);
+                    reject(error);
+                } else {
+                    if (results.length !== 0) {
+                        let withdrawvalueTotal = 0;
+                        for (let i = 0; i < results.length; i++) {
+                            withdrawvalueTotal += results[i].quantity;
+                        }
+                        let jsArray = { "withdrawvalueTotal": withdrawvalueTotal };
+                        resolve(jsArray);
+                    } else {
+                        let jsArray = { "withdrawvalueTotal": 0 };
+                        resolve(jsArray);
+                    }
+                }
+            });
+        });
+    }
+
+    static async toplose() {
+        return new Promise((resolve, reject) => {
+            let sql = `SELECT * FROM logfinanceuser WHERE tpyefinance = 'ถอน'`;
+            connection.query(sql, (error, results) => {
+                if (error) {
+                    console.log(error);
+                    reject(error);
+                } else {
+                    if (results.length !== 0) {
+                        let withdrawvalueTotal = 0;
+                        for (let i = 0; i < results.length; i++) {
+                            withdrawvalueTotal += results[i].quantity;
+                        }
+                        let jsArray = { "withdrawvalueTotal": withdrawvalueTotal };
+                        resolve(jsArray);
+                    } else {
+                        let jsArray = { "withdrawvalueTotal": 0 };
+                        resolve(jsArray);
+                    }
+                }
+            });
+        });
+    }
+
     /*--------------------------------------------------------------------------------- reports Game All End*/
 };
 
@@ -301,7 +350,7 @@ function turnoverrepost(post) {
         } else {
             console.log(date);
             if (results.length > 0) {
-                const numberWin = post.win + results[0].win; 
+                const numberWin = post.win + results[0].win;
                 const turnover = post.bet + results[0].turnover;
                 const numberlose = lose + results[0].lose;
 
@@ -335,7 +384,7 @@ function totalTurnoverrepost(post) {
             reject(error);
         } else {
             if (results.length > 0) {
-                const numberWin = post.win + results[0].win; 
+                const numberWin = post.win + results[0].win;
                 const turnover = post.bet + results[0].turnover;
                 const numberlose = lose + results[0].lose;
 

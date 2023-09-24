@@ -216,7 +216,7 @@ function ShootBalloon(userId, bet, choose, paaswordRound) {
                             let rand = Math.floor(r * tilesArray.length);//สุ่ม index ตามจำนวนลูกโป่งที่เหลืออยู่
 
                             winBalloonId = tilesArray[rand]//เก็บ id ที่ชนะไว้
-                            tilesArray.splice(rand, 1)//remove from array
+                            //tilesArray.splice(rand, 1)//remove from array
                             const tilesString = tilesArray.join(',');
                             const num = parseInt(choose, 10);
                             //console.log(winBalloonId , num)

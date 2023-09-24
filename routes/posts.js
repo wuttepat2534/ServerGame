@@ -98,7 +98,7 @@ router.put('/resetPasswordUserToontaWeb', userToonta.resetPasswordUserToontaWeb)
 // game
 router.post('/playGame/:user_id/:bet/:game_id', testGame.saveTestGame)
 router.post('/gameBuySpin/:user_id/:bet/:game_id', testGame.saveTestGameBuy)
-router.post('/balloonGame/:state/:user_id/:bet/:game_id/:choose/:paaswordRound', balloonGame.saveTestGame)
+router.post('/balloonGame/:state/:user_id/:bet/:game_id/:choose', balloonGame.saveTestGame)
 // game
 
 // routerSubAgent

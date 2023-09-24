@@ -29,12 +29,12 @@ exports.saveTestGame = async (require, response) => {
     const user_id = require.params.user_id;
     const bet = require.params.bet;
     const game_id = require.params.game_id;
-    const authHeader = require.body.Authorization;
-    const paaswordRound = require.params.paaswordRound;
     const choose = require.params.choose;
+    const authHeader = require.body.Authorization;
+    const paaswordRound = require.body.passwordRound;
+    console.log(authHeader);
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
-    console.log(authHeader);
     switch (stateGame) {
         case '0':
             let state_Start = stareOne(authHeader)

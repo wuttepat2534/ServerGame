@@ -355,9 +355,8 @@ module.exports = class Post {
 };
 
 function turnoverrepost(post) {
-    console.log(post.win, post.bet);
-    const floatwit = parseFloat(post.win).toFixed(2);
-    const floatbet = parseFloat(post.bet).toFixed(2);
+    const floatwit = parseFloat(post.win);
+    const floatbet = parseFloat(post.bet);
     const lose = floatbet - floatwit;
     let total = totalTurnoverrepost(post);
     let totlgameCamp = gamecamptotal(post);
@@ -372,11 +371,13 @@ function turnoverrepost(post) {
         } else {
             console.log(date);
             if (results.length > 0) {
-                const numberWin = floatwit + results[0].win;
-                const turnover = floatbet + results[0].turnover;
+                const floatwitapi = parseFloat(results[0].win);
+                const floatturnoverapi = parseFloat(results[0].turnover);
+                const numberWin = floatwit + floatwitapi;
+                const turnover = floatbet + floatturnoverapi;
                 const numberlose = lose + results[0].lose;
 
-                let sql = `UPDATE turnoverrepost set  turnover = '${turnover}',  win = '${numberWin}', lose = '${numberlose}' 
+                let sql = `UPDATE turnoverrepost set  turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}' 
                 WHERE day = '${date}' AND usernameuser = '${post.username}' AND gamecamp = '${post.gameid}'`;
                 connection.query(sql, (error, resultAfter) => {
                     if (error) { console.log(error); }
@@ -395,8 +396,8 @@ function turnoverrepost(post) {
 }
 
 function totalTurnoverrepost(post) {
-    const floatwit = parseFloat(post.win).toFixed(2);
-    const floatbet = parseFloat(post.bet).toFixed(2);
+    const floatwit = parseFloat(post.win);
+    const floatbet = parseFloat(post.bet);
     const lose = floatbet - floatwit;
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
@@ -407,11 +408,13 @@ function totalTurnoverrepost(post) {
             reject(error);
         } else {
             if (results.length > 0) {
-                const numberWin = floatwit + results[0].win;
-                const turnover = floatbet + results[0].turnover;
+                const floatwitapi = parseFloat(results[0].win);
+                const floatturnoverapi = parseFloat(results[0].turnover);
+                const numberWin = floatwit + floatwitapi;
+                const turnover = floatbet + floatturnoverapi;
                 const numberlose = lose + results[0].lose;
 
-                let sql = `UPDATE totalturnoverrepost set  turnover = '${turnover}',  win = '${numberWin}', lose = '${numberlose}' 
+                let sql = `UPDATE totalturnoverrepost set  turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}' 
                 WHERE day = '${date}' AND usernameuser = '${post.username}'`;
                 connection.query(sql, (error, resultAfter) => {
                     if (error) { console.log(error); }
@@ -430,8 +433,8 @@ function totalTurnoverrepost(post) {
 }
 
 function gamecamptotal(post) {
-    const floatwit = parseFloat(post.win).toFixed(2);
-    const floatbet = parseFloat(post.bet).toFixed(2);
+    const floatwit = parseFloat(post.win);
+    const floatbet = parseFloat(post.bet);
     const lose = floatbet - floatwit;
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
@@ -442,11 +445,13 @@ function gamecamptotal(post) {
             reject(error);
         } else {
             if (results.length > 0) {
-                const numberWin = floatwit + results[0].win;
-                const turnover = floatbet + results[0].turnover;
+                const floatwitapi = parseFloat(results[0].win);
+                const floatturnoverapi = parseFloat(results[0].turnover);
+                const numberWin = floatwit + floatwitapi;
+                const turnover = floatbet + floatturnoverapi;
                 const numberlose = lose + results[0].lose;
 
-                let sql = `UPDATE gamecamptotal set grossComm = '${0.00}', turnover = '${turnover}',  win = '${numberWin}', lose = '${numberlose}', commmember = '${0.00}', totalmamber = '${0.00}',
+                let sql = `UPDATE gamecamptotal set grossComm = '${0.00}', turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}', commmember = '${0.00}', totalmamber = '${0.00}',
                 w_l_agent = '${0.00}', comm_agent = '${0.00}', tatal_agent = '${0.00}', w_l_commny = '${0.00}', comm_commny = '${0.00}', tatal_commny = '${0.00}',
                 WHERE day = '${date}' AND namegamecamp = '${post.gameid}'`;
                 connection.query(sql, (error, resultAfter) => {

@@ -31,7 +31,7 @@ exports.saveTestGame = async (require, response) => {
     const game_id = require.params.game_id;
     const choose = require.params.choose;
     const authHeader = require.body.Authorization;
-    const paaswordRound = require.body.passwordRound;
+    const passwordRound = require.body.passwordRound;
     console.log(authHeader);
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
@@ -56,7 +56,7 @@ exports.saveTestGame = async (require, response) => {
                                 multipliers: multipliers,
                                 gameVersion: 1.0,
                                 balance: data.credit,
-                                paaswordRound: randomPassword,
+                                passwordRound: randomPassword,
                                 userId: idUser
                             });
                             response.end();
@@ -82,7 +82,7 @@ exports.saveTestGame = async (require, response) => {
                     response.json({
                         multipliers: multipliers,
                         gameVersion: 1.0,
-                        paaswordRound: randomPassword
+                        passwordRound: randomPassword
                     });
                     response.end();
                 }
@@ -96,7 +96,7 @@ exports.saveTestGame = async (require, response) => {
                     response.json({
                         allBalloonId: arrayBalloonid,
                         deleteBalloonId: deleteBalloon,
-                        paaswordRound: paaswordRound
+                        passwordRound: passwordRound
                     });
                     response.end();
                 })

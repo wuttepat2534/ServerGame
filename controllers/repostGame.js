@@ -362,7 +362,7 @@ function turnoverrepost(post) {
     let totlgameCamp = gamecamptotal(post);
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
-    
+    console.log(floatwit, floatbet);
     let sql = `SELECT * FROM turnoverrepost WHERE day = '${date}' AND usernameuser = '${post.username}' AND gamecamp = '${post.gameid}'`;
     connection.query(sql, (error, results) => {
         if (error) {

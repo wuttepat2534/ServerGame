@@ -357,7 +357,6 @@ module.exports = class Post {
 function turnoverrepost(post) {
     const floatwit = parseFloat(post.win);
     const floatbet = parseFloat(post.bet);
-    const lose = floatbet - floatwit;
     let total = totalTurnoverrepost(post);
     let totlgameCamp = gamecamptotal(post);
     const today = new Date();
@@ -375,7 +374,7 @@ function turnoverrepost(post) {
                 const floatturnoverapi = parseFloat(results[0].turnover);
                 const numberWin = floatwit + floatwitapi;
                 const turnover = floatbet + floatturnoverapi;
-                const numberlose = lose + results[0].lose;
+                const numberlose = turnover - numberWin;
 
                 let sql = `UPDATE turnoverrepost set  turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}' 
                 WHERE day = '${date}' AND usernameuser = '${post.username}' AND gamecamp = '${post.gameid}'`;
@@ -398,7 +397,6 @@ function turnoverrepost(post) {
 function totalTurnoverrepost(post) {
     const floatwit = parseFloat(post.win);
     const floatbet = parseFloat(post.bet);
-    const lose = floatbet - floatwit;
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
     let sql = `SELECT * FROM totalturnoverrepost WHERE day = '${date}' AND usernameuser = '${post.username}'`;
@@ -412,8 +410,8 @@ function totalTurnoverrepost(post) {
                 const floatturnoverapi = parseFloat(results[0].turnover);
                 const numberWin = floatwit + floatwitapi;
                 const turnover = floatbet + floatturnoverapi;
-                const numberlose = lose + results[0].lose;
-
+                const numberlose = turnover - numberWin;
+                //const lose = floatbet - floatwit;
                 let sql = `UPDATE totalturnoverrepost set  turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}' 
                 WHERE day = '${date}' AND usernameuser = '${post.username}'`;
                 connection.query(sql, (error, resultAfter) => {
@@ -449,7 +447,7 @@ function gamecamptotal(post) {
                 const floatturnoverapi = parseFloat(results[0].turnover);
                 const numberWin = floatwit + floatwitapi;
                 const turnover = floatbet + floatturnoverapi;
-                const numberlose = lose + results[0].lose;
+                const numberlose = turnover - numberWin;
 
                 let sql = `UPDATE gamecamptotal set grossComm = '${0.00}', turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}', commmember = '${0.00}', totalmamber = '${0.00}',
                 w_l_agent = '${0.00}', comm_agent = '${0.00}', tatal_agent = '${0.00}', w_l_commny = '${0.00}', comm_commny = '${0.00}', tatal_commny = '${0.00}'

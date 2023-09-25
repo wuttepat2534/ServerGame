@@ -89,7 +89,7 @@ exports.saveTestGame = async (require, response) => {
             });
             break;
         case '1':
-            let state_delete = DeleteBalloon(paaswordRound)
+            let state_delete = DeleteBalloon(passwordRound)
                 .then(data => {
                     const arrayBalloonid = data.allBalloonId;
                     const deleteBalloon = data.deleteBalloonId;
@@ -105,7 +105,7 @@ exports.saveTestGame = async (require, response) => {
                 });
             break;
         case '2':
-            let state_shoot = ShootBalloon(user_id, bet, choose, paaswordRound)
+            let state_shoot = ShootBalloon(user_id, bet, choose, passwordRound)
                 .then(data => {
                     const winBalloonId = data.winBalloonId;
                     const allBalloonId = data.allBalloonId;

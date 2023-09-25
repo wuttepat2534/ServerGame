@@ -174,7 +174,7 @@ exports.PlaceBetSlotXo = async (req, res) => {
         let postTurnover = results[0].turnover - amount;
         if (postTurnover < 0) { postTurnover = 0; }
         const post = {
-          username: usernameGame, gameid: gamecode, bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: roundid
+          username: usernameGame, gameid: "SLOTXO", bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: roundid
         }
         let repost = repostGame.uploadLogRepostGameAsk(post)
         const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${postTurnover}'
@@ -215,7 +215,7 @@ exports.SettlePlaySlotXo = async (req, res) => {
         const balanceUser = parseFloat(results[0].credit);
         const balanceNow = balanceUser + amount;
         const post = {
-          username: usernameGame, gameid: gamecode, bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: roundid
+          username: usernameGame, gameid: "SLOTXO", bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: roundid
         }
         let repost = repostGame.uploadLogRepostGameAsk(post)
         const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${usernameGame}'`;
@@ -385,7 +385,7 @@ exports.WithdrawSlotXo = async (req, res) => {
         const balanceUser = parseFloat(results[0].credit);
         const balanceNow = balanceUser - amount;
         const post = {
-          username: usernameGame, gameid: gamecode, bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: timestamp
+          username: usernameGame, gameid: "SLOTXO", bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: timestamp
         }
         let repost = repostGame.uploadLogRepostGameAsk(post)
         const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${0}' WHERE phonenumber ='${usernameGame}'`;
@@ -426,7 +426,7 @@ exports.DepositSlotXo = async (req, res) => {
         const balanceUser = parseFloat(results[0].credit);
         const balanceNow = balanceUser + amount;
         const post = {
-          username: usernameGame, gameid: gamecode, bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: timestamp
+          username: usernameGame, gameid: "SLOTXO", bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: timestamp
         }
         let repost = repostGame.uploadLogRepostGameAsk(post)
         const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${0}' WHERE phonenumber ='${usernameGame}'`;
@@ -569,7 +569,7 @@ exports.PlaceBetAsk = async (req, res) => {
         }
 
         const post = {
-          username: account, gameid: game_id, bet: amount, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: platform, trans_id: trans_id
+          username: account, gameid: "ASKMEBET", bet: amount, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: platform, trans_id: trans_id
         }
         let repost = repostGame.uploadLogRepostGameAsk(post)
 
@@ -617,7 +617,7 @@ exports.SettleBetAsk = async (req, res) => {
         const balanceUser = parseFloat(results[0].credit);
         const balanceNow = balanceUser + amount;
         const post = {
-          username: account, gameid: game_id, bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgentt, trans_id: trans_id
+          username: account, gameid: "ASKMEBET", bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgentt, trans_id: trans_id
         }
         let repost = repostGame.uploadLogRepostGameAsk(post)
 
@@ -721,7 +721,7 @@ exports.PlayerBetJili = async (req, res) => {
           postTurnover = 0;
         }
         const post = {
-          username: username, gameid: game, bet: betAmount, win: winloseAmount, balance_credit: balanceNowwit, userAgent: userAgent, platform: userAgent
+          username: username, gameid: 'JILI', bet: betAmount, win: winloseAmount, balance_credit: balanceNowwit, userAgent: userAgent, platform: userAgent
         }
         let repost = repostGame.uploadLogRepostGame(post)
         const sql_update = `UPDATE member set credit='${balanceNowwit}',bet_latest='${betAmount}', turnover='${postTurnover}'

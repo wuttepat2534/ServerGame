@@ -354,10 +354,10 @@ module.exports = class Post {
     /*--------------------------------------------------------------------------------- reports Game All End*/
 };
 
-
 function turnoverrepost(post) {
     const lose = post.bet - post.win;
-    let total = totalTurnoverrepost(post)
+    let total = totalTurnoverrepost(post);
+    let totlgameCamp = gamecamptotal(post);
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
     let sql = `SELECT * FROM turnoverrepost WHERE day = '${date}' AND usernameuser = '${post.username}' AND gamecamp = '${post.gameid}'`;
@@ -390,7 +390,6 @@ function turnoverrepost(post) {
     })
 }
 
-
 function totalTurnoverrepost(post) {
     const lose = post.bet - post.win;
     const today = new Date();
@@ -415,6 +414,41 @@ function totalTurnoverrepost(post) {
             } else {
                 let sql_before = `INSERT INTO totalturnoverrepost (	usernameuser, turnover, win, lose, day) value 
                 ('${post.username}','${post.bet}','${post.win}','${lose}', now())`;
+                connection.query(sql_before, (error, resultAfter) => {
+                    if (error) { console.log(error); }
+                    return 'OK';
+                });
+            }
+        }
+    })
+}
+
+function gamecamptotal(post) {
+    const lose = post.bet - post.win;
+    const today = new Date();
+    const date = today.toISOString().slice(0, 10);
+    let sql = `SELECT * FROM gamecamptotal WHERE day = '${date}' AND namegamecamp = '${post.gameid}'`;
+    connection.query(sql, (error, results) => {
+        if (error) {
+            console.log(error);
+            reject(error);
+        } else {
+            if (results.length > 0) {
+                const numberWin = post.win + results[0].win;
+                const turnover = post.bet + results[0].turnover;
+                const numberlose = lose + results[0].lose;
+
+                let sql = `UPDATE gamecamptotal set grossComm = '${0.00}', turnover = '${turnover}',  win = '${numberWin}', lose = '${numberlose}', commmember = '${0.00}', totalmamber = '${0.00}',
+                w_l_agent = '${0.00}', comm_agent = '${0.00}', tatal_agent = '${0.00}', w_l_commny = '${0.00}', comm_commny = '${0.00}', tatal_commny = '${0.00}',
+                WHERE day = '${date}' AND usernameuser = '${post.username}'`;
+                connection.query(sql, (error, resultAfter) => {
+                    if (error) { console.log(error); }
+                    return 'OK';
+                });
+            } else {
+                let sql_before = `INSERT INTO gamecamptotal (namegamecamp, grossComm, turnover, win, lose, commmember, totalmamber, w_l_agent, 
+                comm_agent, tatal_agent, w_l_commny, comm_commny, tatal_commny, day) value 
+                ('${post.username}','${0.00}','${post.bet}','${post.win}','${lose}','${0.00}','${0.00}','${0.00}','${0.00}','${0.00}','${0.00}','${0.00}','${0.00}', now())`;
                 connection.query(sql_before, (error, resultAfter) => {
                     if (error) { console.log(error); }
                     return 'OK';

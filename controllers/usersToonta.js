@@ -2022,6 +2022,9 @@ exports.getRepostWebdaily = (require, response) => {
     let withdrawvalue = 0;
     let depositvalutTotal = 0;
     let withdrawvalueTotal = 0;
+    let topuserwit;
+    let topuserlose;
+    let topuserturnover;
 
     const post = {
         startdate: date, endDate: endDate
@@ -2075,8 +2078,29 @@ exports.getRepostWebdaily = (require, response) => {
         .catch(error => {
             console.error(error);
         });
+    repostGame.topwit()
+        .then(calculatedValues => {
+            topuserwit = calculatedValues.topwit
+        })
+        .catch(error => {
+            console.error(error);
+        });
 
-    
+    repostGame.toplose()
+        .then(calculatedValues => {
+            topuserlose = calculatedValues.withdrawvalueTotal
+        })
+        .catch(error => {
+            console.error(error);
+        });
+          
+    repostGame.topturnover()
+    .then(calculatedValues => {
+        topuserturnover = calculatedValues.withdrawvalueTotal
+    })
+    .catch(error => {
+        console.error(error);
+    });
 
     setTimeout(() => {
         response.send({
@@ -2089,7 +2113,10 @@ exports.getRepostWebdaily = (require, response) => {
             depositvalutTotal: depositvalutTotal,
             withdrawvalueTotal: withdrawvalueTotal,
             startdate: date,
-            enddate: endDate
+            enddate: endDate,
+            topuserturnover: topuserturnover,
+            topuserwit: topuserwit,
+            topuserlose: topuserlose,
         });
         response.end();
     }, 500);

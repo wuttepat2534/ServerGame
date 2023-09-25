@@ -772,7 +772,7 @@ exports.AmebaGame = async (req, res) => {
                         postTurnover = 0;
                     }
                     const post = {
-                        username: account_name, gameid: game_id, bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: sessionid
+                        username: account_name, gameid: "AMEBA", bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: sessionid
                     }
                     let repost = repostGame.uploadLogRepostGameAsk(post)
                     const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${postTurnover}'
@@ -798,7 +798,7 @@ exports.AmebaGame = async (req, res) => {
                     const balanceNow = balanceNum + amount
                     const balanceString = balanceNow.toString();
                     const post = {
-                        username: account_name, gameid: game_id, bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: sessionid
+                        username: account_name, gameid: "AMEBA", bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: sessionid
                     }
                     let repost = repostGame.uploadLogRepostGameAsk(post)
                     const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${account_name}'`;
@@ -1131,14 +1131,14 @@ exports.SpadeGaming = async (req, res) => {
                     if (type === 1) {
                         balanceNow = balanceUser - amounts;
                         const post = {
-                            username: acctId, gameid: gameCode, bet: amounts, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transferId
+                            username: acctId, gameid: "SPADE", bet: amounts, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transferId
                         }
                         let repost = repostGame.uploadLogRepostGameAsk(post)
                         if (postTurnover < 0) postTurnover = 0;
                     } else if (type === 2) {
                         balanceNow = balanceUser + amounts;
                         const post = {
-                            username: acctId, gameid: gameCode, bet: 0, win: amounts, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transferId
+                            username: acctId, gameid: "SPADE", bet: 0, win: amounts, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transferId
                         }
                         let repost = repostGame.uploadLogRepostGameAsk(post)
                         if (postTurnover < 0) postTurnover = 0;

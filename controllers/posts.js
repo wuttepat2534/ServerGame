@@ -112,13 +112,13 @@ exports.convertToken = async (req, res) => {
       connection.query(splip, (error, resultsIp) => {
         if (error) { console.log(error) }
 
-        if (resultsIp[0].ip_address === ipAddress) {
+        if (resultsIp[0].ip_address !== ipAddress) {
           const error = new Error('A user with this ip_address could not be found.');
           error.statusCode = 500;
           res.json({ status: "A user with this ip_address could not be found." });
         }
         else {
-          if (resultsIp[0].browserlogin === browser) {
+          if (resultsIp[0].browserlogin !== browser) {
             const error = new Error('A user with this browserlogin could not be found.');
             error.statusCode = 500;
             res.json({ status: "A user with this browserlogin could not be found." });

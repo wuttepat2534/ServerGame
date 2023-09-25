@@ -3,6 +3,7 @@ const mysql = require('mysql2') //npm install mysql2
 const jwt = require('jsonwebtoken');
 const os = require('os');
 const axios = require('axios'); //npm install axios
+const repostGame = require('./repostGame')
 require('dotenv').config()
 
 const connection = mysql.createPool({
@@ -32,6 +33,8 @@ exports.saveTestGame = async (require, response) => {
     const choose = require.params.choose;
     const authHeader = require.body.Authorization;
     const passwordRound = require.body.passwordRound;
+    const userAgent = req.headers['user-agent'];
+    const userAgentt = req.useragent;
     console.log(authHeader);
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
@@ -69,7 +72,7 @@ exports.saveTestGame = async (require, response) => {
             break;
         case '3':
             const randomPassword = generateRandomPassword(13);
-            
+
             const multipliers = [1.84, 2.76, 3.68, 4.60]
             const allBalloonId = [0, 1, 2, 3, 4]
             let sql_insert = `INSERT INTO user_play (member_id, game_id, bet, win, tiles, winline, winstyle, winCount, credit, created_at, game_feespin) 
@@ -113,6 +116,19 @@ exports.saveTestGame = async (require, response) => {
                     const win = data.winGame;
                     const balance = data.balanceNow;
 
+                    let spl = `SELECT * FROM member WHERE id ='${user_id}' AND status_delete='N'`;
+                    try {
+                        connection.query(spl, (error, results) => {
+                            const post = {
+                                username: results[0].username, gameid: 'DOGZILLA', bet: bet, win: win, balance_credit: balance, userAgent: userAgent, platform: userAgentt
+                            }
+                            let repost = repostGame.uploadLogRepostGame(post)
+                        })
+                    }
+                    catch (err) {
+                        err.statusCode = 500;
+                        res.json({ status: "Not Data Request Body." });
+                    }
                     response.json({
                         winBalloonId: winBalloonId,
                         allBalloonId: allBalloonId,

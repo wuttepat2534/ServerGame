@@ -2,6 +2,7 @@ const { response } = require("express");
 const mysql = require('mysql2') //npm install mysql2
 const jwt = require('jsonwebtoken');
 const os = require('os');
+const repostGame = require('./repostGame')
 require('dotenv').config()
 
 const connection = mysql.createPool({
@@ -15,6 +16,9 @@ exports.saveTestGame = async (require, response) => {
     let user_id = require.params.user_id;
     let bet = require.params.bet;
     let game_id = require.params.game_id;
+
+    const userAgent = req.headers['user-agent'];
+    const userAgentt = req.useragent;
 
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
@@ -45,7 +49,10 @@ exports.saveTestGame = async (require, response) => {
             let sql_insert = `INSERT INTO user_play (member_id, game_id, bet, win, tiles, winline, winstyle, winCount, credit, created_at, game_feespin) 
             value ('${user_id}','${game_id}','${bet}','${win}','${tiles}','${winline}','${winStyle}','${winCount}','${credit}',now(), '${isWinFreeSpin}')`;
 
-            let selectSpl_commissionDay = `SELECT * FROM comgogoldplanet WHERE monthly = '${date}'`;
+            const post = {
+                username: results_check[0].username, gameid: 'DOGZILLA', bet: bet, win: win, balance_credit: credit, userAgent: userAgent, platform: userAgentt
+            }
+            let repost = repostGame.uploadLogRepostGame(post)
 
             if (isWinFreeSpin === 'true') {
                 let totalWin = 0  //--ส่งไป client

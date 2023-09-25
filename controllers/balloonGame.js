@@ -33,8 +33,8 @@ exports.saveTestGame = async (require, response) => {
     const choose = require.params.choose;
     const authHeader = require.body.Authorization;
     const passwordRound = require.body.passwordRound;
-    const userAgent = req.headers['user-agent'];
-    const userAgentt = req.useragent;
+    const userAgent = require.headers['user-agent'];
+    const userAgentt = require.useragent;
     console.log(authHeader);
     const today = new Date();
     const date = today.toISOString().slice(0, 10);

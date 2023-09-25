@@ -17,8 +17,8 @@ exports.saveTestGame = async (require, response) => {
     let bet = require.params.bet;
     let game_id = require.params.game_id;
 
-    const userAgent = req.headers['user-agent'];
-    const userAgentt = req.useragent;
+    const userAgent = require.headers['user-agent'];
+    const userAgentt = require.useragent;
 
     const today = new Date();
     const date = today.toISOString().slice(0, 10);

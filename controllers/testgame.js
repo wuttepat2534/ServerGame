@@ -26,6 +26,7 @@ exports.saveTestGame = async (require, response) => {
     let sql_check = `SELECT id, member_code, name, username, credit, status FROM member WHERE id='${user_id}' AND status_delete='N' 
     ORDER BY member_code ASC`;
     let sql_logGame = `SELECT play, bet, win FROM loggame WHERE id='${game_id}'`;
+    let selectSpl_commissionDay = `SELECT * FROM comgogoldplanet WHERE monthly = '${date}'`;
     connection.query(sql_check, (error, results_check) => {
         if (results_check.length > 0) {
             let user_credit = results_check[0].credit;

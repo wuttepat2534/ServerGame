@@ -355,8 +355,9 @@ module.exports = class Post {
 };
 
 function turnoverrepost(post) {
+    console.log(post.win, post.bet);
     const floatwit = parseFloat(post.win).toFixed(2);
-    const floatbet = parseFloat(rpost.bet).toFixed(2);
+    const floatbet = parseFloat(post.bet).toFixed(2);
     const lose = floatbet - floatwit;
     let total = totalTurnoverrepost(post);
     let totlgameCamp = gamecamptotal(post);
@@ -395,7 +396,7 @@ function turnoverrepost(post) {
 
 function totalTurnoverrepost(post) {
     const floatwit = parseFloat(post.win).toFixed(2);
-    const floatbet = parseFloat(rpost.bet).toFixed(2);
+    const floatbet = parseFloat(post.bet).toFixed(2);
     const lose = floatbet - floatwit;
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
@@ -430,7 +431,7 @@ function totalTurnoverrepost(post) {
 
 function gamecamptotal(post) {
     const floatwit = parseFloat(post.win).toFixed(2);
-    const floatbet = parseFloat(rpost.bet).toFixed(2);
+    const floatbet = parseFloat(post.bet).toFixed(2);
     const lose = floatbet - floatwit;
     const today = new Date();
     const date = today.toISOString().slice(0, 10);

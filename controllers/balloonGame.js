@@ -115,7 +115,7 @@ exports.saveTestGame = async (require, response) => {
                     const isWin = data.isWinUser;
                     const win = data.winGame;
                     const balance = data.balanceNow;
-
+                    
                     let spl = `SELECT * FROM member WHERE id ='${user_id}' AND status_delete='N'`;
                     try {
                         connection.query(spl, (error, results) => {

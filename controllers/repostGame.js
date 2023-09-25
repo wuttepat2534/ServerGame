@@ -452,7 +452,7 @@ function gamecamptotal(post) {
                 const numberlose = lose + results[0].lose;
 
                 let sql = `UPDATE gamecamptotal set grossComm = '${0.00}', turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}', commmember = '${0.00}', totalmamber = '${0.00}',
-                w_l_agent = '${0.00}', comm_agent = '${0.00}', tatal_agent = '${0.00}', w_l_commny = '${0.00}', comm_commny = '${0.00}', tatal_commny = '${0.00}',
+                w_l_agent = '${0.00}', comm_agent = '${0.00}', tatal_agent = '${0.00}', w_l_commny = '${0.00}', comm_commny = '${0.00}', tatal_commny = '${0.00}'
                 WHERE day = '${date}' AND namegamecamp = '${post.gameid}'`;
                 connection.query(sql, (error, resultAfter) => {
                     if (error) { console.log(error); }

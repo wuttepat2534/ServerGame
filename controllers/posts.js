@@ -106,7 +106,6 @@ exports.convertToken = async (req, res) => {
   decodedToken = jwt.verify(token, 'secretfortoken')
   if (decodedToken.type === 'member') {
     try {
-
       let splip = `SELECT * FROM member WHERE username ='${decodedToken.phonenumber}' AND status_delete='N' 
       ORDER BY member_code ASC`;
       connection.query(splip, (error, resultsIp) => {

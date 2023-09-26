@@ -287,7 +287,7 @@ module.exports = class Post {
 
     static async topwit(post) {
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM totalturnoverrepost WHERE created_atdate = ? ORDER BY win DESC LIMIT 20';
+            const sql = 'SELECT * FROM totalturnoverrepost WHERE day = ? ORDER BY win DESC LIMIT 20';
             connection.query(sql, [post.startdate], (err, results) => {
                 if (error) {
                     console.log(error);
@@ -310,7 +310,7 @@ module.exports = class Post {
 
     static async toplose() {
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM totalturnoverrepost WHERE created_atdate = ? ORDER BY lose DESC LIMIT 20';
+            const sql = 'SELECT * FROM totalturnoverrepost WHERE day = ? ORDER BY lose DESC LIMIT 20';
             connection.query(sql, [post.startdate], (err, results) => {
                 if (error) {
                     console.log(error);
@@ -332,7 +332,7 @@ module.exports = class Post {
 
     static async topturnover() {
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM totalturnoverrepost WHERE created_atdate = ? ORDER BY turnover DESC LIMIT 20';
+            const sql = 'SELECT * FROM totalturnoverrepost WHERE day = ? ORDER BY turnover DESC LIMIT 20';
             connection.query(sql, [post.startdate], (err, results) => {
                 if (error) {
                     console.log(error);

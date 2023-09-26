@@ -287,8 +287,9 @@ module.exports = class Post {
 
     static async topwit(post) {
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM totalturnoverrepost WHERE day = ? ORDER BY win DESC LIMIT 20';
-            connection.query(sql, [post.startdate], (err, results) => {
+            console.log(post);
+            const sql = `SELECT * FROM totalturnoverrepost WHERE day >='${post.startdate}' AND day <= '${post.endDate}'  ORDER BY win DESC LIMIT 20`;
+            connection.query(sql, (err, results) => {
                 if (error) {
                     console.log(error);
                     reject(error);
@@ -310,8 +311,8 @@ module.exports = class Post {
 
     static async toplose() {
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM totalturnoverrepost WHERE day = ? ORDER BY lose DESC LIMIT 20';
-            connection.query(sql, [post.startdate], (err, results) => {
+            const sql = `SELECT * FROM totalturnoverrepost WHEREday >='${post.startdate}' AND day <= '${post.endDate}' ORDER BY lose DESC LIMIT 20`;
+            connection.query(sql, (err, results) => {
                 if (error) {
                     console.log(error);
                     reject(error);
@@ -332,8 +333,8 @@ module.exports = class Post {
 
     static async topturnover() {
         return new Promise((resolve, reject) => {
-            const sql = 'SELECT * FROM totalturnoverrepost WHERE day = ? ORDER BY turnover DESC LIMIT 20';
-            connection.query(sql, [post.startdate], (err, results) => {
+            const sql = `SELECT * FROM totalturnoverrepost WHERE day >='${post.startdate}' AND day <= '${post.endDate}' ORDER BY turnover DESC LIMIT 20`;
+            connection.query(sql, (err, results) => {
                 if (error) {
                     console.log(error);
                     reject(error);

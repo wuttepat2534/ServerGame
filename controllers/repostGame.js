@@ -287,19 +287,21 @@ module.exports = class Post {
 
     static async topwit(post) {
         return new Promise((resolve, reject) => {
-            console.log(post);
-            const sql = `SELECT * FROM totalturnoverrepost WHERE day >='${post.startdate}' AND day <= '${post.endDate}'  ORDER BY win DESC LIMIT 20`;
+            //console.log(post);
+            const sql = `SELECT * FROM totalturnoverrepost WHERE day >= '${post.startdate}' AND day <= '${post.endDate}'  ORDER BY win DESC LIMIT 20`;
             connection.query(sql, (err, results) => {
-                if (error) {
-                    console.log(error);
-                    reject(error);
+                if (err) {
+                    console.log(err);
+                    reject(err);
                 } else {
                     if (results.length !== 0) {
+                        let data = [];
                         results.forEach((row, index) => {
-                            //console.log(`${index + 1}. Account: ${row.username}, Balance: ${row.win}`);
-                            let jsArray = { "topwit": row };
-                            resolve(jsArray);
+                            //console.log(`${index + 1}. Account: ${row.usernameuser	}, Balance: ${row.lose}`);
+                            data.push(row)
+                           
                         });
+                        resolve(data);
                     } else {
                         let jsArray = { "topwit": "วันนี้ยังไม่มีผู้เล่น" };
                         resolve(jsArray);
@@ -309,19 +311,22 @@ module.exports = class Post {
         });
     }
 
-    static async toplose() {
+    static async toplose(post) {
         return new Promise((resolve, reject) => {
-            const sql = `SELECT * FROM totalturnoverrepost WHEREday >='${post.startdate}' AND day <= '${post.endDate}' ORDER BY lose DESC LIMIT 20`;
+            const sql = `SELECT * FROM totalturnoverrepost WHERE day >= '${post.startdate}' AND day <= '${post.endDate}' ORDER BY lose DESC LIMIT 20`;
             connection.query(sql, (err, results) => {
-                if (error) {
-                    console.log(error);
-                    reject(error);
+                if (err) {
+                    console.log(err);
+                    reject(err);
                 } else {
                     if (results.length !== 0) {
+                        let data = [];
                         results.forEach((row, index) => {
-                            let jsArray = { "toplose": row };
-                            resolve(jsArray);
+                            //console.log(`${index + 1}. Account: ${row.usernameuser	}, Balance: ${row.lose}`);
+                            data.push(row)
+                           
                         });
+                        resolve(data);
                     } else {
                         let jsArray = { "toplose": "วันนี้ยังไม่มีผู้เล่น" };
                         resolve(jsArray);
@@ -331,19 +336,22 @@ module.exports = class Post {
         });
     }
 
-    static async topturnover() {
+    static async topturnover(post) {
         return new Promise((resolve, reject) => {
             const sql = `SELECT * FROM totalturnoverrepost WHERE day >='${post.startdate}' AND day <= '${post.endDate}' ORDER BY turnover DESC LIMIT 20`;
             connection.query(sql, (err, results) => {
-                if (error) {
-                    console.log(error);
-                    reject(error);
+                if (err) {
+                    console.log(err);
+                    reject(err);
                 } else {
                     if (results.length !== 0) {
+                        let data = [];
                         results.forEach((row, index) => {
-                            let jsArray = { "topturnover": row };
-                            resolve(jsArray);
+                            //console.log(`${index + 1}. Account: ${row.usernameuser	}, Balance: ${row.lose}`);
+                            data.push(row)
+                           
                         });
+                        resolve(data);
                     } else {
                         let jsArray = { "topturnover": "วันนี้ยังไม่มีผู้เล่น" };
                         resolve(jsArray);

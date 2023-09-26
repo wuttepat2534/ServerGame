@@ -2080,7 +2080,7 @@ exports.getRepostWebdaily = (require, response) => {
         });
     repostGame.topwit(post)
         .then(calculatedValues => {
-            topuserwit = calculatedValues.topwit
+            topuserwit = calculatedValues
         })
         .catch(error => {
             console.error(error);
@@ -2088,7 +2088,7 @@ exports.getRepostWebdaily = (require, response) => {
 
     repostGame.toplose(post)
         .then(calculatedValues => {
-            topuserlose = calculatedValues.withdrawvalueTotal
+            topuserlose = calculatedValues
         })
         .catch(error => {
             console.error(error);
@@ -2096,7 +2096,7 @@ exports.getRepostWebdaily = (require, response) => {
           
     repostGame.topturnover(post)
     .then(calculatedValues => {
-        topuserturnover = calculatedValues.withdrawvalueTotal
+        topuserturnover = calculatedValues
     })
     .catch(error => {
         console.error(error);

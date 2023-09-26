@@ -409,7 +409,7 @@ function totalTurnoverrepost(post) {
             reject(error);
         } else {
             connection.query(sqlpercentagegame, (error, resultspercen) => {
-                const commnytotal = (resultspercen[0].percentagegame * floatbet) / 100;
+                const commnytotal = (floatbet - floatwit) - floatbet * (resultspercen[0].percentagegame / 100);
                 if (results.length > 0) {
                     const floatwitapi = parseFloat(results[0].win);
                     const floatturnoverapi = parseFloat(results[0].turnover);
@@ -452,29 +452,30 @@ function gamecamptotal(post) {
             reject(error);
         } else {
             connection.query(sqlpercentagegame, (error, resultspercen) => {
-                const commnytotal = (resultspercen[0].percentagegame * floatbet) / 100;
+                const commnytotal = (floatbet - floatwit) - floatbet * (resultspercen[0].percentagegame / 100);
                 if (results.length > 0) {
                     const floatwitapi = parseFloat(results[0].win);
                     const floatturnoverapi = parseFloat(results[0].turnover);
                     const numberWin = floatwit + floatwitapi;
                     const turnover = floatbet + floatturnoverapi;
                     const numberlose = turnover - numberWin;
-                    const commnytotalupdate = (resultspercen[0].percentagegame * numberlose) / 100;
-                    const agentMenber = numberlose - commnytotalupdate;
-                    let sql = `UPDATE gamecamptotal set grossComm = '${0.00}', turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}', commmember = '${0.00}', totalmamber = '${numberlose}',
-                    w_l_agent = '${agentMenber}', comm_agent = '${agentMenber}', tatal_agent = '${0.00}', w_l_commny = '${commnytotalupdate}', comm_commny = '${0.00}',
-                    tatal_commny = '${commnytotalupdate}', roundplay = '${results[0].roundplay + 1}'
-                     WHERE day = '${date}' AND namegamecamp = '${post.gameid}'`;
+                    const commnytotalupdate = (turnover - numberWin) - turnover * (resultspercen[0].percentagegame / 100);
+                    const agentMenber =  (turnover - numberWin) - turnover - commnytotalupdate;
+
+                    let sql = `UPDATE gamecamptotal set grossComm = '${0.00}', turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}', commmember = '${0.00}', totalmamber = '${numberWin}',
+                    w_l_agent = '${commnytotalupdate}', comm_agent = '${0.00}', tatal_agent = '${commnytotalupdate}', w_l_commny = '${agentMenber}', comm_commny = '${0.00}',
+                    tatal_commny = '${agentMenber}', roundplay = '${results[0].roundplay + 1}'
+                    WHERE day = '${date}' AND namegamecamp = '${post.gameid}'`;
                     connection.query(sql, (error, resultAfter) => {
                         if (error) { console.log(error); }
                         return 'OK';
                     });
                 } else {
-                    const agentMenber = lose - commnytotal;
+                    const agentMenber = (floatbet - floatwit) - floatbet - commnytotal;
                     let sql_before = `INSERT INTO gamecamptotal (namegamecamp, grossComm, turnover, win, lose, commmember, totalmamber, w_l_agent, 
                     comm_agent, tatal_agent, w_l_commny, comm_commny, tatal_commny, roundplay, day) value 
-                    ('${post.gameid}','${0.00}','${floatbet}','${floatwit}','${lose}','${0.00}','${lose}','${agentMenber}','${0.00}','${agentMenber}','${commnytotal}'
-                    ,'${0.00}','${commnytotal}','${1}', now())`;
+                    ('${post.gameid}','${0.00}','${floatbet}','${floatwit}','${lose}','${0.00}','${lose}','${commnytotal}','${0.00}','${commnytotal}','${agentMenber}'
+                    ,'${0.00}','${agentMenber}','${1}', now())`;
                     connection.query(sql_before, (error, resultAfter) => {
                         if (error) { console.log(error); }
                         return 'OK';

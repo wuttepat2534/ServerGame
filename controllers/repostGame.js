@@ -462,9 +462,9 @@ function gamecamptotal(post) {
                     const commnytotalupdate = (resultspercen[0].percentagegame * numberlose) / 100;
                     const agentMenber = numberlose - commnytotalupdate;
                     let sql = `UPDATE gamecamptotal set grossComm = '${0.00}', turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}', commmember = '${0.00}', totalmamber = '${numberlose}',
-                    w_l_agent = '${agentMenber}', comm_agent = '${agentMenber}', tatal_agent = '${0.00}', w_l_commny = '${commnytotalupdate}', comm_commny = '${0.00}', 
+                    w_l_agent = '${agentMenber}', comm_agent = '${agentMenber}', tatal_agent = '${0.00}', w_l_commny = '${commnytotalupdate}', comm_commny = '${0.00}'
                     tatal_commny = '${commnytotalupdate}, roundplay = '${results[0].roundplay + 1}''
-                    WHERE day = '${date}' AND namegamecamp = '${post.gameid}'`;
+                     WHERE day = '${date}' AND namegamecamp = '${post.gameid}'`;
                     connection.query(sql, (error, resultAfter) => {
                         if (error) { console.log(error); }
                         return 'OK';

@@ -2436,3 +2436,115 @@ exports.getRepostTurnoverGameCamp = (require, response) => {
         });
     }
 }
+
+//http://localhost:5000/post/getRepostGameCamp getRepostGameCamp
+exports.getRepostGameCamp = (require, response) => {
+    const searcGameCamp = require.body.searcGameCamp;
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+    const date = require.body.dataDate;
+    const endDate = require.body.dataEndDate;
+
+    if (searcGameCamp === '') {
+        let sql = `SELECT * FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
+        connection.query(sql, async (error, results) => {
+            if (error) { console.log(error); }
+            const totalCount = `SELECT COUNT(*) as count FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'`
+            connection.query(totalCount, (error, res) => {
+                if (error) { console.log(error); }
+                else {
+                    response.send({
+                        data: results,
+                        valusData: results.length,
+                        total: res[0].count,
+                        startdate: date,
+                        enddate: endDate
+                    });
+                    response.end();
+                }
+            });
+        });
+    } else if (searcGameCamp !== '') {
+        let sql_ = `SELECT * FROM gamecamptotal WHERE day >= ? AND day <= ? AND gamecamp LIKE ? LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searcGameCamp}%`;
+        const values = [date, endDate, searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else if (searcGameCamp === undefined) {
+        let sql = `SELECT * FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}' LIMIT ${pageSize} OFFSET ${offset}`;
+        connection.query(sql, async (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else if (searcGameCamp !== undefined) {
+        let sql_ = `SELECT * FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}' AND gamecamp LIKE ? LIMIT ? OFFSET ?`;
+        const values = [searcGameCamp, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else {
+        let sql_ = `SELECT * FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}' AND gamecamp LIKE '%${searcGameCamp}%' AND usernameuser LIKE ? LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searchPhones}%`;
+        const values = [searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    }
+}

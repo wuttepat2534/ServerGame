@@ -122,182 +122,31 @@ exports.saveTestGame = async (require, response) => {
                                                         if (x === 45) {
                                                             checkLoop = true;
                                                             const flattenedArray = arrayWinCount.flat();
-                                                            const upPlay = result_logGame[0].play + 10;
-                                                            const upBet = result_logGame[0].bet + 0;
-                                                            const upWin = result_logGame[0].win + wineArr;
-                                                            const sql_logGameUpdate = `UPDATE loggame set play='${upPlay}',bet='${upBet}', win='${upWin}' 
-                                                        WHERE id='${game_id}'`;
-                                                            connection.query(sql_logGameUpdate, (error, result_logGameUpdate) => {
+                                                            const sql = `SELECT id, member_code, name, username, credit, status FROM member WHERE id='${user_id}' AND status_delete='N' 
+                                                                ORDER BY member_code ASC`;
+                                                            connection.query(sql, (error, results) => {
                                                                 if (error) {
                                                                     response.sendStatus(500);
                                                                     return;
                                                                 } else {
-                                                                    const sql = `SELECT id, member_code, name, username, credit, status FROM member WHERE id='${user_id}' AND status_delete='N' 
-                                                                ORDER BY member_code ASC`;
-                                                                    connection.query(sql, (error, results) => {
-                                                                        if (error) {
-                                                                            response.sendStatus(500);
-                                                                            return;
-                                                                        } else {
-                                                                            // commissionGame----------------------------------------------------------------------------------------------------//
-                                                                            connection.query(selectSpl_commissionDay, (error, result_commissionDay) => {
-                                                                                if (error) {
-                                                                                    response.sendStatus(500);
-                                                                                    return;
-                                                                                } else {
-                                                                                    connection.query(select_logdayGame, (error, result_logGameDay) => {
-                                                                                        if (result_commissionDay.length === 0) { //INSERT comgogoldplanet
-                                                                                            if (game_id === '1') {
-                                                                                                let sql_insertCommission = `INSERT INTO comgogoldplanet (bet_gogold, win_gogold, day, monthly) 
-                                                                                            value ('${beteArr}','${wineArr}','${date}','${date}')`;
-                                                                                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                                                                                    if (error) {
-                                                                                                        response.sendStatus(500);
-                                                                                                        return;
-                                                                                                    }
-                                                                                                });
-                                                                                            }
-                                                                                            else if (game_id === '2') {
-                                                                                                let sql_insertCommission = `INSERT INTO comgogoldplanet (bet_luckybunny, win_luckybunny	, day, monthly) 
-                                                                                            value ('${beteArr}','${wineArr}','${date}','${date}')`;
-                                                                                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                                                                                    if (error) {
-                                                                                                        response.sendStatus(500);
-                                                                                                        return;
-                                                                                                    }
-                                                                                                });
-                                                                                            }
-                                                                                            else if (game_id === '3') {
-                                                                                                let sql_insertCommission = `INSERT INTO comgogoldplanet (bet_aliens, win_aliens, day, monthly) 
-                                                                                            value ('${beteArr}','${wineArr}','${date}','${date}')`;
-                                                                                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                                                                                    if (error) {
-                                                                                                        response.sendStatus(500);
-                                                                                                        return;
-                                                                                                    }
-                                                                                                });
-                                                                                            }
-                                                                                            else {
-                                                                                                let sql_insertCommission = `INSERT INTO comgogoldplanet (bet_aliens, win_aliens, day, monthly) 
-                                                                                            value ('${beteArr}','${wineArr}','${date}','${date}')`;
-                                                                                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                                                                                    if (error) {
-                                                                                                        response.sendStatus(500);
-                                                                                                        return;
-                                                                                                    }
-                                                                                                });
-                                                                                            }
-                                                                                        } else { //UpDate comgogoldplanet
-                                                                                            if (game_id === '1') {
-                                                                                                let sql_insertCommission = `UPDATE comgogoldplanet set 
-                                                                                            bet_gogold='${result_commissionDay[0].bet_gogold + beteArr}',win_gogold='${result_commissionDay[0].win_gogold + wineArr}' WHERE monthly = '${date}'`;
-                                                                                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                                                                                    if (error) {
-                                                                                                        response.sendStatus(500);
-                                                                                                        return;
-                                                                                                    }
-                                                                                                });
-                                                                                            }
-                                                                                            else if (game_id === '2') {
-                                                                                                let sql_insertCommission = `UPDATE comgogoldplanet set 
-                                                                                            bet_luckybunny='${result_commissionDay[0].bet_luckybunny + beteArr}',win_luckybunny='${result_commissionDay[0].win_luckybunny + wineArr}' WHERE monthly = '${date}'`;
-                                                                                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                                                                                    if (error) {
-                                                                                                        response.sendStatus(500);
-                                                                                                        return;
-                                                                                                    }
-                                                                                                });
-                                                                                            } else if (game_id === '3') {
-                                                                                                let sql_insertCommission = `UPDATE comgogoldplanet set 
-                                                                                            bet_aliens='${result_commissionDay[0].bet_aliens + beteArr}',win_aliens='${result_commissionDay[0].win_aliens + wineArr}' WHERE monthly = '${date}'`;
-                                                                                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                                                                                    if (error) {
-                                                                                                        response.sendStatus(500);
-                                                                                                        return;
-                                                                                                    }
-                                                                                                });
-                                                                                            } else {
-                                                                                                let sql_insertCommission = `UPDATE comgogoldplanet set 
-                                                                                            bet_aliens='${result_commissionDay[0].bet_aliens + beteArr}',win_aliens='${result_commissionDay[0].win_aliens + wineArr}' WHERE monthly = '${date}'`;
-                                                                                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                                                                                    if (error) {
-                                                                                                        response.sendStatus(500);
-                                                                                                        return;
-                                                                                                    }
-                                                                                                });
-                                                                                            }
-                                                                                        }
-                                                                                    });
-                                                                                }
-                                                                            });
-                                                                            // commission----------------------------------------------------------------------------------------------------------------------------//
-                                                                            // LogDayGame----------------------------------------------------------------------------------------------------------------------------//
-                                                                            let select_logdayGame = `SELECT * FROM logdaygame WHERE day = '${date}' AND game_id = '${game_id}'`;
-                                                                            connection.query(select_logdayGame, (error, result_logGameDay) => {
-                                                                                if (result_logGameDay.length === 0) {
-                                                                                    if (game_id === '1') {
-                                                                                        let sql_logDayGame = `INSERT INTO logdaygame (namegame, game_id, play, bet, win, icon, day) 
-                                                                                        value ('Go Gold Planet','${1}','${11}','${beteArr}','${wineArr}','/img/thumbs/icontest3.png','${date}')`;
-                                                                                        connection.query(sql_logDayGame, (error, result_GameUpdate) => {
-                                                                                            if (error) {
-                                                                                                response.sendStatus(500);
-                                                                                                return;
-                                                                                            }
-                                                                                        });
-                                                                                    }
-                                                                                    else if (game_id === '2') {
-                                                                                        let sql_logDayGame = `INSERT INTO logdaygame (namegame, game_id, play, bet, win, icon, day) 
-                                                                                        value ('Lucky Bunny Gold','${2}','${11}','${beteArr}','${wineArr}','/img/thumbs/icontest2.png','${date}')`;
-                                                                                        connection.query(sql_logDayGame, (error, result_GameUpdate) => {
-                                                                                            if (error) {
-                                                                                                response.sendStatus(500);
-                                                                                                return;
-                                                                                            }
-                                                                                        });
-                                                                                    }
-                                                                                    else {
-                                                                                        let sql_logDayGame = `INSERT INTO logdaygame (namegame, game_id, play, bet, win, icon, day) 
-                                                                                        value ('CowBoys VS Aliens','${3}','${11}','${beteArr}','${wineArr}','/img/thumbs/icontest1.png','${date}')`;
-                                                                                        connection.query(sql_logDayGame, (error, result_GameUpdate) => {
-                                                                                            if (error) {
-                                                                                                response.sendStatus(500);
-                                                                                                return;
-                                                                                            }
-                                                                                        });
-                                                                                    }
-                                                                                } else {
-                                                                                    let sql_logDayGame = `UPDATE logdaygame set 
-                                                                                    play ='${result_logGameDay[0].play + 1}',bet ='${result_logGameDay[0].bet + beteArr}',win ='${result_logGameDay[0].win + wineArr}' 
-                                                                                    WHERE day = '${date}' AND game_id = '${game_id}'`;
-                                                                                    connection.query(sql_logDayGame, (error, result_GameUpdate) => {
-                                                                                        if (error) {
-                                                                                            response.sendStatus(500);
-                                                                                            return;
-                                                                                        }
-                                                                                    });
-                                                                                }
-                                                                            });
-                                                                            // LogDayGame----------------------------------------------------------------------------------------------------------------------------//
-                                                                            isWinFreeSpinBuy = false;
+                                                                    isWinFreeSpinBuy = false;
 
-                                                                            if (x === 45 && checkLoop === true) {
-                                                                                response.status(200).json({
-                                                                                    dataTiles: arrayTiles,
-                                                                                    dataCredit: results[0].credit,
-                                                                                    credit: arrayCredit,
-                                                                                    dataWin: arrayWin,
-                                                                                    dataFeeSpin: 'true',
-                                                                                    dataWinLine: arrayWinLine,
-                                                                                    dataWinStyle: arrayWinStyle,
-                                                                                    dataWinCount: flattenedArray,
-                                                                                    dataTotalWin: totalWin,
-                                                                                    dataMember: results[0].member_code
-                                                                                })
-                                                                                checkLoop = false;
-                                                                                response.end();
-                                                                            }
-                                                                        }
-                                                                    });
+                                                                    if (x === 45 && checkLoop === true) {
+                                                                        response.status(200).json({
+                                                                            dataTiles: arrayTiles,
+                                                                            dataCredit: results[0].credit,
+                                                                            credit: arrayCredit,
+                                                                            dataWin: arrayWin,
+                                                                            dataFeeSpin: 'true',
+                                                                            dataWinLine: arrayWinLine,
+                                                                            dataWinStyle: arrayWinStyle,
+                                                                            dataWinCount: flattenedArray,
+                                                                            dataTotalWin: totalWin,
+                                                                            dataMember: results[0].member_code
+                                                                        })
+                                                                        checkLoop = false;
+                                                                        response.end();
+                                                                    }
                                                                 }
                                                             });
                                                         }
@@ -312,155 +161,6 @@ exports.saveTestGame = async (require, response) => {
                     }, 500);
                 }
             } else {
-                // commissionGame----------------------------------------------------------------------------------------------------//
-
-                connection.query(selectSpl_commissionDay, (error, result_commissionDay) => {
-                    if (error) {
-                        response.sendStatus(500);
-                        return;
-                    } else {
-                        if (result_commissionDay.length === 0) { //INSERT comgogoldplanet
-                            if (game_id === '1') {
-                                let sql_insertCommission = `INSERT INTO comgogoldplanet (bet_gogold, win_gogold, day, monthly) 
-                             value ('${beteArr}','${wineArr}','${date}','${date}')`;
-                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                    if (error) {
-                                        response.sendStatus(500);
-                                        return;
-                                    }
-                                });
-                            }
-                            else if (game_id === '2') {
-                                let sql_insertCommission = `INSERT INTO comgogoldplanet (bet_luckybunny, win_luckybunny	, day, monthly) 
-                             value ('${beteArr}','${wineArr}','${date}','${date}')`;
-                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                    if (error) {
-                                        response.sendStatus(500);
-                                        return;
-                                    }
-                                });
-                            }
-                            else if (game_id === '3') {
-                                let sql_insertCommission = `INSERT INTO comgogoldplanet (bet_aliens, win_aliens, day, monthly) 
-                                value ('${beteArr}','${wineArr}','${date}','${date}')`;
-                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                    if (error) {
-                                        response.sendStatus(500);
-                                        return;
-                                    }
-                                });
-                            }
-                            else {
-                                let sql_insertCommission = `INSERT INTO comgogoldplanet (bet_aliens, win_aliens, day, monthly) 
-                            value ('${beteArr}','${wineArr}','${date}','${date}')`;
-                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                    if (error) {
-                                        response.sendStatus(500);
-                                        return;
-                                    }
-                                });
-                            }
-                        } else { //UpDate comgogoldplanet
-                            if (game_id === '1') {
-                                let sql_insertCommission = `UPDATE comgogoldplanet set 
-                                 bet_gogold='${result_commissionDay[0].bet_gogold + beteArr}',win_gogold='${result_commissionDay[0].win_gogold + wineArr}' WHERE monthly = '${date}'`;
-                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                    if (error) {
-                                        response.sendStatus(500);
-                                        return;
-                                    }
-                                });
-                            }
-                            else if (game_id === '2') {
-                                let sql_insertCommission = `UPDATE comgogoldplanet set 
-                                 bet_luckybunny='${result_commissionDay[0].bet_luckybunny + beteArr}',win_luckybunny='${result_commissionDay[0].win_luckybunny + wineArr}' WHERE monthly = '${date}'`;
-                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                    if (error) {
-                                        response.sendStatus(500);
-                                        return;
-                                    }
-                                });
-                            } else if (game_id === '3') {
-                                let sql_insertCommission = `UPDATE comgogoldplanet set 
-                                bet_aliens='${result_commissionDay[0].bet_aliens + beteArr}',win_aliens='${result_commissionDay[0].win_aliens + wineArr}' WHERE monthly = '${date}'`;
-                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                    if (error) {
-                                        response.sendStatus(500);
-                                        return;
-                                    }
-                                });
-                            } else {
-                                let sql_insertCommission = `UPDATE comgogoldplanet set 
-                                bet_aliens='${result_commissionDay[0].bet_aliens + beteArr}',win_aliens='${result_commissionDay[0].win_aliens + wineArr}' WHERE monthly = '${date}'`;
-                                connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                    if (error) {
-                                        response.sendStatus(500);
-                                        return;
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
-                // commission----------------------------------------------------------------------------------------------------------------------------//
-
-                // LogDayGame----------------------------------------------------------------------------------------------------------------------------//
-                let select_logdayGame = `SELECT * FROM logdaygame WHERE game_id = '${game_id}' AND day = '${date}'`;
-                connection.query(select_logdayGame, (error, result_logGameDay) => {
-                    if (result_logGameDay.length === 0) {
-                        if (game_id === '1') {
-                            let sql_logDayGame = `INSERT INTO logdaygame (namegame, game_id, play, bet, win, icon, day) 
-                            value ('Go Gold Planet','${1}','${1}','${beteArr}','${wineArr}','/img/thumbs/icontest3.png','${date}')`;
-                            connection.query(sql_logDayGame, (error, result_GameUpdate) => {
-                                if (error) {
-                                    response.sendStatus(500);
-                                    return;
-                                }
-                            });
-                        }
-                        else if (game_id === '2') {
-                            let sql_logDayGame = `INSERT INTO logdaygame (namegame, game_id, play, bet, win, icon, day) 
-                            value ('Lucky Bunny Gold','${2}','${1}','${beteArr}','${wineArr}','/img/thumbs/icontest2.png','${date}')`;
-                            connection.query(sql_logDayGame, (error, result_GameUpdate) => {
-                                if (error) {
-                                    response.sendStatus(500);
-                                    return;
-                                }
-                            });
-                        } else if (game_id === '3') {
-                            let sql_logDayGame = `INSERT INTO logdaygame (namegame, game_id, play, bet, win, icon, day) 
-                            value ('CowBoys VS Aliens','${3}','${1}','${beteArr}','${wineArr}','/img/thumbs/icontest1.png','${date}')`;
-                            connection.query(sql_logDayGame, (error, result_GameUpdate) => {
-                                if (error) {
-                                    response.sendStatus(500);
-                                    return;
-                                }
-                            });
-                        }
-                        else {
-                            let sql_logDayGame = `INSERT INTO logdaygame (namegame, game_id, play, bet, win, icon, day) 
-                            value ('CowBoys VS Aliens','${3}','${1}','${beteArr}','${wineArr}','/img/thumbs/icontest1.png','${date}')`;
-                            connection.query(sql_logDayGame, (error, result_GameUpdate) => {
-                                if (error) {
-                                    response.sendStatus(500);
-                                    return;
-                                }
-                            });
-                        }
-                    } else {
-                        let sql_logDayGame = `UPDATE logdaygame set 
-                        play ='${result_logGameDay[0].play + 1}',bet ='${result_logGameDay[0].bet + beteArr}',win ='${result_logGameDay[0].win + wineArr}' 
-                        WHERE day = '${date}' AND game_id = '${game_id}'`;
-                        connection.query(sql_logDayGame, (error, result_GameUpdate) => {
-                            if (error) {
-                                response.sendStatus(500);
-                                return;
-                            }
-                        });
-                    }
-                });
-                // LogDayGame----------------------------------------------------------------------------------------------------------------------------//
-
                 connection.query(sql_insert, (error, result_insert_play) => {
                     if (error) {
                         response.sendStatus(500);
@@ -483,38 +183,26 @@ exports.saveTestGame = async (require, response) => {
                                                 response.sendStatus(500);
                                                 return;
                                             } else {
-                                                const upPlay = result_logGame[0].play + 1;
-                                                const upBet = result_logGame[0].bet + beteArr;
-                                                const upWin = result_logGame[0].win + wineArr;
-                                                let sql_logGameUpdate = `UPDATE loggame set play='${upPlay}',bet='${upBet}', win='${upWin}' 
-                                        WHERE id='${game_id}'`;
-                                                connection.query(sql_logGameUpdate, (error, result_logGameUpdate) => {
+                                                let sql = `SELECT id, member_code, name, username, credit, status FROM member WHERE id='${user_id}' AND status_delete='N' 
+                                                ORDER BY member_code ASC`;
+                                                connection.query(sql, (error, results) => {
                                                     if (error) {
                                                         response.sendStatus(500);
                                                         return;
-                                                    } else {
-                                                        let sql = `SELECT id, member_code, name, username, credit, status FROM member WHERE id='${user_id}' AND status_delete='N' 
-                                                ORDER BY member_code ASC`;
-                                                        connection.query(sql, (error, results) => {
-                                                            if (error) {
-                                                                response.sendStatus(500);
-                                                                return;
-                                                            }
-                                                            if (isWinFreeSpin === 'false') {
-                                                                response.status(200).json({
-                                                                    //message: 'member play game: '+game_id,
-                                                                    dataTiles: tilesArr,
-                                                                    dataCredit: results[0].credit,
-                                                                    dataWinLine: winlineArr,
-                                                                    dataFeeSpin: isWinFreeSpin,
-                                                                    dataWin: wineArr,
-                                                                    dataWinStyle: winStyle,
-                                                                    dataWinCount: winCountArr,
-                                                                    dataMember: results[0].member_code
-                                                                });
-                                                                response.end();
-                                                            }
+                                                    }
+                                                    if (isWinFreeSpin === 'false') {
+                                                        response.status(200).json({
+                                                            //message: 'member play game: '+game_id,
+                                                            dataTiles: tilesArr,
+                                                            dataCredit: results[0].credit,
+                                                            dataWinLine: winlineArr,
+                                                            dataFeeSpin: isWinFreeSpin,
+                                                            dataWin: wineArr,
+                                                            dataWinStyle: winStyle,
+                                                            dataWinCount: winCountArr,
+                                                            dataMember: results[0].member_code
                                                         });
+                                                        response.end();
                                                     }
                                                 });
                                             }
@@ -560,7 +248,7 @@ exports.saveTestGame = async (require, response) => {
             [6, 4, 5, 9, 3, 12, 4, 2, 5, 1, 11, 0, 6, 4, 2, 1, 5, 3, 9, 0, 4, 8, 1, 5, 10, 2, 3, 1, 9, 4, 6, 2, 0, 5, 1, 4, 10, 7, 2, 5, 8, 0, 2, 1, 6, 5, 0, 3, 7, 10, 5, 4, 0, 2, 8, 1, 11, 9, 2, 0, 4, 3, 5, 1, 6, 5, 9, 5, 3, 10, 12, 7, 1, 8],
             [8, 0, 9, 4, 10, 5, 7, 6, 8, 5, 2, 11, 7, 2, 5, 3, 8, 10, 4, 5, 12, 6, 2, 7, 3, 5, 8, 3, 4, 9, 5, 6, 10, 1, 4, 7, 5, 9, 3, 1, 8, 6, 11, 7, 5, 4, 9, 5, 11, 6, 0, 10, 5]
         ];
-        
+
         var slotTemp = JSON.parse(JSON.stringify(slot))//ดีง array มาใช้ไม่ให้กระทบต้นฉบับ
 
         if (bet <= credit) {
@@ -569,7 +257,7 @@ exports.saveTestGame = async (require, response) => {
             {
                 let r = Math.random()
                 let rand = Math.floor(r * slotTemp[i].length);//สุ่มเลข ตามจำนวณ tile ใน reel นั้น
-                
+
                 //เก็บข้อมูล
                 reels[i].push(slotTemp[i][rand])//push ตัวแรก
                 //push อีก 5 ตัวที่เหลือไล่ตามลำดับ
@@ -577,11 +265,11 @@ exports.saveTestGame = async (require, response) => {
                 for (let j = 0; j < 5; j++)//5tile
                 {
                     rand++//เริ่มตัวต่อไป
-                    if (rand > slotTemp[i].length - 1){//ถ้าเกินreel เริ่มใหม่
+                    if (rand > slotTemp[i].length - 1) {//ถ้าเกินreel เริ่มใหม่
                         rand = 0
                     }
                     reels[i].push(slotTemp[i][rand])//push
-                    
+
                     if (j > 1) {
                         tile15.push(reels[i][j])//ใน playarea
                     }
@@ -605,8 +293,7 @@ exports.saveTestGame = async (require, response) => {
 
                 let m = Math.max(left3, middle3, right3, left4, right4, left5)
 
-                if (m != 0) 
-                {//hit
+                if (m != 0) {//hit
                     winLine.push(j)
                     winCount++
                     if (m == left3)
@@ -663,7 +350,7 @@ exports.saveTestGame = async (require, response) => {
         let tileCount = 0
         let once = 0
         let lineCost = bet / 30
-      
+
         highestWinLine[j] = 0
 
         const RewardTable =
@@ -717,7 +404,7 @@ exports.saveTestGame = async (require, response) => {
 
         if (winingTile[j] == null)//ถ้าเส้นนี้ไม่ถูกก็ไม่ต้องมี winingTile
             winingTile[j] = undefined
-         
+
         //เช็คว่าชนะ 3 4 5
         if (highestWinLine[j] == 3) {
             return lineCost * RewardTable[winingTile[j]][0]
@@ -1042,7 +729,7 @@ exports.saveTestGameBuy = async (require, response) => {
                 let left4 = CheckArrange(0, 3, currentPayline, j, bet, highestWinLine, tile15)
                 let right4 = CheckArrange(1, 4, currentPayline, j, bet, highestWinLine, tile15)
                 let left5 = CheckArrange(0, 4, currentPayline, j, bet, highestWinLine, tile15)
-    
+
                 let m = Math.max(left3, middle3, right3, left4, right4, left5)
 
                 if (m != 0) {//hit
@@ -1088,21 +775,21 @@ exports.saveTestGameBuy = async (require, response) => {
         highestWinLine[j] = 0
 
         const RewardTable =
-        [
-            [3, 8, 15],//สัญลักษณ์ 9 ถ้าเรียง 3,4,5
-            [5, 15, 30],//10
-            [10, 20, 50],//J
-            [12, 25, 70],//Q
-            [15, 30, 80],//K
-            [18, 40, 100],//A
-            [20, 50, 150],//H_Blue
-            [30, 75, 200],//H_Green
-            [50, 100, 250],//H_Orange
-            [75, 150, 300],//H_Pink
-            [100, 300, 750],//H_Purple
-            [250, 500, 1000],//Wild
-            [0, 0, 0]//Scatter
-        ];
+            [
+                [3, 8, 15],//สัญลักษณ์ 9 ถ้าเรียง 3,4,5
+                [5, 15, 30],//10
+                [10, 20, 50],//J
+                [12, 25, 70],//Q
+                [15, 30, 80],//K
+                [18, 40, 100],//A
+                [20, 50, 150],//H_Blue
+                [30, 75, 200],//H_Green
+                [50, 100, 250],//H_Orange
+                [75, 150, 300],//H_Pink
+                [100, 300, 750],//H_Purple
+                [250, 500, 1000],//Wild
+                [0, 0, 0]//Scatter
+            ];
 
         //หาสัญลักษณ์แรก
         for (let i = start; i <= end; i++) {

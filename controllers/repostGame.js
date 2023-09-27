@@ -299,7 +299,7 @@ module.exports = class Post {
                         results.forEach((row, index) => {
                             //console.log(`${index + 1}. Account: ${row.usernameuser	}, Balance: ${row.lose}`);
                             data.push(row)
-                           
+
                         });
                         resolve(data);
                     } else {
@@ -324,7 +324,7 @@ module.exports = class Post {
                         results.forEach((row, index) => {
                             //console.log(`${index + 1}. Account: ${row.usernameuser	}, Balance: ${row.lose}`);
                             data.push(row)
-                           
+
                         });
                         resolve(data);
                     } else {
@@ -349,7 +349,7 @@ module.exports = class Post {
                         results.forEach((row, index) => {
                             //console.log(`${index + 1}. Account: ${row.usernameuser	}, Balance: ${row.lose}`);
                             data.push(row)
-                           
+
                         });
                         resolve(data);
                     } else {
@@ -386,15 +386,15 @@ function turnoverrepost(post) {
                 const turnover = floatbet + floatturnoverapi;
                 const numberlose = turnover - numberWin;
 
-                let sql = `UPDATE turnoverrepost set  turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}' 
+                let sql = `UPDATE turnoverrepost set roundplay = '${results[0].roundplay + 1}', turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}' 
                 WHERE day = '${date}' AND usernameuser = '${post.username}' AND gamecamp = '${post.gameid}'`;
                 connection.query(sql, (error, resultAfter) => {
                     if (error) { console.log(error); }
                     return 'OK';
                 });
             } else {
-                let sql_before = `INSERT INTO turnoverrepost (usernameuser, gamecamp, turnover, win, lose, day) value 
-                ('${post.username}','${post.gameid}','${floatbet}','${floatwit}','${lose}', now())`;
+                let sql_before = `INSERT INTO turnoverrepost (usernameuser, gamecamp, roundplay, turnover, win, lose, day) value 
+                ('${post.username}','${post.gameid}','${1}','${floatbet}','${floatwit}','${lose}', now())`;
                 connection.query(sql_before, (error, resultAfter) => {
                     if (error) { console.log(error); }
                     return 'OK';
@@ -418,17 +418,24 @@ function totalTurnoverrepost(post) {
             reject(error);
         } else {
             connection.query(sqlpercentagegame, (error, resultspercen) => {
-                const commnytotal = (floatbet - floatwit) - floatbet * (resultspercen[0].percentagegame / 100);
+                const commnytotal = (floatbet - floatwit)
+                const commy_agentTotal = commnytotal * (resultspercen[0].percentagegame / 100);
+                const tatal_commny = commnytotal - commy_agentTotal;
                 if (results.length > 0) {
                     const floatwitapi = parseFloat(results[0].win);
                     const floatturnoverapi = parseFloat(results[0].turnover);
+                    const ag_winlose = parseFloat(results[0].ag_winlose);
+                    const ag_total = parseFloat(results[0].ag_total);
+                    const comny_total = parseFloat(results[0].comny_total);
                     const numberWin = floatwit + floatwitapi;
                     const turnover = floatbet + floatturnoverapi;
                     const numberlose = turnover - numberWin;
                     const commnytotalupdate = (resultspercen[0].percentagegame * numberlose) / 100;
+                    const commy_agentTotalupdate = commy_agentTotal + ag_total
+                    const tatal_commnyupdate = comny_total + tatal_commny;
                     //const lose = floatbet - floatwit;
                     let sql = `UPDATE totalturnoverrepost set  turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}', roundplay = '${results[0].roundplay + 1}', 
-                    ag_winlose = '${numberlose}', ag_comm = '${numberlose}', ag_total = '${numberlose}', comny_total = '${commnytotalupdate}'
+                    ag_winlose = '${numberlose}', ag_comm = '${0.00}', ag_total = '${commy_agentTotalupdate}', comny_total = '${tatal_commnyupdate}'
                     WHERE day = '${date}' AND usernameuser = '${post.username}'`;
                     connection.query(sql, (error, resultAfter) => {
                         if (error) { console.log(error); }
@@ -436,7 +443,7 @@ function totalTurnoverrepost(post) {
                     });
                 } else {
                     let sql_before = `INSERT INTO totalturnoverrepost (	usernameuser, turnover, win, lose, roundplay, ag_winlose, ag_comm, ag_total, comny_total ,day) value 
-                    ('${post.username}','${floatbet}','${floatwit}','${lose}','${1}','${lose}','${0.00}','${lose}','${commnytotal}', now())`;
+                    ('${post.username}','${floatbet}','${floatwit}','${lose}','${1}','${commnytotal}','${0.00}','${commy_agentTotal}','${tatal_commny}', now())`;
                     connection.query(sql_before, (error, resultAfter) => {
                         if (error) { console.log(error); }
                         return 'OK';
@@ -451,6 +458,7 @@ function gamecamptotal(post) {
     const floatwit = parseFloat(post.win);
     const floatbet = parseFloat(post.bet);
     const lose = floatbet - floatwit;
+    const total = floatwit - lose;
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
     let sqlpercentagegame = `SELECT percentagegame FROM gameweb WHERE password_img = '${post.gameid}'`;
@@ -461,30 +469,38 @@ function gamecamptotal(post) {
             reject(error);
         } else {
             connection.query(sqlpercentagegame, (error, resultspercen) => {
-                const commnytotal = (floatbet - floatwit) - floatbet * (resultspercen[0].percentagegame / 100);
+
+                const commnytotal = (floatbet - floatwit)
+                const commy_agentTotal = commnytotal * (resultspercen[0].percentagegame / 100);
+                const tatal_commny = commnytotal - commy_agentTotal;
+
                 if (results.length > 0) {
                     const floatwitapi = parseFloat(results[0].win);
                     const floatturnoverapi = parseFloat(results[0].turnover);
+                    const ag_winlose = parseFloat(results[0].ag_winlose);
+                    const ag_total = parseFloat(results[0].ag_total);
+                    const comny_total = parseFloat(results[0].comny_total);
                     const numberWin = floatwit + floatwitapi;
                     const turnover = floatbet + floatturnoverapi;
                     const numberlose = turnover - numberWin;
-                    const commnytotalupdate = (turnover - numberWin) - turnover * (resultspercen[0].percentagegame / 100);
-                    const agentMenber =  (turnover - numberWin) - turnover - commnytotalupdate;
+                    const totalnumber = numberWin - numberlose
+                    //const commnytotalupdate = (resultspercen[0].percentagegame * numberlose) / 100;
+                    const commy_agentTotalupdate = commy_agentTotal + ag_total
+                    const tatal_commnyupdate = comny_total + tatal_commny;
 
-                    let sql = `UPDATE gamecamptotal set grossComm = '${0.00}', turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}', commmember = '${0.00}', totalmamber = '${numberWin}',
-                    w_l_agent = '${commnytotalupdate}', comm_agent = '${0.00}', tatal_agent = '${commnytotalupdate}', w_l_commny = '${agentMenber}', comm_commny = '${0.00}',
-                    tatal_commny = '${agentMenber}', roundplay = '${results[0].roundplay + 1}'
+                    let sql = `UPDATE gamecamptotal set grossComm = '${0.00}', turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}', commmember = '${0.00}', totalmamber = '${totalnumber}',
+                    w_l_agent = '${numberlose}', comm_agent = '${0.00}', tatal_agent = '${commy_agentTotalupdate}', w_l_commny = '${numberlose}', comm_commny = '${0.00}',
+                    tatal_commny = '${tatal_commnyupdate}', roundplay = '${results[0].roundplay + 1}'
                     WHERE day = '${date}' AND namegamecamp = '${post.gameid}'`;
                     connection.query(sql, (error, resultAfter) => {
                         if (error) { console.log(error); }
                         return 'OK';
                     });
                 } else {
-                    const agentMenber = (floatbet - floatwit) - floatbet - commnytotal;
                     let sql_before = `INSERT INTO gamecamptotal (namegamecamp, grossComm, turnover, win, lose, commmember, totalmamber, w_l_agent, 
                     comm_agent, tatal_agent, w_l_commny, comm_commny, tatal_commny, roundplay, day) value 
-                    ('${post.gameid}','${0.00}','${floatbet}','${floatwit}','${lose}','${0.00}','${lose}','${commnytotal}','${0.00}','${commnytotal}','${agentMenber}'
-                    ,'${0.00}','${agentMenber}','${1}', now())`;
+                    ('${post.gameid}','${0.00}','${floatbet}','${floatwit}','${lose}','${0.00}','${total}','${commnytotal}','${0.00}','${commy_agentTotal}','${commnytotal}'
+                    ,'${0.00}','${tatal_commny}','${1}', now())`;
                     connection.query(sql_before, (error, resultAfter) => {
                         if (error) { console.log(error); }
                         return 'OK';

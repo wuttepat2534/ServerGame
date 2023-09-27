@@ -112,12 +112,18 @@ exports.creditPromotion = async (req, res, next) => {
     const groupuser = req.body.groupuser;
     const afterPromotion = req.body.afterPromotion;
     const receiving_data_type = req.body.receiving_data_type;
+    const receiving_data_typeI = req.body.receiving_data_typeI;
+    const receiving_data_typeII = req.body.receiving_data_typeII;
     const valus_receiving = req.body.valus_receiving;
     const data_type = req.body.data_type;
+    const data_typeI = req.body.data_typeI;
+    const data_typeII = req.body.data_typeII;
     const valus_day = req.body.valus_day;
     const numberoftimes_person = req.body.numberoftimes_person;
     const ipAddress_attempts = req.body.ipAddress_attempts;
     const reset = req.body.reset;
+    const resetI = req.body.resetI;
+    const resetII = req.body.resetII;
     const withdrawalType = req.body.withdrawalType;
     const withdraw_data_type = req.body.withdraw_data_type;
     const withdraw_max = req.body.withdraw_max;
@@ -128,11 +134,13 @@ exports.creditPromotion = async (req, res, next) => {
     const namepromotion = req.body.namepromotion;
     const leakedPro = req.body.leakedPro;
 
-    let sql = `INSERT INTO creditpromotion (agnetidcreate, repost, startpromotion, endpromotion, typebonus, bunus, maxbunus, valusbunus, groupuser, afterPromotion, receiving_data_type, valus_receiving, data_type,
-         valus_day, numberoftimes_person, ipAddress_attempts, reset, withdrawalType, withdraw_data_type, withdraw_max, withdraw_valus, statuspromotion, promotiontype, namepromotion, leakedPro, multiplier) 
- value ('${agnetidcreate}','${repost}','${startpromotion}','${endpromotion}','${typebonus}','${bunus}','${maxbunus}','${valusbunus}','${groupuser}',
- '${afterPromotion}','${receiving_data_type}','${valus_receiving}','${data_type}','${valus_day}','${numberoftimes_person}','${ipAddress_attempts}',
- '${reset}','${withdrawalType}','${withdraw_data_type}','${withdraw_max}','${withdraw_valus}','${statuspromotion}','${promotiontype}','${namepromotion}','${leakedPro}','${multiplier}')`;
+    let sql = `INSERT INTO creditpromotion (agnetidcreate, repost, startpromotion, endpromotion, typebonus, bunus, maxbunus, valusbunus, groupuser, afterPromotion, 
+        receiving_data_type, receiving_data_typeI, receiving_data_typeII, valus_receiving, data_type, data_typeI, data_typeII, valus_day, numberoftimes_person, ipAddress_attempts, 
+        reset, resetI, resetII, withdrawalType, withdraw_data_type, withdraw_max, withdraw_valus, statuspromotion, promotiontype, namepromotion, leakedPro, multiplier) 
+    value ('${agnetidcreate}','${repost}','${startpromotion}','${endpromotion}','${typebonus}','${bunus}','${maxbunus}','${valusbunus}','${groupuser}',
+ '${afterPromotion}','${receiving_data_type}','${receiving_data_typeI}','${receiving_data_typeII}','${valus_receiving}','${data_type}','${data_typeI}',
+ '${data_typeII}','${valus_day}','${numberoftimes_person}','${ipAddress_attempts}','${reset}','${resetI}','${resetII}','${withdrawalType}','${withdraw_data_type}'
+ ,'${withdraw_max}','${withdraw_valus}','${statuspromotion}','${promotiontype}','${namepromotion}','${leakedPro}','${multiplier}')`;
     connection.query(sql, (error, result) => {
         try {
             if (error) { console.log(error) }
@@ -2093,14 +2101,14 @@ exports.getRepostWebdaily = (require, response) => {
         .catch(error => {
             console.error(error);
         });
-          
+
     repostGame.topturnover(post)
-    .then(calculatedValues => {
-        topuserturnover = calculatedValues
-    })
-    .catch(error => {
-        console.error(error);
-    });
+        .then(calculatedValues => {
+            topuserturnover = calculatedValues
+        })
+        .catch(error => {
+            console.error(error);
+        });
 
     setTimeout(() => {
         response.send({

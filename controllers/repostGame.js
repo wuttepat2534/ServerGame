@@ -477,9 +477,9 @@ function gamecamptotal(post) {
                 if (results.length > 0) {
                     const floatwitapi = parseFloat(results[0].win);
                     const floatturnoverapi = parseFloat(results[0].turnover);
-                    const ag_winlose = parseFloat(results[0].ag_winlose);
-                    const ag_total = parseFloat(results[0].ag_total);
-                    const comny_total = parseFloat(results[0].comny_total);
+                    const ag_winlose = parseFloat(results[0].w_l_agent);
+                    const ag_total = parseFloat(results[0].tatal_agent);
+                    const comny_total = parseFloat(results[0].tatal_commny);
                     const numberWin = floatwit + floatwitapi;
                     const turnover = floatbet + floatturnoverapi;
                     const numberlose = turnover - numberWin;

@@ -497,7 +497,7 @@ app.post('/login/member', async (require, response, next) => {
             }
             const storedUser = data[0];
 
-            const hashedPassword = md5(password);
+            const hashedPassword = md5(password)
             if (hashedPassword !== storedUser.password) {
                 return response.status(401).json({ message: 'Incorrect password' });
             }

@@ -328,14 +328,28 @@ exports.financeUser = (req, res) => {
                             ,'${destinationAccount}','${destinationAccountNumber}','${transRef}', '${qrcodeData}', '${nameimg}')`;
                             if (statusFinance === "สำเร็จ") {
                                 let totalamountdaily = logTotalAmount(resultUser, formattedDateBill, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
+                                const totaltopup = resultUser[0].total_top_up_amount + quantity;
                                 connection.query(sql_before, (error, result) => {
                                     if (error) {
                                         console.log(error)
                                     } else {
                                         if (typePromotion !== '0') {
-                                            let postpromotionDeposit = promotiontoonta.promotionDeposit(quantity, resultUser[0], typePromotion, formattedNumber);
+                                            let postpromotionDeposit = promotiontoonta.promotionDeposit(quantity, resultUser[0], typePromotion, formattedNumber, totaltopup);
                                         } else {
-                                            let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}' WHERE phonenumber ='${phonenumber}'`;
+                                            let rank = 'NewMember';
+                                            if (totaltopup >= 200000){
+                                                rank = "Bronze";
+                                            } else if (totaltopup >= 1000000){
+                                                rank = "Silver";
+                                            } else if (totaltopup >= 3000000){
+                                                rank = "Gold";
+                                            } else if (totaltopup >= 10000000){
+                                                rank = "Diamond";
+                                            } else {
+                                                rank = "NewMember";
+                                            }
+                                            let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}', 
+                                            total_top_up_amount = '${totaltopup}' groupmember = '${rank}' WHERE phonenumber ='${phonenumber}'`;
                                             connection.query(sql, (error, resultAfter) => {
                                                 if (error) {
                                                     console.log(error);

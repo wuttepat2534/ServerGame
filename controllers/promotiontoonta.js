@@ -33,7 +33,7 @@ module.exports = class Post {
         });
     }  
 
-    static promotionDeposit(quantity, dataUser, idPromotion, bill_number) {
+    static promotionDeposit(quantity, dataUser, idPromotion, bill_number, totaltopup) {
         try {
             let sql_Promotion = `SELECT * FROM creditpromotion WHERE id ='${idPromotion}'`;
             connection.query(sql_Promotion, (error, resultPromotion) => {
@@ -50,8 +50,20 @@ module.exports = class Post {
                                     }
                                     const balance = quantity + balancebunus
                                     const turnover = balancebunus * resultPromotion[0].multiplier;
-                                    let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}', turnover = '${turnover}'
-                                     WHERE id='${dataUser.id}'`;
+                                    let rank = 'NewMember';
+                                    if (totaltopup >= 200000){
+                                        rank = "Bronze";
+                                    } else if (totaltopup >= 1000000){
+                                        rank = "Silver";
+                                    } else if (totaltopup >= 3000000){
+                                        rank = "Gold";
+                                    } else if (totaltopup >= 10000000){
+                                        rank = "Diamond";
+                                    } else {
+                                        rank = "NewMember";
+                                    }
+                                    let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}', turnover = '${turnover}',
+                                    total_top_up_amount = '${totaltopup}' groupmember = '${rank}' WHERE id='${dataUser.id}'`;
                                     connection.query(sql, (error, result) => {
                                         if (error) {
                                             console.log(error)

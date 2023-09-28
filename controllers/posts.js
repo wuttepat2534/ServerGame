@@ -474,7 +474,7 @@ exports.MemberSubAgent = async (require, response) => {
   const pageNumber = require.body.pageIndex;
   const offset = (pageNumber - 1) * pageSize;
 
-  if (searchKeyword === '' || searchKeyword === undefined) {
+  if (searchKeyword === '' && searchKeyword === undefined) {
     let sql = `SELECT * FROM member WHERE agent_id ='${id_SubAgent}' AND status_delete='N' LIMIT ${pageSize} OFFSET ${offset}`;
     connection.query(sql, async (error, results) => {
       if (error) { console.log(error); }
@@ -490,17 +490,19 @@ exports.MemberSubAgent = async (require, response) => {
       });
     });
   } else {
-
     let sql = `SELECT * FROM member WHERE agent_id = '${id_SubAgent}' AND status_delete='N' AND 
         username LIKE '%${searchKeyword}%' OR name LIKE '%${searchKeyword}%' OR username LIKE '%${searchKeyword}%' LIMIT ${pageSize} OFFSET ${offset}`;
     connection.query(sql, async (error, results) => {
       if (error) { console.log(error); }
-      response.send({
-        message: 'Sub agent_Search',
-        data: results,
-        total: results.length
-      });
-      response.end();
+      const totalCount = `SELECT COUNT(*) as count FROM member WHERE status_delete='N'`
+      connection.query(totalCount, (error, resTotal) => {
+        response.send({
+          message: 'Sub agent_Search',
+          data: results,
+          total: res[0].count
+        });
+        response.end();
+      })
     });
   }
 };

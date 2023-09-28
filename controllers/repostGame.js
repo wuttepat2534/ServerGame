@@ -365,9 +365,9 @@ module.exports = class Post {
         return new Promise((resolve, reject) => {
             const sql = `SELECT roundplay FROM totalturnoverrepost WHERE day >='${post.startdate}' AND day <= '${post.endDate}'`;
             connection.query(sql, (err, results) => {
-                if (error) {
-                    console.log(error);
-                    reject(error);
+                if (err) {
+                    console.log(err);
+                    reject(err);
                 } else {
                     if (results.length !== 0) {
                         let roundplayTotal = 0;

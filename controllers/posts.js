@@ -499,7 +499,7 @@ exports.MemberSubAgent = async (require, response) => {
         response.send({
           message: 'Sub agent_Search',
           data: results,
-          total: res[0].count
+          total: resTotal[0].count
         });
         response.end();
       })

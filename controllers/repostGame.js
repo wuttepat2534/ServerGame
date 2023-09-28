@@ -360,6 +360,30 @@ module.exports = class Post {
             });
         });
     }
+
+    static async totalroundplayday (post) {
+        return new Promise((resolve, reject) => {
+            const sql = `SELECT roundplay FROM totalturnoverrepost WHERE day >='${post.startdate}' AND day <= '${post.endDate}'`;
+            connection.query(sql, (err, results) => {
+                if (error) {
+                    console.log(error);
+                    reject(error);
+                } else {
+                    if (results.length !== 0) {
+                        let roundplayTotal = 0;
+                        for (let i = 0; i < results.length; i++) {
+                            roundplayTotal += results[i].roundplay;
+                        }
+                        let jsArray = { "roundplayvalueTotal": turnoverTotal, 'valususerplayDay': results.length};
+                        resolve(jsArray);
+                    } else {
+                        let jsArray = { "roundplayvalueTotal": 0 };
+                        resolve(jsArray);
+                    }
+                }
+            });
+        });
+    }
     /*--------------------------------------------------------------------------------- reports Game All End*/
 };
 

@@ -2033,6 +2033,8 @@ exports.getRepostWebdaily = (require, response) => {
     let topuserwit;
     let topuserlose;
     let topuserturnover;
+    let roundplayvalueTotal = 0;
+    let valususerplayDay = 0;
 
     const post = {
         startdate: date, endDate: endDate
@@ -2110,6 +2112,15 @@ exports.getRepostWebdaily = (require, response) => {
             console.error(error);
         });
 
+    repostGame.totalroundplayday(post)
+        .then(calculatedValues => {
+            roundplayvalueTotal = calculatedValues.roundplayvalueTotal;
+            valususerplayDay = calculatedValues.valususerplayDay;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
     setTimeout(() => {
         response.send({
             wingame: win,
@@ -2125,6 +2136,8 @@ exports.getRepostWebdaily = (require, response) => {
             topuserturnover: topuserturnover,
             topuserwit: topuserwit,
             topuserlose: topuserlose,
+            roundplayvalueTotal: roundplayvalueTotal,
+            valususerplayDay: valususerplayDay,
         });
         response.end();
     }, 500);

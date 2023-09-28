@@ -374,7 +374,7 @@ module.exports = class Post {
                         for (let i = 0; i < results.length; i++) {
                             roundplayTotal += results[i].roundplay;
                         }
-                        let jsArray = { "roundplayvalueTotal": turnoverTotal, 'valususerplayDay': results.length};
+                        let jsArray = { "roundplayvalueTotal": roundplayTotal, 'valususerplayDay': results.length};
                         resolve(jsArray);
                     } else {
                         let jsArray = { "roundplayvalueTotal": 0 };

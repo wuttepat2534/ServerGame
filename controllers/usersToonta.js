@@ -103,6 +103,7 @@ http: //localhost:5000/post/creditPromotion Add creditPromotion
 exports.creditPromotion = async (req, res, next) => {
     const agnetidcreate = req.body.agnetidcreate;
     const repost = req.body.repost;
+    const passwordpromotion = req.body.member_sinceInfo;
     const startpromotion = req.body.startpromotion;
     const endpromotion = req.body.endpromotion;
     const typebonus = req.body.typebonus;
@@ -138,12 +139,12 @@ exports.creditPromotion = async (req, res, next) => {
     const withdraw_valusII = req.body.withdraw_valusII;
     const withdraw_valusIII = req.body.withdraw_valusIII;
     const statusTopup = req.body.statusTopup;
-
-    let sql = `INSERT INTO creditpromotion (agnetidcreate, repost, startpromotion, endpromotion, typebonus, bunus, maxbunus, valusbunus, groupuser, afterPromotion, 
+    
+    let sql = `INSERT INTO creditpromotion (passwordpromotion, agnetidcreate, repost, startpromotion, endpromotion, typebonus, bunus, maxbunus, valusbunus, groupuser, afterPromotion, 
         receiving_data_type, receiving_data_typeI, receiving_data_typeII, valus_receiving, data_type, data_typeI, data_typeII, valus_day, numberoftimes_person, ipAddress_attempts, 
         reset, resetI, resetII, withdrawalType, withdraw_data_type, withdraw_max, withdraw_valus, statuspromotion, promotiontype, namepromotion, leakedPro, multiplier,
         withdrawalTypeII, withdrawalTypeIII, withdraw_valusII, 	withdraw_valusIII, status_topup) 
-value ('${agnetidcreate}','${repost}','${startpromotion}','${endpromotion}','${typebonus}','${bunus}','${maxbunus}','${valusbunus}','${groupuser}',
+value ('${passwordpromotion}','${agnetidcreate}','${repost}','${startpromotion}','${endpromotion}','${typebonus}','${bunus}','${maxbunus}','${valusbunus}','${groupuser}',
  '${afterPromotion}','${receiving_data_type}','${receiving_data_typeI}','${receiving_data_typeII}','${valus_receiving}','${data_type}','${data_typeI}',
  '${data_typeII}','${valus_day}','${numberoftimes_person}','${ipAddress_attempts}','${reset}','${resetI}','${resetII}','${withdrawalType}','${withdraw_data_type}',
  '${withdraw_max}','${withdraw_valus}','${statuspromotion}','${promotiontype}','${namepromotion}','${leakedPro}','${multiplier}','${withdrawalTypeII}',
@@ -172,7 +173,8 @@ exports.creditImgPromotion = (req, res) => {
     const data = JSON.parse(req.body.data);
     const {
         namepromotion,
-        details
+        details,
+        passwordpromotion
     } = data;
     const fileimg = req.file;
 
@@ -182,10 +184,16 @@ exports.creditImgPromotion = (req, res) => {
     connection.query(sql, (error, result) => {
         try {
             if (error) { console.log(error) }
-            res.send({
-                message: "Data created Success"
+            let sql_update = `UPDATE creditpromotion set filename = '${fileimg.filename}', details = '${details}' WHERE passwordpromotion ='${passwordpromotion}'`;
+            connection.query(sql_update, (error, resultAfter) => {
+                if (error) {
+                    console.log(error);
+                }
+                res.send({
+                    message: "Data created Success"
+                });
+                res.end();
             });
-            res.end();
         } catch (err) {
             if (!err.statusCode) { err.statusCode = 500; }
             next(err);

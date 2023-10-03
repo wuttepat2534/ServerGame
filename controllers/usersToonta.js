@@ -133,14 +133,22 @@ exports.creditPromotion = async (req, res, next) => {
     const promotiontype = req.body.promotiontype;
     const namepromotion = req.body.namepromotion;
     const leakedPro = req.body.leakedPro;
+    const withdrawalTypeII = req.body.withdrawalTypeII;
+    const withdrawalTypeIII = req.body.withdrawalTypeIII;
+    const withdraw_valusII = req.body.withdraw_valusII;
+    const withdraw_valusIII = req.body.withdraw_valusIII;
+    const statusTopup = req.body.statusTopup;
 
     let sql = `INSERT INTO creditpromotion (agnetidcreate, repost, startpromotion, endpromotion, typebonus, bunus, maxbunus, valusbunus, groupuser, afterPromotion, 
         receiving_data_type, receiving_data_typeI, receiving_data_typeII, valus_receiving, data_type, data_typeI, data_typeII, valus_day, numberoftimes_person, ipAddress_attempts, 
-        reset, resetI, resetII, withdrawalType, withdraw_data_type, withdraw_max, withdraw_valus, statuspromotion, promotiontype, namepromotion, leakedPro, multiplier) 
-    value ('${agnetidcreate}','${repost}','${startpromotion}','${endpromotion}','${typebonus}','${bunus}','${maxbunus}','${valusbunus}','${groupuser}',
+        reset, resetI, resetII, withdrawalType, withdraw_data_type, withdraw_max, withdraw_valus, statuspromotion, promotiontype, namepromotion, leakedPro, multiplier,
+        withdrawalTypeII, withdrawalTypeIII, withdraw_valusII, 	withdraw_valusIII, status_topup) 
+value ('${agnetidcreate}','${repost}','${startpromotion}','${endpromotion}','${typebonus}','${bunus}','${maxbunus}','${valusbunus}','${groupuser}',
  '${afterPromotion}','${receiving_data_type}','${receiving_data_typeI}','${receiving_data_typeII}','${valus_receiving}','${data_type}','${data_typeI}',
- '${data_typeII}','${valus_day}','${numberoftimes_person}','${ipAddress_attempts}','${reset}','${resetI}','${resetII}','${withdrawalType}','${withdraw_data_type}'
- ,'${withdraw_max}','${withdraw_valus}','${statuspromotion}','${promotiontype}','${namepromotion}','${leakedPro}','${multiplier}')`;
+ '${data_typeII}','${valus_day}','${numberoftimes_person}','${ipAddress_attempts}','${reset}','${resetI}','${resetII}','${withdrawalType}','${withdraw_data_type}',
+ '${withdraw_max}','${withdraw_valus}','${statuspromotion}','${promotiontype}','${namepromotion}','${leakedPro}','${multiplier}','${withdrawalTypeII}',
+ '${withdrawalTypeIII}','${withdraw_valusII}','${withdraw_valusIII}','${statusTopup}')`;
+
     connection.query(sql, (error, result) => {
         try {
             if (error) { console.log(error) }
@@ -337,13 +345,13 @@ exports.financeUser = (req, res) => {
                                             let postpromotionDeposit = promotiontoonta.promotionDeposit(quantity, resultUser[0], typePromotion, formattedNumber, totaltopup);
                                         } else {
                                             let rank = 'NewMember';
-                                            if (totaltopup >= 200000){
+                                            if (totaltopup >= 200000) {
                                                 rank = "Bronze";
-                                            } else if (totaltopup >= 1000000){
+                                            } else if (totaltopup >= 1000000) {
                                                 rank = "Silver";
-                                            } else if (totaltopup >= 3000000){
+                                            } else if (totaltopup >= 3000000) {
                                                 rank = "Gold";
-                                            } else if (totaltopup >= 10000000){
+                                            } else if (totaltopup >= 10000000) {
                                                 rank = "Diamond";
                                             } else {
                                                 rank = "NewMember";
@@ -2582,4 +2590,8 @@ exports.getRepostGameCamp = (require, response) => {
             }
         });
     }
+}
+
+exports.testtesttest = (require, response) => {
+    let test = repostGame.turnoverrepost();
 }

@@ -361,7 +361,7 @@ module.exports = class Post {
         });
     }
 
-    static async totalroundplayday (post) {
+    static async totalroundplayday(post) {
         return new Promise((resolve, reject) => {
             const sql = `SELECT roundplay FROM totalturnoverrepost WHERE day >='${post.startdate}' AND day <= '${post.endDate}'`;
             connection.query(sql, (err, results) => {
@@ -374,7 +374,7 @@ module.exports = class Post {
                         for (let i = 0; i < results.length; i++) {
                             roundplayTotal += results[i].roundplay;
                         }
-                        let jsArray = { "roundplayvalueTotal": roundplayTotal, 'valususerplayDay': results.length};
+                        let jsArray = { "roundplayvalueTotal": roundplayTotal, 'valususerplayDay': results.length };
                         resolve(jsArray);
                     } else {
                         let jsArray = { "roundplayvalueTotal": 0 };
@@ -385,6 +385,44 @@ module.exports = class Post {
         });
     }
     /*--------------------------------------------------------------------------------- reports Game All End*/
+
+    static async turnoverrepost(post) {
+        return new Promise((resolve, reject) => {
+            const startDate = '2023-09-25';
+            const endDate = '2023-09-30';
+
+            // Query to retrieve tables within the date range
+            const query = `SELECT usernameuser , SUM(turnover) AS turnover 
+            FROM totalturnoverrepost WHERE day BETWEEN ? AND ? GROUP BY usernameuser`;
+
+            connection.query(query, [startDate, endDate], (err, results) => {
+                if (err) {
+                    console.error('Error querying the database:', err);
+                    connection.end();
+                    return;
+                }
+
+                // Process the results
+                const summedValues = {};
+                results.forEach((row) => {
+                    const tableName = row.table_name;
+                    const totalValue = row.total_value;
+
+                    if (summedValues[tableName]) {
+                        summedValues[tableName] += totalValue;
+                    } else {
+                        summedValues[tableName] = totalValue;
+                    }
+                });
+
+                // Print the summed values
+                console.log('Summed Values:', summedValues);
+
+                // Close the database connection
+                connection.end();
+            });
+        })
+    }
 };
 
 function turnoverrepost(post) {

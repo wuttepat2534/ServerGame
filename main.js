@@ -1097,8 +1097,33 @@ app.post('/otpRequest', async (req, res) => {
             }
         }
     })
+});
 
-
+app.post('/otpRequestForgotPassword', async (req, res) => {
+    const phone = req.body.phoneNumber
+    let sql_check = `SELECT * FROM member WHERE phonenumber='${phone}' ORDER BY phonenumber ASC`;
+    connection.query(sql_check, async (error, results) => {
+        try {
+            const data = results;
+            if (data.length === 1 || data.length < 1) {
+                sdk.postV2OtpRequest({
+                    key: '1771680550307989',
+                    secret: 'f7452e51ee54238076d2c04a1af5aeb7',
+                    msisdn: phone
+                }, { accept: 'application/json' })
+                    .then(data => { res.json({ dataRes: data }) })
+                    .catch(err => console.error(err));
+            }
+            else {
+                res.json({ message: "This phonenumber is not available." });
+                res.end();
+            }
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+        }
+    })
 });
 
 app.post('/otpVerify', async (req, res) => {

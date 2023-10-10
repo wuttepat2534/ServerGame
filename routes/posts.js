@@ -92,7 +92,7 @@ router.get('/getlistPromotion', userToonta.getlistPromotion)
 router.get('/getOneGroup/:idGroup', userToonta.getOneGroup)
 router.get('/', userToonta.getImgPromotion)
 router.get('/getTestTest', userToonta.testFuntion)
-router.get('/getlistPromotion', userToonta.getOnePromotion)
+router.get('/getOnePromotion', userToonta.getOnePromotion)
 
 router.put('/updateDepositaccount', userToonta.updateDepositaccount)
 router.put('/putUserGroupInformation', userToonta.PutUserGroupInformation)

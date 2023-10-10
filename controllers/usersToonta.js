@@ -12,7 +12,7 @@ const useragent = require('express-useragent')
 const logEdit = require('./logEditAll')
 const promotiontoonta = require('./promotiontoonta')
 const repostGame = require('./repostGame')
-
+const Finance = require('./Finance')
 const app = express();
 app.use(express.static('public'));
 require('dotenv').config()
@@ -139,22 +139,94 @@ exports.creditPromotion = async (req, res, next) => {
     const withdraw_valusII = req.body.withdraw_valusII;
     const withdraw_valusIII = req.body.withdraw_valusIII;
     const statusTopup = req.body.statusTopup;
-    
+    const promotionSuppost = req.body.promotionSuppost;
+    const webtype = req.body.webtype;
+
     let sql = `INSERT INTO creditpromotion (passwordpromotion, agnetidcreate, repost, startpromotion, endpromotion, typebonus, bunus, maxbunus, valusbunus, groupuser, afterPromotion, 
         receiving_data_type, receiving_data_typeI, receiving_data_typeII, valus_receiving, data_type, data_typeI, data_typeII, valus_day, numberoftimes_person, ipAddress_attempts, 
         reset, resetI, resetII, withdrawalType, withdraw_data_type, withdraw_max, withdraw_valus, statuspromotion, promotiontype, namepromotion, leakedPro, multiplier,
-        withdrawalTypeII, withdrawalTypeIII, withdraw_valusII, 	withdraw_valusIII, status_topup) 
+        withdrawalTypeII, withdrawalTypeIII, withdraw_valusII, 	withdraw_valusIII, status_topup, promotionsupport, webtype) 
 value ('${passwordpromotion}','${agnetidcreate}','${repost}','${startpromotion}','${endpromotion}','${typebonus}','${bunus}','${maxbunus}','${valusbunus}','${groupuser}',
  '${afterPromotion}','${receiving_data_type}','${receiving_data_typeI}','${receiving_data_typeII}','${valus_receiving}','${data_type}','${data_typeI}',
  '${data_typeII}','${valus_day}','${numberoftimes_person}','${ipAddress_attempts}','${reset}','${resetI}','${resetII}','${withdrawalType}','${withdraw_data_type}',
  '${withdraw_max}','${withdraw_valus}','${statuspromotion}','${promotiontype}','${namepromotion}','${leakedPro}','${multiplier}','${withdrawalTypeII}',
- '${withdrawalTypeIII}','${withdraw_valusII}','${withdraw_valusIII}','${statusTopup}')`;
+ '${withdrawalTypeIII}','${withdraw_valusII}','${withdraw_valusIII}','${statusTopup}','${promotionSuppost}','${webtype}')`;
 
     connection.query(sql, (error, result) => {
         try {
             if (error) { console.log(error) }
             res.send({
                 message: "Data created Success"
+            });
+            res.end();
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+
+    });
+};
+
+http: //localhost:5000/post/editPromotion  Edit editPromotion
+exports.EditPromotion = async (req, res, next) => {
+    const agnetidcreate = req.body.agnetidcreate;
+    const repost = req.body.repost;
+    const passwordpromotion = req.body.member_sinceInfo;
+    const startpromotion = req.body.startpromotion;
+    const endpromotion = req.body.endpromotion;
+    const typebonus = req.body.typebonus;
+    const bunus = req.body.bunus;
+    const maxbunus = req.body.maxbunus;
+    const valusbunus = req.body.valusbunus;
+    const groupuser = req.body.groupuser;
+    const afterPromotion = req.body.afterPromotion;
+    const receiving_data_type = req.body.receiving_data_type;
+    const receiving_data_typeI = req.body.receiving_data_typeI;
+    const receiving_data_typeII = req.body.receiving_data_typeII;
+    const valus_receiving = req.body.valus_receiving;
+    const data_type = req.body.data_type;
+    const data_typeI = req.body.data_typeI;
+    const data_typeII = req.body.data_typeII;
+    const valus_day = req.body.valus_day;
+    const numberoftimes_person = req.body.numberoftimes_person;
+    const ipAddress_attempts = req.body.ipAddress_attempts;
+    const reset = req.body.reset;
+    const resetI = req.body.resetI;
+    const resetII = req.body.resetII;
+    const withdrawalType = req.body.withdrawalType;
+    const withdraw_data_type = req.body.withdraw_data_type;
+    const withdraw_max = req.body.withdraw_max;
+    const withdraw_valus = req.body.withdraw_valus;
+    const multiplier = req.body.multiplier;
+    const statuspromotion = req.body.statuspromotion;
+    const promotiontype = req.body.promotiontype;
+    const namepromotion = req.body.namepromotion;
+    const leakedPro = req.body.leakedPro;
+    const withdrawalTypeII = req.body.withdrawalTypeII;
+    const withdrawalTypeIII = req.body.withdrawalTypeIII;
+    const withdraw_valusII = req.body.withdraw_valusII;
+    const withdraw_valusIII = req.body.withdraw_valusIII;
+    const statusTopup = req.body.statusTopup;
+    const promotionSuppost = req.body.promotionSuppost;
+    const webtype = req.body.webtype;
+
+    let sql = `UPDATE creditpromotion set  agnetidcreate ='${agnetidcreate}', repost ='${repost}', startpromotion ='${startpromotion}', 
+    endpromotion ='${endpromotion}', typebonus ='${typebonus}', bunus ='${bunus}', maxbunus ='${maxbunus}', valusbunus ='${valusbunus}', groupuser ='${groupuser}',
+    afterPromotion ='${afterPromotion}', receiving_data_type ='${receiving_data_type}', receiving_data_typeI ='${receiving_data_typeI}', receiving_data_typeII ='${receiving_data_typeII}',
+    valus_receiving ='${valus_receiving}', data_type ='${data_type}', data_typeI ='${data_typeI}', data_typeII ='${data_typeII}', valus_day ='${valus_day}', numberoftimes_person ='${numberoftimes_person}',
+    ipAddress_attempts ='${ipAddress_attempts}', reset ='${reset}', resetI ='${resetI}', resetII ='${resetII}', withdrawalType ='${withdrawalType}', withdraw_data_type ='${withdraw_data_type}',
+    withdraw_max ='${withdraw_max}', withdraw_valus ='${withdraw_valus}', statuspromotion ='${statuspromotion}', promotiontype ='${promotiontype}', namepromotion ='${namepromotion}',
+    leakedPro ='${leakedPro}', multiplier ='${multiplier}', withdrawalTypeII ='${withdrawalTypeII}', withdrawalTypeIII ='${withdrawalTypeIII}', withdraw_valusII ='${withdraw_valusII}',
+    withdraw_valusIII ='${withdraw_valusIII}', status_topup ='${statusTopup}', promotionsupport ='${promotionSuppost}', webtype ='${webtype}' 
+    WHERE passwordpromotion = '${passwordpromotion}'`;
+
+    connection.query(sql, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            res.send({
+                message: "Data Update Success"
             });
             res.end();
         } catch (err) {
@@ -237,13 +309,27 @@ exports.getPromotion = (require, response) => {
     }
 };
 
-http: //localhost:5000/post/getlistPromotion Add getPromotion
+http: //localhost:5000/post/getlistPromotion Get getPromotion
 exports.getlistPromotion = (require, response) => {
     let sql = `SELECT * FROM creditpromotion`;
     connection.query(sql, async (error, results) => {
         if (error) { console.log(error); }
         response.send({
             message: 'Success',
+            data: results,
+        });
+        response.end();
+    });
+};
+
+http: //localhost:5000/post/getlistPromotion Add getPromotion
+exports.getOnePromotion = (require, response) => {
+    const passwordpromotion = require.body.passwordpromotion;
+    let sql = `SELECT * FROM creditpromotion WHERE passwordpromotion = '${passwordpromotion}`;
+    connection.query(sql, async (error, results) => {
+        if (error) { console.log(error); }
+        response.send({
+            message: `Promotion Password '${passwordpromotion}'`,
             data: results,
         });
         response.end();
@@ -398,6 +484,15 @@ exports.financeUser = (req, res) => {
                                     billnum = resultBill[0].numberbill + 1;
                                 } else { billnum += 1; }
                                 const formattedNumber = formatNumber(billnum);
+
+                                Finance.Withdrawmoney(resultUser[0], formattedNumber, billnum, quantity, accountNumber, phonenumber, 'ยังไม่เรียบร้อย')
+                                    .then(calculatedValues => {
+                                        console.log(calculatedValues);
+                                    })
+                                    .catch(error => {
+                                        console.error(error);
+                                    });
+
                                 const balance = resultUser[0].credit - quantity;
                                 let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
                                     balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value 
@@ -443,6 +538,96 @@ exports.financeUser = (req, res) => {
         next(err);
     }
 };
+
+//http://localhost:5000/post/WinhdrawUser WinhdrawUserMoneyUser
+exports.WinhdrawUser = (req, res) => {
+    const quantity = req.body.quantity;
+    const phonenumber = req.body.phonenumber;
+    //const statusFinance = req.body.statusFinance;
+    const today = new Date();
+    // Format the date as "ddmmyyyy"
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // JavaScript months are 0-based, so we add 1
+    const year = today.getFullYear();
+    const formattedDate = year + month + day;
+    const formattedDateBill = `${year}-${month}-${day}`;
+    //console.log(statusFinance);
+    try {
+        let sql_before = `SELECT * FROM member WHERE phonenumber ='${phonenumber}' ORDER BY phonenumber ASC`;
+        connection.query(sql_before, (error, resultUser) => {
+            if (error) {
+                console.log(error)
+            } else {
+                if (resultUser[0].credit > quantity) {
+                    //let totalamountdaily = logTotalAmountWithdraw(resultUser, formattedDateBill, 'ถอน', destinationAccount, destinationAccountNumber, quantity, statusFinance)
+                    let bill = `SELECT numberbill FROM logfinanceuser WHERE transaction_date = ? AND tpyefinance = 'ถอน' ORDER BY numberbill DESC LIMIT 1`;
+                    connection.query(bill, [formattedDateBill], (error, resultBill) => {
+                        if (error) {
+                            console.log(error)
+                        } else {
+                            let billnum = 0
+                            if (resultBill.length !== 0) {
+                                billnum = resultBill[0].numberbill + 1;
+                            } else { billnum += 1; }
+                            const formattedNumber = formatNumber(billnum);
+                            //console.log(formattedNumber)
+                            const statusWitdraw = 'ถอน';
+                            Finance.Withdrawmoney(resultUser[0] ,formattedDate, formattedNumber, billnum, quantity, resultUser[0].accountNumber, phonenumber, 'ยังไม่เรียบร้อย')
+                                .then(calculatedValues => {
+                                    console.log(calculatedValues);
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                });
+
+                            const balance = quantity;
+                            let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
+                                    balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value 
+                                ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${resultUser[0].accountNumber}','${phonenumber}','${'ถอน'}','${quantity}','${0}','${resultUser[0].credit}'
+                                ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${'ยังไม่เรียบร้อย'}',now(),now(),'${resultUser[0].bank}','${resultUser[0].imgBank}'
+                                ,'${resultUser[0].accountName}','${resultUser[0].accountNumber}')`;
+
+                            connection.query(sql_before, (error, result) => {
+                                if (error) {
+                                    console.log(error)
+                                } else {
+                                    if (statusWitdraw === "สำเร็จ") {
+                                        let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}' WHERE phonenumber ='${phonenumber}'`;
+                                        connection.query(sql, (error, resultAfter) => {
+                                            if (error) {
+                                                console.log(error);
+                                            }
+                                            res.send({
+                                                message: "ถอนเงินสำเร็จ",
+                                            });
+                                            res.end();
+                                        });
+                                    }
+                                    else {
+                                        console.log(statusWitdraw);
+                                        res.send({
+                                            message: statusWitdraw
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    })
+                } else {
+                    res.send({
+                        message: "ยอดเงินมีไม่เพียงพอ",
+                    });
+                }
+            }
+        });
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
 
 function logTotalAmount(resultUser, formattedDateBill, type, destinationAccount, destinationAccountNumber, quantity, statusFinance) {
     let sql_deposit = `SELECT billmatched, complated, bankName, balance, imgbank FROM depositaccount WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;

@@ -273,4 +273,16 @@ module.exports = class Post {
             }
         });
     }
+
+    static Withdrawmoney(resultUser, formattedDate, formattedNumber, billnum, quantity, accountNumber, phonenumber, status) {
+        return new Promise((resolve, reject) => {
+            console.log(resultUser.bank);
+            let sql_before = `INSERT INTO withdraw (bill_number, numberbill, quantity, accountName, accountNumber, phonenumber, transaction_date, time, status, bank ) value 
+            ('T${formattedDate}${formattedNumber}','${billnum}','${quantity}','${resultUser.accountName}','${accountNumber}','${phonenumber}', now(), now(),'${status}','${resultUser.bank}')`;
+            connection.query(sql_before, (error, result) => {
+                let jsArray = "ระบบกำลังดำเนินการ";
+                resolve(jsArray);
+            });
+        });
+    }
 };

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Oct 06, 2023 at 02:42 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Host: db
+-- Generation Time: Oct 10, 2023 at 04:38 PM
+-- Server version: 8.0.34
+-- PHP Version: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,18 +28,18 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `admin` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `username` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `datetime_lastlogin` datetime DEFAULT NULL,
-  `get_browser` longtext DEFAULT NULL,
-  `status` enum('Y','N') NOT NULL DEFAULT 'Y',
-  `status_delete` enum('Y','N') NOT NULL DEFAULT 'N',
+  `get_browser` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
+  `status` enum('Y','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'Y',
+  `status_delete` enum('Y','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'N',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `contact_number` varchar(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `contact_number` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Dumping data for table `admin`
@@ -73,20 +73,20 @@ INSERT INTO `admin` (`id`, `name`, `username`, `password`, `datetime_lastlogin`,
 --
 
 CREATE TABLE `agent` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `website_name` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `status` enum('Y','N') NOT NULL DEFAULT 'Y',
-  `status_delete` enum('Y','N') NOT NULL DEFAULT 'N',
+  `id` bigint UNSIGNED NOT NULL,
+  `website_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `username` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `status` enum('Y','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'Y',
+  `status_delete` enum('Y','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'N',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `contact_number` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `credit` float(15,2) DEFAULT 0.00,
-  `commission` float(15,2) DEFAULT 0.00,
+  `contact_number` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `credit` float(15,2) DEFAULT '0.00',
+  `commission` float(15,2) DEFAULT '0.00',
   `tpye` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'agent'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Dumping data for table `agent`
@@ -119,10 +119,10 @@ INSERT INTO `agent` (`id`, `website_name`, `name`, `username`, `password`, `stat
 --
 
 CREATE TABLE `allgame` (
-  `id` bigint(22) NOT NULL,
-  `namegame` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `img` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `linkgame` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL
+  `id` bigint NOT NULL,
+  `namegame` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `img` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `linkgame` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -130,9 +130,11 @@ CREATE TABLE `allgame` (
 --
 
 INSERT INTO `allgame` (`id`, `namegame`, `img`, `linkgame`) VALUES
-(1, 'Go Gold Planet', '/img/thumbs/icontest1.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_GoGoldPlanet/index.html'),
-(2, 'Lucky Bunny Gold', '/img/thumbs/icontest2.png\n', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_LuckyBunnyGold/index.html'),
-(3, 'CowBoys VS Aliens', '/img/thumbs/icontest3.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_CowboyVSAlien/index.html');
+(1, 'Go Gold Planet', 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/size_tall/size_square/icon_3.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_GoGoldPlanet/index.html'),
+(2, 'Lucky Bunny Gold', 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/size_tall/size_square/icon_2.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_LuckyBunnyGold/index.html'),
+(3, 'CowBoys VS Aliens', 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/size_tall/size_square/icon_1.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_CowboyVSAlien/index.html'),
+(4, 'Buunty Balloon', 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/size_tall/size_square/icon_5.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_BountyBalloon/index.html'),
+(6, 'RoBo Farm', 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/size_tall/size_square/icon_4.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_RoboFarm/index.html');
 
 -- --------------------------------------------------------
 
@@ -141,14 +143,14 @@ INSERT INTO `allgame` (`id`, `namegame`, `img`, `linkgame`) VALUES
 --
 
 CREATE TABLE `comgogoldplanet` (
-  `id` bigint(20) NOT NULL,
-  `bet_gogold` float DEFAULT 0,
-  `win_gogold` float DEFAULT 0,
-  `bet_luckybunny` float(15,2) DEFAULT 0.00,
-  `win_luckybunny` float(15,2) DEFAULT 0.00,
-  `bet_aliens` float(15,2) DEFAULT 0.00,
-  `win_aliens` decimal(15,2) DEFAULT 0.00,
-  `commission` float(15,2) DEFAULT 0.00,
+  `id` bigint NOT NULL,
+  `bet_gogold` float DEFAULT '0',
+  `win_gogold` float DEFAULT '0',
+  `bet_luckybunny` float(15,2) DEFAULT '0.00',
+  `win_luckybunny` float(15,2) DEFAULT '0.00',
+  `bet_aliens` float(15,2) DEFAULT '0.00',
+  `win_aliens` decimal(15,2) DEFAULT '0.00',
+  `commission` float(15,2) DEFAULT '0.00',
   `day` date DEFAULT NULL,
   `monthly` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -158,25 +160,25 @@ CREATE TABLE `comgogoldplanet` (
 --
 
 INSERT INTO `comgogoldplanet` (`id`, `bet_gogold`, `win_gogold`, `bet_luckybunny`, `win_luckybunny`, `bet_aliens`, `win_aliens`, `commission`, `day`, `monthly`) VALUES
-(1, 30, 7, 20.00, 0.00, 15.00, '9.00', 5.00, '2023-05-11', '2023-05-11'),
-(2, 10, 5, 0.00, 0.00, 0.00, '0.00', 120.00, '2023-05-12', '2023-05-12'),
-(3, 10, 0, 0.00, 0.00, 0.00, '0.00', 0.00, '2023-05-13', '2023-05-13'),
-(4, 550, 336.002, 0.00, 0.00, 0.00, '0.00', 0.00, '2023-05-16', '2023-05-16'),
-(5, 3030, 158.333, 1520.00, 117.67, 0.00, '0.00', 0.00, '2023-05-17', '2023-05-17'),
-(6, 1455, 951.033, 0.00, 0.00, 0.00, '0.00', 0.00, '2023-05-18', '2023-05-18'),
-(7, 198, 268.2, 0.00, 0.00, 0.00, '0.00', 0.00, '2023-05-20', '2023-05-20'),
-(8, 891, 1159.2, 0.00, 0.00, 0.00, '0.00', 0.00, '2023-05-21', '2023-05-21'),
-(9, 0, 0, 18.00, 13.20, 0.00, '0.00', 0.00, '2023-05-22', '2023-05-22'),
-(10, 0, 0, 909.00, 1039.20, 0.00, '0.00', 0.00, '2023-05-25', '2023-05-25'),
-(11, 0, 0, 1179.00, 775.80, 0.00, '0.00', 0.00, '2023-05-26', '2023-05-26'),
-(12, 0, 0, 81.00, 16.50, 0.00, '0.00', 0.00, '2023-06-20', '2023-06-20'),
-(13, 0, 0, 441.00, 144.90, 0.00, '0.00', 0.00, '2023-06-28', '2023-06-28'),
-(14, 0, 0, 0.00, 0.00, 252.00, '0.05', 0.00, '2023-06-29', '2023-06-29'),
-(15, 0, 0, 0.00, 0.00, 153.00, '1.51', 0.00, '2023-07-18', '2023-07-18'),
-(16, 40, 31, 0.00, 0.00, 0.00, '0.00', 0.00, '2023-08-23', '2023-08-23'),
-(17, 0, 0, 0.00, 0.00, 1431.00, '0.14', 0.00, '2023-08-30', '2023-08-30'),
-(18, 171, 84.3, 0.00, 0.00, 0.00, '0.00', 0.00, '2023-08-31', '2023-08-31'),
-(19, 9, 0, 0.00, 0.00, 0.00, '0.00', 0.00, '2023-09-11', '2023-09-11');
+(1, 30, 7, 20.00, 0.00, 15.00, 9.00, 5.00, '2023-05-11', '2023-05-11'),
+(2, 10, 5, 0.00, 0.00, 0.00, 0.00, 120.00, '2023-05-12', '2023-05-12'),
+(3, 10, 0, 0.00, 0.00, 0.00, 0.00, 0.00, '2023-05-13', '2023-05-13'),
+(4, 550, 336.002, 0.00, 0.00, 0.00, 0.00, 0.00, '2023-05-16', '2023-05-16'),
+(5, 3030, 158.333, 1520.00, 117.67, 0.00, 0.00, 0.00, '2023-05-17', '2023-05-17'),
+(6, 1455, 951.033, 0.00, 0.00, 0.00, 0.00, 0.00, '2023-05-18', '2023-05-18'),
+(7, 198, 268.2, 0.00, 0.00, 0.00, 0.00, 0.00, '2023-05-20', '2023-05-20'),
+(8, 891, 1159.2, 0.00, 0.00, 0.00, 0.00, 0.00, '2023-05-21', '2023-05-21'),
+(9, 0, 0, 18.00, 13.20, 0.00, 0.00, 0.00, '2023-05-22', '2023-05-22'),
+(10, 0, 0, 909.00, 1039.20, 0.00, 0.00, 0.00, '2023-05-25', '2023-05-25'),
+(11, 0, 0, 1179.00, 775.80, 0.00, 0.00, 0.00, '2023-05-26', '2023-05-26'),
+(12, 0, 0, 81.00, 16.50, 0.00, 0.00, 0.00, '2023-06-20', '2023-06-20'),
+(13, 0, 0, 441.00, 144.90, 0.00, 0.00, 0.00, '2023-06-28', '2023-06-28'),
+(14, 0, 0, 0.00, 0.00, 252.00, 0.05, 0.00, '2023-06-29', '2023-06-29'),
+(15, 0, 0, 0.00, 0.00, 153.00, 1.51, 0.00, '2023-07-18', '2023-07-18'),
+(16, 40, 31, 0.00, 0.00, 0.00, 0.00, 0.00, '2023-08-23', '2023-08-23'),
+(17, 0, 0, 0.00, 0.00, 1431.00, 0.14, 0.00, '2023-08-30', '2023-08-30'),
+(18, 171, 84.3, 0.00, 0.00, 0.00, 0.00, 0.00, '2023-08-31', '2023-08-31'),
+(19, 9, 0, 0.00, 0.00, 0.00, 0.00, 0.00, '2023-09-11', '2023-09-11');
 
 -- --------------------------------------------------------
 
@@ -185,11 +187,11 @@ INSERT INTO `comgogoldplanet` (`id`, `bet_gogold`, `win_gogold`, `bet_luckybunny
 --
 
 CREATE TABLE `commissionsubagent` (
-  `id` bigint(20) NOT NULL,
-  `idsub_agent` bigint(20) DEFAULT NULL,
-  `id_agent` bigint(20) DEFAULT NULL,
+  `id` bigint NOT NULL,
+  `idsub_agent` bigint DEFAULT NULL,
+  `id_agent` bigint DEFAULT NULL,
   `game_id` float(15,2) DEFAULT NULL,
-  `total` float(15,2) DEFAULT 0.00,
+  `total` float(15,2) DEFAULT '0.00',
   `time` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -207,40 +209,57 @@ INSERT INTO `commissionsubagent` (`id`, `idsub_agent`, `id_agent`, `game_id`, `t
 --
 
 CREATE TABLE `creditpromotion` (
-  `id` bigint(20) NOT NULL,
-  `agnetidcreate` int(20) NOT NULL,
-  `repost` enum('ทั่วไป','อีเวนท์') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'ทั่วไป',
+  `id` bigint NOT NULL,
+  `agnetidcreate` int NOT NULL,
+  `repost` enum('ทั่วไป','อีเวนท์') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'ทั่วไป',
   `startpromotion` date NOT NULL,
   `endpromotion` date NOT NULL,
-  `typebonus` enum('Percent','Fixed rate') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Percent',
-  `bunus` float(15,2) NOT NULL DEFAULT 0.00,
+  `typebonus` enum('Percent','Fixed rate') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'Percent',
+  `bunus` float(15,2) NOT NULL DEFAULT '0.00',
   `maxbunus` float(15,2) NOT NULL,
   `valusbunus` float(15,2) NOT NULL,
-  `groupuser` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'New',
-  `afterPromotion` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `receiving_data_type` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `valus_receiving` int(30) NOT NULL,
-  `data_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `valus_day` int(20) NOT NULL,
-  `numberoftimes_person` int(20) NOT NULL,
-  `ipAddress_attempts` int(20) NOT NULL,
-  `reset` time NOT NULL,
-  `withdrawalType` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `withdraw_data_type` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'ไม่มี',
-  `withdraw_max` float(15,2) NOT NULL DEFAULT 1.00,
-  `withdraw_valus` int(30) NOT NULL DEFAULT 0,
-  `statuspromotion` enum('Y','N') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Y',
-  `promotiontype` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `namepromotion` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `leakedPro` enum('เปอร์เซ็นต์','ค่าคงที่') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'เปอร์เซ็นต์'
+  `groupuser` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `afterPromotion` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `receiving_data_type` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `valus_receiving` int NOT NULL,
+  `data_type` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `valus_day` int NOT NULL,
+  `numberoftimes_person` int NOT NULL,
+  `ipAddress_attempts` int NOT NULL,
+  `reset` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_danish_ci NOT NULL,
+  `withdrawalType` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `withdraw_data_type` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'ไม่มี',
+  `withdraw_max` float(15,2) NOT NULL DEFAULT '1.00',
+  `withdraw_valus` int NOT NULL DEFAULT '0',
+  `statuspromotion` enum('Y','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'Y',
+  `promotiontype` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `namepromotion` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `leakedPro` enum('เปอร์เซ็นต์','ค่าคงที่') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'เปอร์เซ็นต์',
+  `receiving_data_typeI` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `receiving_data_typeII` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `data_typeI` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `data_typeII` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `resetI` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `resetII` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `withdrawalTypeII` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `withdrawalTypeIII` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `withdraw_valusII` int NOT NULL DEFAULT '0',
+  `withdraw_valusIII` int NOT NULL DEFAULT '0',
+  `status_topup` enum('Y','N') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'N',
+  `filename` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `details` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci,
+  `passwordpromotion` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `promotionsupport` varchar(500) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `webtype` varchar(250) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `multiplier` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `creditpromotion`
 --
 
-INSERT INTO `creditpromotion` (`id`, `agnetidcreate`, `repost`, `startpromotion`, `endpromotion`, `typebonus`, `bunus`, `maxbunus`, `valusbunus`, `groupuser`, `afterPromotion`, `receiving_data_type`, `valus_receiving`, `data_type`, `valus_day`, `numberoftimes_person`, `ipAddress_attempts`, `reset`, `withdrawalType`, `withdraw_data_type`, `withdraw_max`, `withdraw_valus`, `statuspromotion`, `promotiontype`, `namepromotion`, `leakedPro`) VALUES
-(1, 2, 'ทั่วไป', '2023-07-19', '2023-07-27', 'Percent', 30.00, 1000.00, 499.00, '', 'New', 'เติมเงินครั้งแรก', 0, '', 0, 0, 0, '00:00:00', 'ถอน', '', 5000.00, 0, 'Y', 'ฟรีเครดิต', 'เติมเงินครั้งแรกรับไปเลย', 'ค่าคงที่');
+INSERT INTO `creditpromotion` (`id`, `agnetidcreate`, `repost`, `startpromotion`, `endpromotion`, `typebonus`, `bunus`, `maxbunus`, `valusbunus`, `groupuser`, `afterPromotion`, `receiving_data_type`, `valus_receiving`, `data_type`, `valus_day`, `numberoftimes_person`, `ipAddress_attempts`, `reset`, `withdrawalType`, `withdraw_data_type`, `withdraw_max`, `withdraw_valus`, `statuspromotion`, `promotiontype`, `namepromotion`, `leakedPro`, `receiving_data_typeI`, `receiving_data_typeII`, `data_typeI`, `data_typeII`, `resetI`, `resetII`, `withdrawalTypeII`, `withdrawalTypeIII`, `withdraw_valusII`, `withdraw_valusIII`, `status_topup`, `filename`, `details`, `passwordpromotion`, `promotionsupport`, `webtype`, `multiplier`) VALUES
+(2, 2, 'ทั่วไป', '2023-10-10', '2023-10-30', 'Percent', 30.00, 1000.00, 100.00, 'undefined', '', 'ฝากเงินครั้งแรก', 0, '', 0, 0, 0, '00.00.00', 'Turnover Rate', '', 0.00, 0, 'Y', 'ฝาก', 'เติมเงินครั้งแรกรับไปเลย', 'ค่าคงที่', '', '', '', '', '00.00.00', '00.00.00', '', '', 0, 0, 'N', 'file_dateVal_1696955652462_banner2.jpg', 'เงือน\n1.ธธธธธธธธธธธธธธธธธธธธธธธธ\n2.ฌฌฌฌฌฌฌฌฌฌฌฌฌฌฌ\n3.ฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑ', 'cost-type-7j1eot', 'PG Soft,Slotxo,Joker123,Askmebet,Habanero,Spade Gaming,Micro Gaming,Simple Play,Live22,Evoplay,CQ9,Jili,Mannaplay,Funky Games,Yggdrasil Gaming,UPG Slot,Ameba,Ambslot,Netent2,Red Tiger,Dragon Gaming,Ace333,I8,WmSlot,Spinix,Ninja slot,918 Kiss,Pragmatic Play Slot', 'slot', '2');
 
 -- --------------------------------------------------------
 
@@ -249,22 +268,22 @@ INSERT INTO `creditpromotion` (`id`, `agnetidcreate`, `repost`, `startpromotion`
 --
 
 CREATE TABLE `depositaccount` (
-  `id` bigint(20) NOT NULL,
-  `webname` varchar(100) NOT NULL DEFAULT 'TOONTA',
-  `agent_id` bigint(20) DEFAULT NULL,
-  `bankName` enum('ธนาคารไทยพาณิชย์','ธนาคารกสิกรไทย','ธนาคารกรุงเทพ','ธนาคารกรุงไทย','ธนาคารกรุงศรีอยุธยา','ธนาคารเกียรตินาคินภัทร','ธนาคารซีไอเอ็มบี ไทย','ธนาคารทหารไทยธนชาต','ธนาคารยูโอบี','ธนาคารออมสิน','ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร','ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)') NOT NULL DEFAULT 'ธนาคารไทยพาณิชย์',
-  `status` varchar(255) NOT NULL,
-  `balance` int(11) NOT NULL DEFAULT 0,
-  `billMatched` int(11) NOT NULL DEFAULT 0,
-  `complated` int(11) NOT NULL DEFAULT 0,
-  `accountNumber` varchar(13) NOT NULL,
-  `algorithm` enum('Sms','Bot Bank','Bank API') NOT NULL DEFAULT 'Sms',
-  `activestatus` enum('เปิดใช้งาน','ปิดใช้งาน') NOT NULL DEFAULT 'เปิดใช้งาน',
-  `accountRocked` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `autorocker` int(11) NOT NULL DEFAULT 0,
-  `imgbank` varchar(100) NOT NULL,
-  `accountName` varchar(100) DEFAULT NULL,
-  `nameAccount` varchar(100) NOT NULL
+  `id` bigint NOT NULL,
+  `webname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'TOONTA',
+  `agent_id` bigint DEFAULT NULL,
+  `bankName` enum('ธนาคารไทยพาณิชย์','ธนาคารกสิกรไทย','ธนาคารกรุงเทพ','ธนาคารกรุงไทย','ธนาคารกรุงศรีอยุธยา','ธนาคารเกียรตินาคินภัทร','ธนาคารซีไอเอ็มบี ไทย','ธนาคารทหารไทยธนชาต','ธนาคารยูโอบี','ธนาคารออมสิน','ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร','ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'ธนาคารไทยพาณิชย์',
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `balance` int NOT NULL DEFAULT '0',
+  `billMatched` int NOT NULL DEFAULT '0',
+  `complated` int NOT NULL DEFAULT '0',
+  `accountNumber` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `algorithm` enum('Sms','Bot Bank','Bank API') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Sms',
+  `activestatus` enum('เปิดใช้งาน','ปิดใช้งาน') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'เปิดใช้งาน',
+  `accountRocked` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `autorocker` int NOT NULL DEFAULT '0',
+  `imgbank` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `accountName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `nameAccount` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -275,7 +294,7 @@ INSERT INTO `depositaccount` (`id`, `webname`, `agent_id`, `bankName`, `status`,
 (1, 'TOONTA', 2, 'ธนาคารไทยพาณิชย์', 'แก้ไขไม่ได้ เนื่องจากผูก Api ', 53295, 53295, 60495, '1568996524', 'Sms', 'ปิดใช้งาน', 'RockedTest', 50000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย ทรงยศ เปล่งรัตน์', 'นาย ทรงยศ เปล่งรัตน์'),
 (4, 'TOONTA', 2, 'ธนาคารกรุงเทพ', 'แก้ไขไม่ได้ เนื่องจากผูก Api ', 52500, 52500, 59700, '1568996524', 'Sms', 'ปิดใช้งาน', 'RockedTest', 50000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-bbl.png', 'นาย ทรงยศ แสงใส', 'นาย ทรงยศ แสงใส'),
 (5, 'TOONTA', NULL, 'ธนาคารไทยพาณิชย์', 'แก้ไขไม่ได้ เนื่องจากผูก Api', 7, 7, 7, '8852932451', 'Sms', 'ปิดใช้งาน', 'Test', 30000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', 'นาย พีรวัส ขวัญแก้ว'),
-(6, 'TOONTA', NULL, 'ธนาคารกสิกรไทย', 'แก้ไขไม่ได้ เนื่องจากผูก Api', 6, 6, 6, '0358449174', 'Sms', 'เปิดใช้งาน', 'Test', 1000000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-kbank.png', 'MR. JRIRAKHIT CHOKPARITKUN', 'MR. JRIRAKHIT CHOKPARITKUN'),
+(6, 'TOONTA', NULL, 'ธนาคารกสิกรไทย', 'แก้ไขไม่ได้ เนื่องจากผูก Api', 6, 6, 6, '0358449174', 'Sms', 'ปิดใช้งาน', 'Test', 1000000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-kbank.png', 'MR. JRIRAKHIT CHOKPARITKUN', 'MR. JRIRAKHIT CHOKPARITKUN'),
 (7, 'TOONTA', NULL, 'ธนาคารไทยพาณิชย์', 'แก้ไขไม่ได้ เนื่องจากผูก Api', 2, 2, 2, '4370390228', 'Sms', 'เปิดใช้งาน', 'Test', 1000000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นางสาว จิราภรณ์ แหขุนทด', 'นางสาว จิราภรณ์ แหขุนทด'),
 (8, 'TOONTA', NULL, 'ธนาคารกสิกรไทย', 'แก้ไขไม่ได้ เนื่องจากผูก Api', 0, 0, 0, '1653149774', 'Sms', 'เปิดใช้งาน', 'Test', 1000000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-kbank.png', 'MS. MY HAY MAR -', 'MYHAYMAR');
 
@@ -286,13 +305,13 @@ INSERT INTO `depositaccount` (`id`, `webname`, `agent_id`, `bankName`, `status`,
 --
 
 CREATE TABLE `game` (
-  `id` bigint(20) NOT NULL,
-  `growshrink` int(255) DEFAULT NULL,
-  `fiatValue` int(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `symbol` varchar(255) DEFAULT NULL,
-  `icon` varchar(255) DEFAULT NULL,
-  `linkgame` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL
+  `id` bigint NOT NULL,
+  `growshrink` int DEFAULT NULL,
+  `fiatValue` int DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `symbol` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `linkgame` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -308,50 +327,84 @@ INSERT INTO `game` (`id`, `growshrink`, `fiatValue`, `name`, `symbol`, `icon`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `gamecamptotal`
+--
+
+CREATE TABLE `gamecamptotal` (
+  `id` bigint NOT NULL,
+  `namegamecamp` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `grossComm` double(15,2) NOT NULL DEFAULT '0.00',
+  `turnover` double(15,2) NOT NULL DEFAULT '0.00',
+  `win` double(15,2) NOT NULL DEFAULT '0.00',
+  `lose` double(15,2) NOT NULL DEFAULT '0.00',
+  `commmember` double(15,2) NOT NULL DEFAULT '0.00',
+  `totalmamber` double(15,2) NOT NULL DEFAULT '0.00',
+  `w_l_agent` double(15,2) NOT NULL DEFAULT '0.00',
+  `comm_agent` double(15,2) NOT NULL DEFAULT '0.00',
+  `tatal_agent` double(15,2) NOT NULL DEFAULT '0.00',
+  `w_l_commny` double(15,2) NOT NULL DEFAULT '0.00',
+  `comm_commny` double(15,2) NOT NULL DEFAULT '0.00',
+  `tatal_commny` double(15,2) NOT NULL DEFAULT '0.00',
+  `roundplay` int NOT NULL DEFAULT '0',
+  `day` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `gamecamptotal`
+--
+
+INSERT INTO `gamecamptotal` (`id`, `namegamecamp`, `grossComm`, `turnover`, `win`, `lose`, `commmember`, `totalmamber`, `w_l_agent`, `comm_agent`, `tatal_agent`, `w_l_commny`, `comm_commny`, `tatal_commny`, `roundplay`, `day`) VALUES
+(2, 'PGSOFT2', 0.00, 96.30, 7.68, 88.62, 0.00, -80.94, 88.62, 0.00, 79.76, 88.62, 0.00, 8.86, 16, '2023-10-06'),
+(3, 'AMBSLOT2', 0.00, 18.00, 11.00, 7.00, 0.00, 4.00, 7.00, 0.00, 6.30, 7.00, 0.00, 0.70, 2, '2023-10-06');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `gameweb`
 --
 
 CREATE TABLE `gameweb` (
-  `id` bigint(255) NOT NULL,
-  `imglogo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `password_img` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `namegame` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `active` enum('Y','N') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'N'
+  `id` bigint NOT NULL,
+  `imglogo` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `password_img` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `namegame` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `active` enum('Y','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'N',
+  `percentagegame` double(15,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `gameweb`
 --
 
-INSERT INTO `gameweb` (`id`, `imglogo`, `password_img`, `namegame`, `active`) VALUES
-(1, 'https://superapi-products.s3-ap-southeast-1.amazonaws.com/logo/pgslot.webp', 'PGSOFT2', 'PG Soft', 'N'),
-(2, 'https://alexanderdevenezuela.com/wp-content/uploads/2021/02/slot-xo.png', 'SLOTXO', 'Slotxo', 'N'),
-(3, 'https://joker123.center/wp-content/uploads/2021/01/cropped-joker123-center-1024px.png', 'JOKER', 'Joker123', 'N'),
-(4, 'https://superapi-products.s3-ap-southeast-1.amazonaws.com/logo/askmebet.webp', 'ASKMEBET', 'Askmebet', 'N'),
-(5, 'https://casinodaddy.com/wp-content/uploads/2020/04/habanero-logo.png', 'HABANERO', 'Habanero', 'N'),
-(6, 'https://www.slotsreview.games/wp-content/uploads/2020/09/tabPp8TY.png', 'SPADE', 'Spade Gaming', 'N'),
-(7, 'https://onlinebingo.co.uk/wp-content/uploads/2022/08/microgaming.png', 'MICRO', 'Micro Gaming', 'N'),
-(8, 'https://smartcasinoguide.com/app/uploads/2021/11/SimplePlay-games-icon.png', 'SIMPLEPLAY', 'Simple Play', 'N'),
-(9, 'https://malaysialistings.s3.ap-south-1.amazonaws.com/listings/images63be4cb88319b.jpg', 'LIVE22', 'Live22', 'N'),
-(10, 'https://goodluckmate.com/storage/attribute_value/d3dce8f6c19589bace8a9d293a271780/c/evoplay-games-250x250.png', 'EVOPLAY', 'Evoplay', 'N'),
-(11, 'https://pgslot-game.io/wp-content/uploads/2021/08/CQ9-SLOT-min-1.png', 'CQ9V2', 'CQ9', 'N'),
-(12, 'https://play-lh.googleusercontent.com/7KD9UI2qGFDKCqSvVK_9k03PzApNaFxhHeAbQzCZqRvxAiqVOLVS5Jr6MXKzkcFotzUp', 'JILI', 'Jili', 'N'),
-(13, 'https://superslot247.com/wp-content/uploads/2022/06/%E0%B8%84%E0%B9%88%E0%B8%B2%E0%B8%A2-mannaplay-%E0%B9%80%E0%B8%A7%E0%B9%87%E0%B8%9A-Superslot-%E0%B8%9F%E0%B8%A3%E0%B8%B5%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%94%E0%B8%B4%E0%B8%95.png', 'MANNA', 'Mannaplay', 'N'),
-(14, 'https://www.atombetx888.com/images/bfgames/Funky%20Games.png', 'FUNKY', 'Funky Games', 'N'),
-(15, 'https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,f_auto,q_auto:eco,dpr_1/uj9tjvzkgifyr1nsyomj', 'YGGDRASIL', 'Yggdrasil Gaming', 'N'),
-(16, 'https://apimain.fomobet88.com/images/1655903289.webp', 'UPG', 'UPG Slot', 'N'),
-(17, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0jB977AuuUdyeQYZRVw25DzoOFCWZz7yMfd5GPujDIxe0SEwqngvMLMmvmLG6ZtSOC8o&usqp=CAU', 'AMEBA', 'Ameba', 'N'),
-(18, 'https://fortuneox.net/wp-content/uploads/2022/12/gamecompanyamb.png', 'AMBSLOT2', 'Ambslot', 'N'),
-(19, 'https://slotsmegacasino.pt/images/slots/hotline.jpg', 'NETENT2', 'Netent2', 'N'),
-(20, 'https://pbs.twimg.com/profile_images/1495764482307637248/9yEFhc2D_400x400.jpg', 'REDTIGER', 'Red Tiger', 'N'),
-(21, 'https://as2.ftcdn.net/v2/jpg/03/19/27/03/1000_F_319270375_1tXTAdn0eim324DADDtNJZZVBLIVYTLP.jpg', 'DRAGONGAMING', 'Dragon Gaming', 'N'),
-(22, 'https://static.wixstatic.com/media/ce54f5_43d735b0df6c47cf8de3ab7ca74be105~mv2.png/v1/fill/w_269,h_267,al_c,lg_1,q_95,enc_auto/ace333.png', 'ACE333', 'Ace333', 'N'),
-(23, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSokl0-jgqd5PRC_z88Q5m13kpMVH6YxTx88w&usqp=CAU', 'I8', 'I8', 'N'),
-(24, 'https://is3-ssl.mzstatic.com/image/thumb/Purple111/v4/22/0a/37/220a37e4-f17f-0b02-e54e-4869308fc2fb/source/512x512bb.jpg', 'WMSLOT', 'WmSlot', 'N'),
-(25, 'https://play-lh.googleusercontent.com/kyMC5UyPeJWaoju2AonX3StTnfZ5cse0MlkXheLzAdWnLeRG1u25X33Y59IuFLqnWQ', 'SPINIX', 'Spinix', 'N'),
-(26, 'https://ninjaslot.co.in/wp-content/uploads/2022/11/imgninja.png', 'NINJA', 'Ninja slot', 'Y'),
-(27, 'https://i1.sndcdn.com/avatars-5zP0dUayEzDDtX3G-zTczhA-t500x500.jpg', '918KISS', '918 Kiss', 'N'),
-(28, 'https://cryptostec.com/wp-content/uploads/2022/05/pragmatic-play.jpeg', 'PRAGMATIC_SLOT', 'Pragmatic Play Slot', 'N');
+INSERT INTO `gameweb` (`id`, `imglogo`, `password_img`, `namegame`, `active`, `percentagegame`) VALUES
+(1, 'https://superapi-products.s3-ap-southeast-1.amazonaws.com/logo/pgslot.webp', 'PGSOFT2', 'PG Soft', 'N', 90.00),
+(2, 'https://alexanderdevenezuela.com/wp-content/uploads/2021/02/slot-xo.png', 'SLOTXO', 'Slotxo', 'N', 90.00),
+(3, 'https://joker123.center/wp-content/uploads/2021/01/cropped-joker123-center-1024px.png', 'JOKER', 'Joker123', 'N', 90.00),
+(4, 'https://superapi-products.s3-ap-southeast-1.amazonaws.com/logo/askmebet.webp', 'ASKMEBET', 'Askmebet', 'N', 90.00),
+(5, 'https://casinodaddy.com/wp-content/uploads/2020/04/habanero-logo.png', 'HABANERO', 'Habanero', 'N', 90.00),
+(6, 'https://www.slotsreview.games/wp-content/uploads/2020/09/tabPp8TY.png', 'SPADE', 'Spade Gaming', 'N', 90.00),
+(7, 'https://onlinebingo.co.uk/wp-content/uploads/2022/08/microgaming.png', 'MICRO', 'Micro Gaming', 'N', 90.00),
+(8, 'https://smartcasinoguide.com/app/uploads/2021/11/SimplePlay-games-icon.png', 'SIMPLEPLAY', 'Simple Play', 'N', 90.00),
+(9, 'https://malaysialistings.s3.ap-south-1.amazonaws.com/listings/images63be4cb88319b.jpg', 'LIVE22', 'Live22', 'N', 90.00),
+(10, 'https://goodluckmate.com/storage/attribute_value/d3dce8f6c19589bace8a9d293a271780/c/evoplay-games-250x250.png', 'EVOPLAY', 'Evoplay', 'N', 90.00),
+(11, 'https://pgslot-game.io/wp-content/uploads/2021/08/CQ9-SLOT-min-1.png', 'CQ9V2', 'CQ9', 'N', 90.00),
+(12, 'https://play-lh.googleusercontent.com/7KD9UI2qGFDKCqSvVK_9k03PzApNaFxhHeAbQzCZqRvxAiqVOLVS5Jr6MXKzkcFotzUp', 'JILI', 'Jili', 'N', 90.00),
+(13, 'https://superslot247.com/wp-content/uploads/2022/06/%E0%B8%84%E0%B9%88%E0%B8%B2%E0%B8%A2-mannaplay-%E0%B9%80%E0%B8%A7%E0%B9%87%E0%B8%9A-Superslot-%E0%B8%9F%E0%B8%A3%E0%B8%B5%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%94%E0%B8%B4%E0%B8%95.png', 'MANNA', 'Mannaplay', 'N', 90.00),
+(14, 'https://www.atombetx888.com/images/bfgames/Funky%20Games.png', 'FUNKY', 'Funky Games', 'N', 90.00),
+(15, 'https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,f_auto,q_auto:eco,dpr_1/uj9tjvzkgifyr1nsyomj', 'YGGDRASIL', 'Yggdrasil Gaming', 'N', 90.00),
+(16, 'https://apimain.fomobet88.com/images/1655903289.webp', 'UPG', 'UPG Slot', 'N', 90.00),
+(17, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0jB977AuuUdyeQYZRVw25DzoOFCWZz7yMfd5GPujDIxe0SEwqngvMLMmvmLG6ZtSOC8o&usqp=CAU', 'AMEBA', 'Ameba', 'N', 90.00),
+(18, 'https://fortuneox.net/wp-content/uploads/2022/12/gamecompanyamb.png', 'AMBSLOT2', 'Ambslot', 'N', 90.00),
+(19, 'https://slotsmegacasino.pt/images/slots/hotline.jpg', 'NETENT2', 'Netent2', 'N', 90.00),
+(20, 'https://pbs.twimg.com/profile_images/1495764482307637248/9yEFhc2D_400x400.jpg', 'REDTIGER', 'Red Tiger', 'N', 90.00),
+(21, 'https://as2.ftcdn.net/v2/jpg/03/19/27/03/1000_F_319270375_1tXTAdn0eim324DADDtNJZZVBLIVYTLP.jpg', 'DRAGONGAMING', 'Dragon Gaming', 'N', 90.00),
+(22, 'https://static.wixstatic.com/media/ce54f5_43d735b0df6c47cf8de3ab7ca74be105~mv2.png/v1/fill/w_269,h_267,al_c,lg_1,q_95,enc_auto/ace333.png', 'ACE333', 'Ace333', 'N', 90.00),
+(23, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSokl0-jgqd5PRC_z88Q5m13kpMVH6YxTx88w&usqp=CAU', 'I8', 'I8', 'N', 90.00),
+(24, 'https://is3-ssl.mzstatic.com/image/thumb/Purple111/v4/22/0a/37/220a37e4-f17f-0b02-e54e-4869308fc2fb/source/512x512bb.jpg', 'WMSLOT', 'WmSlot', 'N', 90.00),
+(25, 'https://play-lh.googleusercontent.com/kyMC5UyPeJWaoju2AonX3StTnfZ5cse0MlkXheLzAdWnLeRG1u25X33Y59IuFLqnWQ', 'SPINIX', 'Spinix', 'N', 90.00),
+(26, 'https://ninjaslot.co.in/wp-content/uploads/2022/11/imgninja.png', 'NINJA', 'Ninja slot', 'Y', 90.00),
+(27, 'https://i1.sndcdn.com/avatars-5zP0dUayEzDDtX3G-zTczhA-t500x500.jpg', '918KISS', '918 Kiss', 'N', 90.00),
+(28, 'https://cryptostec.com/wp-content/uploads/2022/05/pragmatic-play.jpeg', 'PRAGMATIC_SLOT', 'Pragmatic Play Slot', 'N', 90.00);
 
 -- --------------------------------------------------------
 
@@ -360,8 +413,8 @@ INSERT INTO `gameweb` (`id`, `imglogo`, `password_img`, `namegame`, `active`) VA
 --
 
 CREATE TABLE `game_feespin` (
-  `member_id` bigint(255) DEFAULT 0,
-  `game_id` bigint(255) DEFAULT 0,
+  `member_id` bigint DEFAULT '0',
+  `game_id` bigint DEFAULT '0',
   `game_feespin` enum('true','false') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'false'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -411,17 +464,17 @@ INSERT INTO `game_feespin` (`member_id`, `game_id`, `game_feespin`) VALUES
 --
 
 CREATE TABLE `imgpromotion` (
-  `id` bigint(15) NOT NULL,
-  `namepromotion` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `details` varchar(400) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `fieldname` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `originalname` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `encoding` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `mimetype` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `destination` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `filename` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `path` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `size` int(20) NOT NULL
+  `id` bigint NOT NULL,
+  `namepromotion` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `details` varchar(400) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `fieldname` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `originalname` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `encoding` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `mimetype` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `destination` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `filename` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `path` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `size` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -429,7 +482,12 @@ CREATE TABLE `imgpromotion` (
 --
 
 INSERT INTO `imgpromotion` (`id`, `namepromotion`, `details`, `fieldname`, `originalname`, `encoding`, `mimetype`, `destination`, `filename`, `path`, `size`) VALUES
-(1, 'เติมเงินครั้งแรกรับไปเลย', 'เพียงผู้เล่นเติมเงินครั้งแรก ก็รับไปเลยโบนัส 30 % สูงสุด 1000 บาท เพียง เติมเงินขั้นต่ำ 500 บาทขึ้นไป', 'file', 'banner_03.png', '7bit', 'image/png', 'public/images', 'file_dateVal_1689789728226_banner_03.png', 'publicimagesfile_dateVal_1689789728226_banner_03.png', 2692525);
+(1, 'เติมเงินครั้งแรกรับไปเลย', 'เพียงผู้เล่นเติมเงินครั้งแรก ก็รับไปเลยโบนัส 30 % สูงสุด 1000 บาท เพียง เติมเงินขั้นต่ำ 500 บาทขึ้นไป', 'file', 'banner_03.png', '7bit', 'image/png', 'public/images', 'file_dateVal_1689789728226_banner_03.png', 'publicimagesfile_dateVal_1689789728226_banner_03.png', 2692525),
+(2, 'เติมเงินครั้งแรกรับโบนัสไปเลย', 'เงื่อนไข\n\n- ฝากขั้นต่ำ 100 บาท รับโบนัส 30%\n\n- เทิร์นโอเวอร์ 3 เท่า\n\n- โปรโมชั่นนี้รับได้เฉพาะการเงินครั้งแรก', 'file', 'banner2.jpg', '7bit', 'image/jpeg', 'public/images', 'file_dateVal_1696952348660_banner2.jpg', 'public/images/file_dateVal_1696952348660_banner2.jpg', 262791),
+(3, 'เติมเงินครั้งแรกรับไปเลยโบนัส', 'เงิือนไข\n1. TestTestTestTestTestTest\n2. TestTestTestTestTestTest\n3. TestTestTestTestTestTest\n4. TestTestTestTestTestTest', 'file', 'banner2.jpg', '7bit', 'image/jpeg', 'public/images', 'file_dateVal_1696952810869_banner2.jpg', 'public/images/file_dateVal_1696952810869_banner2.jpg', 262791),
+(4, 'เติมเงินครั้งแรกรับไปเลยโบนัส', 'เงื่อนไข\n1.testtesttesttesttesttest\n2.testtesttesttesttesttest\n3.testtesttesttesttesttest', 'file', 'banner2.jpg', '7bit', 'image/jpeg', 'public/images', 'file_dateVal_1696954925204_banner2.jpg', 'public/images/file_dateVal_1696954925204_banner2.jpg', 262791),
+(5, 'เติมเงินครั้งแรกรับไปเลย', 'เงือนไข\n1.ttttttttttttttttttttttttttttttttttttttttt\n2.tttttttttttttttttttttttttttttttttttttttt\n3.ttttttttttttttttttttttttttttttttttttt', 'file', 'banner2.jpg', '7bit', 'image/jpeg', 'public/images', 'file_dateVal_1696955131373_banner2.jpg', 'public/images/file_dateVal_1696955131373_banner2.jpg', 262791),
+(6, 'เติมเงินครั้งแรกรับไปเลย', 'เงือน\n1.ธธธธธธธธธธธธธธธธธธธธธธธธ\n2.ฌฌฌฌฌฌฌฌฌฌฌฌฌฌฌ\n3.ฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑ', 'file', 'banner2.jpg', '7bit', 'image/jpeg', 'public/images', 'file_dateVal_1696955652462_banner2.jpg', 'public/images/file_dateVal_1696955652462_banner2.jpg', 262791);
 
 -- --------------------------------------------------------
 
@@ -438,13 +496,13 @@ INSERT INTO `imgpromotion` (`id`, `namepromotion`, `details`, `fieldname`, `orig
 --
 
 CREATE TABLE `logdaygame` (
-  `id` bigint(20) NOT NULL,
-  `game_id` bigint(20) DEFAULT NULL,
-  `namegame` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'game',
-  `play` int(11) DEFAULT 0,
-  `bet` float(15,2) DEFAULT 0.00,
-  `win` float(15,2) DEFAULT 0.00,
-  `icon` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `id` bigint NOT NULL,
+  `game_id` bigint DEFAULT NULL,
+  `namegame` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'game',
+  `play` int DEFAULT '0',
+  `bet` float(15,2) DEFAULT '0.00',
+  `win` float(15,2) DEFAULT '0.00',
+  `icon` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `day` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -478,13 +536,13 @@ INSERT INTO `logdaygame` (`id`, `game_id`, `namegame`, `play`, `bet`, `win`, `ic
 --
 
 CREATE TABLE `logedit` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `edittype` enum('admin','agent','member') DEFAULT NULL,
-  `idedit` bigint(20) DEFAULT NULL,
-  `idmember` bigint(20) DEFAULT 0,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `editbefore` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `editafter` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `edittype` enum('admin','agent','member') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `idedit` bigint DEFAULT NULL,
+  `idmember` bigint DEFAULT '0',
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `editbefore` varchar(300) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `editafter` varchar(300) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `created_attime` datetime DEFAULT NULL,
   `created_atdate` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -517,7 +575,10 @@ INSERT INTO `logedit` (`id`, `edittype`, `idedit`, `idmember`, `name`, `editbefo
 (43, 'agent', 2, 27, 'agent01', 'ชื่อจริง พีรวัสTestTest นามสกุล นุเคราะห์ชีพTestTest กลุ่มลูกค้า NewMember Renk Bronze username 0990825941 ไลน์ NoobTest', 'ชื่อจริง พีรวัสTest นามสกุล นุเคราะห์ชีพTestTest กลุ่มลูกค้า NewMember Renk Bronze username 0990825941 ไลน์ NoobTestแก้ไขโดย agent01', '2023-08-21 01:44:23', NULL),
 (44, 'agent', 2, 27, 'agent01', 'ชื่อจริง พีรวัสTest นามสกุล นุเคราะห์ชีพTestTest กลุ่มลูกค้า NewMember Renk Bronze username 0990825941 ไลน์ NoobTest', 'ชื่อจริง พีรวัสTestAc นามสกุล นุเคราะห์ชีพTestTest กลุ่มลูกค้า Bronze Renk Bronze username 0990825941 ไลน์ NoobTestแก้ไขโดย agent01', '2023-08-21 01:46:58', NULL),
 (45, 'agent', 2, 27, 'agent01', 'ชื่อจริง พีรวัสTestAc นามสกุล นุเคราะห์ชีพTestTest กลุ่มลูกค้า NewMember Renk Bronze username 0990825941 ไลน์ NoobTest', 'ชื่อจริง พีรวัสTestAc นามสกุล นุเคราะห์ชีพTestTest กลุ่มลูกค้า Bronze Renk Bronze username 0990825941 ไลน์ NoobTestแก้ไขโดย agent01', '2023-08-21 01:52:46', NULL),
-(46, 'member', 27, 27, '0990825942', 'ไม่เปิดเผยรหัสผ่านเก่า\n              ', 'มีการเปลี่ยนรหัสผ่านโดย member ชื่อ 0990825942', '2023-09-15 20:45:13', '2023-09-15');
+(46, 'member', 27, 27, '0990825942', 'ไม่เปิดเผยรหัสผ่านเก่า\n              ', 'มีการเปลี่ยนรหัสผ่านโดย member ชื่อ 0990825942', '2023-09-15 20:45:13', '2023-09-15'),
+(47, 'agent', 2, 36, 'agent01', 'Credit ก่อนหน้า   0\n              ', 'Credit ปัจจุบัน = 1000มีการเปลี่ยนโดย agent ชื่อ agent01', '2023-10-07 13:53:05', '2023-10-07'),
+(48, 'agent', 2, 37, 'agent01', 'Credit ก่อนหน้า   0\n              ', 'Credit ปัจจุบัน = 1000มีการเปลี่ยนโดย agent ชื่อ agent01', '2023-10-07 14:07:54', '2023-10-07'),
+(49, 'member', 36, 36, '0954789782', 'ไม่เปิดเผยรหัสผ่านเก่า\n              ', 'มีการเปลี่ยนรหัสผ่านโดย member ชื่อ 0954789782', '2023-10-07 14:57:41', '2023-10-07');
 
 -- --------------------------------------------------------
 
@@ -526,13 +587,13 @@ INSERT INTO `logedit` (`id`, `edittype`, `idedit`, `idmember`, `name`, `editbefo
 --
 
 CREATE TABLE `logeditadmin` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `edittype` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `idedit` bigint(20) DEFAULT NULL,
-  `adminid` bigint(20) DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `editbefore` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `editafter` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `edittype` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `idedit` bigint DEFAULT NULL,
+  `adminid` bigint DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `editbefore` varchar(300) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `editafter` varchar(300) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -550,13 +611,13 @@ INSERT INTO `logeditadmin` (`id`, `edittype`, `idedit`, `adminid`, `name`, `edit
 --
 
 CREATE TABLE `logeditagent` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `edittype` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `idedit` bigint(20) DEFAULT NULL,
-  `agentid` bigint(20) DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `id` bigint UNSIGNED NOT NULL,
+  `edittype` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `idedit` bigint DEFAULT NULL,
+  `agentid` bigint DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `editbefore` varchar(300) CHARACTER SET utf32 COLLATE utf32_general_ci DEFAULT NULL,
-  `editafter` varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `editafter` varchar(300) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -586,29 +647,29 @@ INSERT INTO `logeditagent` (`id`, `edittype`, `idedit`, `agentid`, `name`, `edit
 --
 
 CREATE TABLE `logfinanceuser` (
-  `id` bigint(20) NOT NULL,
-  `bill_number` varchar(20) NOT NULL DEFAULT '''111111111111111''',
-  `numberbill` int(11) NOT NULL DEFAULT 0,
-  `idUser` int(11) NOT NULL,
-  `agent_id` bigint(20) NOT NULL,
-  `tpyefinance` enum('ถอน','ฝาก') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `accountName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `accountNumber` varchar(13) NOT NULL,
-  `phonenumber` varchar(11) NOT NULL DEFAULT '0999999999',
+  `id` bigint NOT NULL,
+  `bill_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '''111111111111111''',
+  `numberbill` int NOT NULL DEFAULT '0',
+  `idUser` int NOT NULL,
+  `agent_id` bigint NOT NULL,
+  `tpyefinance` enum('ถอน','ฝาก') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `accountName` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `accountNumber` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `phonenumber` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0999999999',
   `transaction_date` date NOT NULL,
   `time` time NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `creditbonus` int(11) DEFAULT 0,
-  `balance_before` float(15,2) NOT NULL DEFAULT 0.00,
+  `quantity` int NOT NULL,
+  `creditbonus` int DEFAULT '0',
+  `balance_before` float(15,2) NOT NULL DEFAULT '0.00',
   `balance` float(15,2) NOT NULL,
-  `status` enum('ยังไม่เรียบร้อย','ทั้งหมด','รอ','ที่ยังไม่ผูก','สำเร็จ','ไม่สำเส็จ') NOT NULL DEFAULT 'สำเร็จ',
-  `bank` enum('ธนาคารไทยพาณิชย์','ธนาคารกสิกรไทย','ธนาคารกรุงเทพ','ธนาคารกรุงไทย','ธนาคารกรุงศรีอยุธยา','ธนาคารเกียรตินาคินภัทร','ธนาคารซีไอเอ็มบี ไทย','ธนาคารทหารไทยธนชาต','ธนาคารยูโอบี','ธนาคารออมสิน','ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร','ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)','Agent') NOT NULL DEFAULT 'ธนาคารไทยพาณิชย์',
-  `imgBank` varchar(100) NOT NULL,
-  `destinationAccount` varchar(100) NOT NULL,
-  `destinationAccountNumber` varchar(13) NOT NULL,
-  `trans_ref` varchar(100) NOT NULL DEFAULT 'เพิ่มจากเว็บAgent',
-  `qrcodeData` varchar(150) NOT NULL DEFAULT 'เพิ่มจากเว็บAgent',
-  `nameimg` varchar(100) NOT NULL DEFAULT 'เพิ่มจากเว็บAgent'
+  `status` enum('ยังไม่เรียบร้อย','ทั้งหมด','รอ','ที่ยังไม่ผูก','สำเร็จ','ไม่สำเส็จ') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'สำเร็จ',
+  `bank` enum('ธนาคารไทยพาณิชย์','ธนาคารกสิกรไทย','ธนาคารกรุงเทพ','ธนาคารกรุงไทย','ธนาคารกรุงศรีอยุธยา','ธนาคารเกียรตินาคินภัทร','ธนาคารซีไอเอ็มบี ไทย','ธนาคารทหารไทยธนชาต','ธนาคารยูโอบี','ธนาคารออมสิน','ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร','ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)','Agent') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'ธนาคารไทยพาณิชย์',
+  `imgBank` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `destinationAccount` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `destinationAccountNumber` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `trans_ref` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'เพิ่มจากเว็บAgent',
+  `qrcodeData` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'เพิ่มจากเว็บAgent',
+  `nameimg` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'เพิ่มจากเว็บAgent'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -681,12 +742,12 @@ INSERT INTO `logfinanceuser` (`id`, `bill_number`, `numberbill`, `idUser`, `agen
 --
 
 CREATE TABLE `loggame` (
-  `id` bigint(20) NOT NULL,
-  `namegame` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'game',
-  `play` int(11) DEFAULT 0,
-  `bet` float(15,2) DEFAULT 0.00,
-  `win` float(15,2) DEFAULT 0.00,
-  `icon` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL
+  `id` bigint NOT NULL,
+  `namegame` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'game',
+  `play` int DEFAULT '0',
+  `bet` float(15,2) DEFAULT '0.00',
+  `win` float(15,2) DEFAULT '0.00',
+  `icon` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -705,23 +766,23 @@ INSERT INTO `loggame` (`id`, `namegame`, `play`, `bet`, `win`, `icon`) VALUES
 --
 
 CREATE TABLE `mastergroup` (
-  `id` bigint(20) NOT NULL,
-  `agent_id` bigint(20) NOT NULL,
-  `account_name` varchar(50) NOT NULL,
-  `account_number` varchar(13) NOT NULL,
-  `color` varchar(7) NOT NULL DEFAULT '#000000',
-  `password` varchar(30) NOT NULL,
-  `minwithdrawal` double(15,2) NOT NULL DEFAULT 0.00,
-  `withdrawalday` int(20) NOT NULL DEFAULT 0,
-  `nameaccoun` varchar(30) NOT NULL,
-  `mindeposit` double(15,2) NOT NULL DEFAULT 0.00,
-  `withdrawalsperday` int(20) NOT NULL DEFAULT 0,
-  `groupmaster` enum('NewMember','Bronze','Silver','Gold','Diamond') NOT NULL DEFAULT 'NewMember',
-  `depositaccount` varchar(30) NOT NULL,
-  `secondaryaccount` varchar(30) DEFAULT NULL,
-  `secondaryaccountII` varchar(30) DEFAULT NULL,
-  `secondaryaccountIII` varchar(30) DEFAULT NULL,
-  `imgbank` varchar(255) NOT NULL
+  `id` bigint NOT NULL,
+  `agent_id` bigint NOT NULL,
+  `account_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `account_number` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `color` varchar(7) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '#000000',
+  `password` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `minwithdrawal` double(15,2) NOT NULL DEFAULT '0.00',
+  `withdrawalday` int NOT NULL DEFAULT '0',
+  `nameaccoun` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `mindeposit` double(15,2) NOT NULL DEFAULT '0.00',
+  `withdrawalsperday` int NOT NULL DEFAULT '0',
+  `groupmaster` enum('NewMember','Bronze','Silver','Gold','Diamond') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'NewMember',
+  `depositaccount` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `secondaryaccount` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `secondaryaccountII` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `secondaryaccountIII` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `imgbank` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -738,51 +799,53 @@ INSERT INTO `mastergroup` (`id`, `agent_id`, `account_name`, `account_number`, `
 --
 
 CREATE TABLE `member` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `agent_id` bigint(20) DEFAULT 0,
-  `username_agent` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `member_code` varchar(25) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `credit` float(15,2) DEFAULT 0.00,
-  `bet_latest` float(16,2) DEFAULT 0.00,
-  `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `status` enum('Y','N') NOT NULL DEFAULT 'Y',
-  `status_delete` enum('Y','N') NOT NULL DEFAULT 'N',
+  `id` bigint UNSIGNED NOT NULL,
+  `agent_id` bigint DEFAULT '0',
+  `username_agent` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `member_code` varchar(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `credit` float(15,2) DEFAULT '0.00',
+  `bet_latest` float(16,2) DEFAULT '0.00',
+  `username` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `status` enum('Y','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'Y',
+  `status_delete` enum('Y','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'N',
   `created_at` date DEFAULT NULL,
   `created_attime` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `ip_address` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `browserlogin` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `customerGroup` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `userrank` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `ip_address` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `browserlogin` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `customerGroup` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `userrank` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `lineid` varchar(20) CHARACTER SET utf32 COLLATE utf32_general_ci NOT NULL,
-  `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `note` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `currency` varchar(11) CHARACTER SET utf32 COLLATE utf32_general_ci NOT NULL,
-  `bank` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `accountName` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `accountNumber` varchar(13) NOT NULL,
-  `phonenumber` varchar(10) NOT NULL,
-  `lastName` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `recharge_times` int(100) NOT NULL DEFAULT 0,
-  `bonususer` int(20) NOT NULL DEFAULT 0,
-  `imgBank` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `deposit` double(15,2) NOT NULL DEFAULT 0.00,
-  `withdraw_member` double(15,2) NOT NULL DEFAULT 0.00,
+  `bank` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `accountName` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `accountNumber` varchar(13) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `phonenumber` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `lastName` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `recharge_times` int NOT NULL DEFAULT '0',
+  `bonususer` int NOT NULL DEFAULT '0',
+  `deposit` double(15,2) NOT NULL DEFAULT '0.00',
+  `withdraw_member` double(15,2) NOT NULL DEFAULT '0.00',
   `groupmember` enum('NewMember','Bronze','Silver','Gold','Diamond') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'NewMember',
-  `turnover` double(15,2) NOT NULL DEFAULT 0.00
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `turnover` double(15,2) NOT NULL DEFAULT '0.00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Dumping data for table `member`
 --
 
-INSERT INTO `member` (`id`, `agent_id`, `username_agent`, `member_code`, `name`, `credit`, `bet_latest`, `username`, `password`, `status`, `status_delete`, `created_at`, `created_attime`, `updated_at`, `ip_address`, `browserlogin`, `customerGroup`, `userrank`, `lineid`, `note`, `currency`, `bank`, `accountName`, `accountNumber`, `phonenumber`, `lastName`, `recharge_times`, `bonususer`, `imgBank`, `deposit`, `withdraw_member`, `groupmember`, `turnover`) VALUES
-(27, 2, 'agent01', '2', 'พีรวัสTestAc', 154109.91, 9.00, '0990825942', '1c8a0fb0f77321b2fea4124168f33eef', 'Y', 'N', '2023-07-16', '2023-07-18 19:22:34', '2023-07-16 10:20:06', 'null', 'null', 'Bronze', 'Bronze', 'NoobTest', 'สร้างขึ้นเพื่อการทดสอบ', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย พีรวัส ขวัญแก้ว', '2147483647', '0990825942', 'นุเคราะห์ชีพTestTest', 13, 150, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 0.00, 0.00, 'Bronze', 165.00),
-(29, 2, 'agent01', '2', 'คุโรซากิ', 1005.00, 0.00, '0990825941', '25f9e794323b453885f5181f1b624d0b', 'N', 'N', '2023-07-16', '2023-07-18 19:22:34', '2023-07-16 11:24:17', NULL, NULL, 'NEW ALL', 'Bronze', 'WorkFromHome', 'TestTestTest', 'บาท', 'ธนาคารไทยพาณิชย์', 'อิจิโกะคุโรซากิ', '2892287535', '0990825941', 'อิจิโกะ', 5, 0, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 0.00, 0.00, 'NewMember', 0.00),
-(30, 2, 'agent01', '2', 'hjklljlhujlh', 2000.00, 0.00, '0852369877', 'cdc4a43766bedd38cc0ac9a007ef7b5a', 'Y', 'N', '2023-07-16', '2023-08-06 19:24:14', '2023-07-16 11:49:30', NULL, NULL, 'NEW ALL', 'Bronze', 'jkioujj', 'testtestest', 'บาท', 'ธนาคารไทยพาณิชย์', '1245621244', '2147483647', '0852369877', 'ljljjljljljlj', 0, 0, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 0.00, 0.00, 'NewMember', 0.00),
-(31, 2, 'agent01', '2', 'พีรวัส ขวัญแก้ว', 3000.00, 0.00, '0990825955', '8006d0ab269ea94538b5be36aa74c3c6', 'Y', 'N', '2023-07-18', '2023-08-13 19:24:05', '2023-07-18 10:26:17', 'null', 'null', 'NEW ALL', 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'พีรวัส ขวัญแก้ว', '2147483647', '0990825955', 'พีรวัส ขวัญแก้ว', 1, 0, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 0.00, 0.00, 'NewMember', 0.00),
-(34, 2, 'agent01', '2', 'จิรกฤต โชคพฤทธิ์กุล', 3800.00, 0.00, '0954789782', 'ef775988943825d2871e1cfa75473ec0', 'Y', 'N', '2023-08-24', '2023-08-23 19:23:55', '2023-07-20 10:54:38', 'null', 'null', 'NEW ALL', 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'จิรกฤต โชคพฤทธิ์กุล', '1111111111', '0954789782', 'จิรกฤต โชคพฤทธิ์กุล', 27, 0, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 0.00, 0.00, 'NewMember', 0.00);
+INSERT INTO `member` (`id`, `agent_id`, `username_agent`, `member_code`, `name`, `credit`, `bet_latest`, `username`, `password`, `status`, `status_delete`, `created_at`, `created_attime`, `updated_at`, `ip_address`, `browserlogin`, `customerGroup`, `userrank`, `lineid`, `note`, `currency`, `bank`, `accountName`, `accountNumber`, `phonenumber`, `lastName`, `recharge_times`, `bonususer`, `deposit`, `withdraw_member`, `groupmember`, `turnover`) VALUES
+(27, 2, 'agent01', '2', 'พีรวัสTestAc', 154109.91, 9.00, '0990825943', '1c8a0fb0f77321b2fea4124168f33eef', 'Y', 'N', '2023-07-16', '2023-07-18 19:22:34', '2023-07-16 10:20:06', 'null', 'null', 'Bronze', 'Bronze', 'NoobTest', 'สร้างขึ้นเพื่อการทดสอบ', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย พีรวัส ขวัญแก้ว', '2147483647', '0990825943', 'นุเคราะห์ชีพTestTest', 13, 150, 0.00, 0.00, 'Bronze', 165.00),
+(29, 2, 'agent01', '2', 'คุโรซากิ', 1011.55, 9.00, '0990825941', '1c8a0fb0f77321b2fea4124168f33eef', 'N', 'N', '2023-07-16', '2023-07-18 19:22:34', '2023-07-16 11:24:17', 'null', 'null', 'NEW ALL', 'Bronze', 'WorkFromHome', 'TestTestTest', 'บาท', 'ธนาคารไทยพาณิชย์', 'อิจิโกะคุโรซากิ', '2892287535', '0990825941', 'อิจิโกะ', 5, 0, 0.00, 0.00, 'NewMember', 0.00),
+(30, 2, 'agent01', '2', 'hjklljlhujlh', 2000.00, 0.00, '0852369877', 'cdc4a43766bedd38cc0ac9a007ef7b5a', 'Y', 'N', '2023-07-16', '2023-08-06 19:24:14', '2023-07-16 11:49:30', NULL, NULL, 'NEW ALL', 'Bronze', 'jkioujj', 'testtestest', 'บาท', 'ธนาคารไทยพาณิชย์', '1245621244', '2147483647', '0852369877', 'ljljjljljljlj', 0, 0, 0.00, 0.00, 'NewMember', 0.00),
+(31, 2, 'agent01', '2', 'พีรวัส ขวัญแก้ว', 3000.00, 0.00, '0990825955', '8006d0ab269ea94538b5be36aa74c3c6', 'Y', 'N', '2023-07-18', '2023-08-13 19:24:05', '2023-07-18 10:26:17', 'null', 'null', 'NEW ALL', 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'พีรวัส ขวัญแก้ว', '2147483647', '0990825955', 'พีรวัส ขวัญแก้ว', 1, 0, 0.00, 0.00, 'NewMember', 0.00),
+(35, 2, 'agent01', '2', 'นาย พีรวัส ขวัญแก้ว', 0.00, 0.00, '0990825942', '1c8a0fb0f77321b2fea4124168f33eef', 'Y', 'N', '2023-10-07', '2023-10-07 13:48:58', '2023-10-07 13:48:58', 'null', 'null', NULL, 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย พีรวัส ขวัญแก้ว', '1587456984', '0990825942', 'นาย พีรวัส ขวัญแก้ว', 0, 0, 0.00, 0.00, 'NewMember', 0.00),
+(36, 2, 'agent01', '2', 'นาย จิรกฤต โชคพฤทธิ์กุล', 1002.40, 5.00, '0954789782', '52c69e3a57331081823331c4e69d3f2e', 'Y', 'N', '2023-10-07', '2023-10-07 13:50:28', '2023-10-07 13:50:28', 'null', 'null', NULL, 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย จิรกฤต โชคพฤทธิ์กุล', '2892287535', '0954789782', 'นาย จิรกฤต โชคพฤทธิ์กุล', 0, 0, 0.00, 0.00, 'NewMember', 0.00),
+(37, 2, 'agent01', '2', 'ธีร์จุฑา ศรีครุฑ', 1000.00, 0.00, '0819372939', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'N', '2023-10-07', '2023-10-07 13:57:07', '2023-10-07 13:57:07', '172.18.0.5', 'Google Chrome', NULL, 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารออมสิน', 'ธีร์จุฑา ศรีครุฑ', '1234567890', '0819372939', 'ธีร์จุฑา ศรีครุฑ', 0, 0, 0.00, 0.00, 'NewMember', 0.00),
+(38, 2, 'agent01', '2', 'นิธิธร', 0.00, 0.00, '0951789155', 'cf8c105ec5b1554187508d61aa4a325d', 'Y', 'N', '2023-10-07', '2023-10-07 18:11:39', '2023-10-07 18:11:39', 'null', 'null', NULL, 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารกสิกรไทย', 'นิธิธร', '0972831476', '0951789155', 'นิธิธร', 0, 0, 0.00, 0.00, 'NewMember', 0.00);
 
 -- --------------------------------------------------------
 
@@ -791,15 +854,15 @@ INSERT INTO `member` (`id`, `agent_id`, `username_agent`, `member_code`, `name`,
 --
 
 CREATE TABLE `percentgame` (
-  `id` bigint(20) NOT NULL,
-  `subagent_id` bigint(20) DEFAULT NULL,
+  `id` bigint NOT NULL,
+  `subagent_id` bigint DEFAULT NULL,
   `gamename` varchar(30) CHARACTER SET utf32 COLLATE utf32_general_ci DEFAULT NULL,
-  `img` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `hold_percentage` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '0%',
-  `our_percentage` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '0%',
-  `monthly_total` float(15,2) DEFAULT 0.00,
+  `img` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `hold_percentage` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '0%',
+  `our_percentage` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '0%',
+  `monthly_total` float(15,2) DEFAULT '0.00',
   `monthly` date DEFAULT NULL,
-  `status_game` enum('Y','N') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Y'
+  `status_game` enum('Y','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'Y'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -875,16 +938,16 @@ INSERT INTO `percentgame` (`id`, `subagent_id`, `gamename`, `img`, `hold_percent
 --
 
 CREATE TABLE `repostgame` (
-  `id` bigint(20) NOT NULL,
-  `iduser` bigint(20) NOT NULL DEFAULT 0,
-  `username` varchar(100) NOT NULL,
-  `gameid` varchar(30) NOT NULL,
-  `bet` double(15,2) NOT NULL DEFAULT 0.00,
-  `win` double(15,2) NOT NULL DEFAULT 0.00,
-  `balance_credit` double(15,2) NOT NULL DEFAULT 0.00,
-  `get_browser` longtext NOT NULL,
-  `platform` enum('PC','Mobile') NOT NULL DEFAULT 'Mobile',
-  `trans_id` varchar(100) NOT NULL DEFAULT 'NO',
+  `id` bigint NOT NULL,
+  `iduser` bigint NOT NULL DEFAULT '0',
+  `username` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `gameid` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `bet` double(15,2) NOT NULL DEFAULT '0.00',
+  `win` double(15,2) NOT NULL DEFAULT '0.00',
+  `balance_credit` double(15,2) NOT NULL DEFAULT '0.00',
+  `get_browser` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `platform` enum('PC','Mobile') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Mobile',
+  `trans_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'NO',
   `created_atdate` date NOT NULL,
   `created_attime` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -3174,7 +3237,86 @@ INSERT INTO `repostgame` (`id`, `iduser`, `username`, `gameid`, `bet`, `win`, `b
 (2273, 27, '0990825941', '3062', 10.00, 0.00, 78731.44, 'Google Chrome', 'PC', '650d12e3186a280001cfb47e', '2023-09-22', '04:06:59'),
 (2274, 27, '0990825941', '3062', 10.00, 0.00, 78721.44, 'Google Chrome', 'PC', '650d12e5186a280001cfb480', '2023-09-22', '04:07:02'),
 (2275, 27, '0990825941', '3062', 10.00, 1.00, 78712.44, 'Google Chrome', 'PC', '650d12ee186a280001cfb482', '2023-09-22', '04:07:10'),
-(2276, 27, '0990825941', '3062', 10.00, 1.00, 78703.44, 'Google Chrome', 'PC', '650d12f6186a280001cfb484', '2023-09-22', '04:07:18');
+(2276, 27, '0990825941', '3062', 10.00, 1.00, 78703.44, 'Google Chrome', 'PC', '650d12f6186a280001cfb484', '2023-09-22', '04:07:18'),
+(2277, 29, '0990825941', 'PGSOFT2', 0.90, 1.47, 1005.57, 'Google Chrome', 'PC', 'NO', '2023-10-06', '17:59:35'),
+(2278, 29, '0990825941', 'PGSOFT2', 0.90, 0.00, 1004.67, 'Google Chrome', 'PC', 'NO', '2023-10-06', '17:59:39'),
+(2279, 29, '0990825941', 'PGSOFT2', 0.90, 0.30, 1004.07, 'Google Chrome', 'PC', 'NO', '2023-10-06', '17:59:41'),
+(2280, 29, '0990825941', 'PGSOFT2', 0.90, 0.00, 1003.17, 'Google Chrome', 'PC', 'NO', '2023-10-06', '17:59:45'),
+(2281, 29, '0990825941', 'PGSOFT2', 0.90, 0.00, 1002.27, 'Google Chrome', 'PC', 'NO', '2023-10-06', '17:59:47'),
+(2282, 29, '0990825941', 'PGSOFT2', 0.90, 0.00, 1001.37, 'Google Chrome', 'PC', 'NO', '2023-10-06', '17:59:50'),
+(2283, 29, '0990825941', 'SLOTXO', 30.00, 0.00, 971.37, 'Google Chrome', 'PC', 'xjp94rem6mm5h', '2023-10-06', '18:00:41'),
+(2284, 29, '0990825941', 'SLOTXO', 30.00, 12.00, 953.37, 'Google Chrome', 'PC', 'xjpi1u3w6mm5h', '2023-10-06', '18:00:44'),
+(2285, 29, '0990825941', 'SLOTXO', 30.00, 30.00, 953.37, 'Google Chrome', 'PC', 'xjp95c5t6mm5h', '2023-10-06', '18:00:50'),
+(2286, 29, '0990825941', 'SLOTXO', 30.00, 6.00, 929.37, 'Google Chrome', 'PC', 'xjpiuwbm6mm5h', '2023-10-06', '18:00:57'),
+(2287, 29, '0990825941', 'SLOTXO', 30.00, 66.00, 965.37, 'Google Chrome', 'PC', 'xjpaeago6mm5h', '2023-10-06', '18:01:05'),
+(2288, 29, '0990825941', 'SLOTXO', 30.00, 0.00, 935.37, 'Google Chrome', 'PC', 'xjp94c9k6mm5h', '2023-10-06', '18:01:14'),
+(2289, 29, '0990825941', 'SLOTXO', 30.00, 0.00, 905.37, 'Google Chrome', 'PC', 'xjpajwcg6mm5h', '2023-10-06', '18:01:18'),
+(2290, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 895.37, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:04:55'),
+(2291, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 885.37, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:05:01'),
+(2292, 29, '0990825941', 'PGSOFT2', 10.00, 3.00, 878.37, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:05:06'),
+(2293, 29, '0990825941', 'PGSOFT2', 0.00, 0.00, 878.37, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:05:10'),
+(2294, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 868.37, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:05:16'),
+(2295, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 858.37, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:05:20'),
+(2296, 29, '0990825941', 'PGSOFT2', 10.00, 1.50, 849.87, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:05:24'),
+(2297, 29, '0990825941', 'PGSOFT2', 0.00, 0.00, 849.87, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:05:29'),
+(2298, 29, '0990825941', 'PGSOFT2', 10.00, 2.00, 841.87, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:05:30'),
+(2299, 29, '0990825941', 'PGSOFT2', 0.00, 0.00, 841.87, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:05:35'),
+(2300, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 831.87, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:05:36'),
+(2301, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 821.87, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:05:40'),
+(2302, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 811.87, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:05:44'),
+(2303, 29, '0990825941', 'PGSOFT2', 10.00, 2.00, 803.87, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:06:45'),
+(2304, 29, '0990825941', 'PGSOFT2', 0.00, 0.00, 803.87, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:06:49'),
+(2305, 29, '0990825941', 'PGSOFT2', 9.00, 4.80, 799.67, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:07:39'),
+(2306, 29, '0990825941', 'PGSOFT2', 0.00, 9.00, 808.67, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:07:43'),
+(2307, 29, '0990825941', 'PGSOFT2', 0.00, 0.00, 808.67, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:07:45'),
+(2308, 29, '0990825941', 'PGSOFT2', 0.00, 0.00, 808.67, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:07:52'),
+(2309, 29, '0990825941', 'PGSOFT2', 0.00, 2.40, 811.07, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:07:54'),
+(2310, 29, '0990825941', 'PGSOFT2', 0.00, 13.50, 824.57, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:07:56'),
+(2311, 29, '0990825941', 'PGSOFT2', 0.00, 0.00, 824.57, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:07:59'),
+(2312, 29, '0990825941', 'PGSOFT2', 0.00, 22.50, 847.07, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:08:01'),
+(2313, 29, '0990825941', 'PGSOFT2', 0.00, 0.00, 847.07, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:08:04'),
+(2314, 29, '0990825941', 'PGSOFT2', 0.00, 0.00, 847.07, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:08:06'),
+(2315, 29, '0990825941', 'PGSOFT2', 0.00, 72.00, 919.07, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:08:09'),
+(2316, 29, '0990825941', 'PGSOFT2', 0.00, 0.00, 919.07, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:08:12'),
+(2317, 29, '0990825941', 'PGSOFT2', 0.00, 22.50, 941.57, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:08:14'),
+(2318, 29, '0990825941', 'PGSOFT2', 0.00, 2.70, 944.27, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:08:18'),
+(2319, 29, '0990825941', 'PGSOFT2', 0.00, 100.80, 1045.07, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:08:20'),
+(2320, 29, '0990825941', 'PGSOFT2', 0.00, 0.00, 1045.07, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:08:25'),
+(2321, 29, '0990825941', 'PGSOFT2', 0.00, 0.00, 1045.07, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:08:27'),
+(2322, 29, '0990825941', 'PGSOFT2', 0.00, 22.50, 1067.57, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:08:28'),
+(2323, 29, '0990825941', 'PGSOFT2', 0.00, 0.00, 1067.57, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:08:33'),
+(2324, 29, '0990825941', 'PGSOFT2', 0.00, 0.00, 1067.57, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:08:35'),
+(2325, 29, '0990825941', 'PGSOFT2', 0.90, 0.18, 1066.85, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:12:12'),
+(2326, 29, '0990825941', 'PGSOFT2', 0.90, 0.00, 1065.95, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:12:20'),
+(2327, 29, '0990825941', 'PGSOFT2', 0.90, 0.00, 1065.05, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:12:22'),
+(2328, 29, '0990825941', 'PGSOFT2', 0.90, 0.00, 1064.15, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:12:29'),
+(2329, 29, '0990825941', 'PGSOFT2', 0.90, 0.00, 1063.25, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:12:31'),
+(2330, 29, '0990825941', 'PGSOFT2', 0.90, 0.00, 1062.35, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:12:34'),
+(2331, 29, '0990825941', 'PGSOFT2', 0.90, 1.50, 1062.95, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:12:36'),
+(2332, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 1052.95, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:25:21'),
+(2333, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 1042.95, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:25:28'),
+(2334, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 1032.95, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:25:30'),
+(2335, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 1022.95, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:25:32'),
+(2336, 29, '0990825941', 'PGSOFT2', 10.00, 6.00, 1018.95, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:25:35'),
+(2337, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 1008.95, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:25:41'),
+(2338, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 998.95, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:25:44'),
+(2339, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 988.95, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:25:46'),
+(2340, 29, '0990825941', 'PGSOFT2', 10.00, 0.00, 978.95, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:25:49'),
+(2341, 29, '0990825941', 'GAME', 0.00, 0.00, 988.95, 'Google Chrome', 'PC', 'AIBQACAAOK6NYJIAAAAABOHTCUGRKAAAAAAA', '2023-10-06', '18:46:47'),
+(2342, 29, '0990825941', 'GAME', 4.80, 0.00, 993.75, 'Google Chrome', 'PC', 'AIBQACAAOK6NYJIAAAAABOPTCUGRKAAAAAAA', '2023-10-06', '18:46:47'),
+(2343, 29, '0990825941', 'GAME', 0.00, 0.00, 993.75, 'Google Chrome', 'PC', 'AIBQACAAOK6NYJIAAAAAAAIAAAAA', '2023-10-06', '18:46:48'),
+(2344, 29, '0990825941', 'GAME', 0.00, 0.00, 1003.75, 'Google Chrome', 'PC', 'AIBQACAAOK6NYJIAAAAABK2QCYGRKAAAAAAA', '2023-10-06', '18:47:34'),
+(2345, 29, '0990825941', 'GAME', 4.80, 0.00, 1008.55, 'Google Chrome', 'PC', 'AIBQACAAOK6NYJIAAAAABLCQCYGRKAAAAAAA', '2023-10-06', '18:47:34'),
+(2346, 29, '0990825941', 'GAME', 0.00, 0.00, 1008.55, 'Google Chrome', 'PC', 'AIBQACAAOK6NYJIAAAAAAAQAAAAA', '2023-10-06', '18:47:35'),
+(2347, 29, '0990825941', 'GAME', 0.00, 0.00, 1018.55, 'Google Chrome', 'PC', 'AIBQACAAOK6NYJIAAAAAAXUHCYGRKAAAAAAA', '2023-10-06', '18:48:01'),
+(2348, 29, '0990825941', 'GAME', 0.00, 0.00, 1018.55, 'Google Chrome', 'PC', 'AIBQACAAOK6NYJIAAAAAAAYAAAAA', '2023-10-06', '18:48:01'),
+(2349, 29, '0990825941', 'AMBSLOT2', 9.00, 3.00, 1012.55, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:49:49'),
+(2350, 29, '0990825941', 'AMBSLOT2', 9.00, 8.00, 1011.55, 'Google Chrome', 'PC', 'NO', '2023-10-06', '18:50:10'),
+(2351, 37, '0819372939', 'DOGZILLA', 0.00, 0.00, 1000.00, 'Google Chrome', 'Mobile', 'NO', '2023-10-07', '14:42:06'),
+(2352, 36, '0954789782', 'DOGZILLA', 5.00, 0.00, 999.20, 'Google Chrome', 'PC', 'NO', '2023-10-07', '15:01:05'),
+(2353, 36, '0954789782', 'DOGZILLA', 1.00, 0.00, 998.20, 'Google Chrome', 'PC', 'NO', '2023-10-07', '18:15:35'),
+(2354, 36, '0954789782', 'DOGZILLA', 5.00, 0.00, 1018.20, 'Google Chrome', 'PC', 'NO', '2023-10-08', '06:32:16'),
+(2355, 36, '0954789782', 'DOGZILLA', 5.00, 0.00, 1013.20, 'Google Chrome', 'PC', 'NO', '2023-10-08', '06:32:29');
 
 -- --------------------------------------------------------
 
@@ -3183,23 +3325,23 @@ INSERT INTO `repostgame` (`id`, `iduser`, `username`, `gameid`, `bet`, `win`, `b
 --
 
 CREATE TABLE `subagent` (
-  `id` bigint(20) NOT NULL,
-  `id_agent` bigint(20) DEFAULT NULL,
-  `ranksubAgent` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'Agent',
-  `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `contact_number` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `level` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'VVIP',
-  `bettype` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '-',
-  `responsibleperson` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '-',
+  `id` bigint NOT NULL,
+  `id_agent` bigint DEFAULT NULL,
+  `ranksubAgent` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'Agent',
+  `username` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `contact_number` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `level` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'VVIP',
+  `bettype` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '-',
+  `responsibleperson` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '-',
   `created_at` timestamp NULL DEFAULT NULL,
   `last_login_date` timestamp NULL DEFAULT NULL,
-  `last_login_ip` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `status` enum('Y','N') CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'Y',
-  `creditsub` float(15,2) DEFAULT 0.00,
-  `status_delete` enum('Y','N') CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'N',
-  `currencysubagent` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'บาท'
+  `last_login_ip` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `status` enum('Y','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'Y',
+  `creditsub` float(15,2) DEFAULT '0.00',
+  `status_delete` enum('Y','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'N',
+  `currencysubagent` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'บาท'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -3236,18 +3378,18 @@ INSERT INTO `subagent` (`id`, `id_agent`, `ranksubAgent`, `username`, `password`
 --
 
 CREATE TABLE `totalamountdaily` (
-  `id` bigint(20) NOT NULL,
-  `agentid` bigint(20) NOT NULL,
-  `accountName` varchar(100) NOT NULL,
-  `accountNumber` varchar(255) NOT NULL,
+  `id` bigint NOT NULL,
+  `agentid` bigint NOT NULL,
+  `accountName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `accountNumber` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `billmatched` double(15,2) NOT NULL,
   `complated` double(15,2) NOT NULL,
-  `balance` double(15,2) NOT NULL DEFAULT 0.00,
-  `bankname` varchar(100) NOT NULL,
+  `balance` double(15,2) NOT NULL DEFAULT '0.00',
+  `bankname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `date` date NOT NULL,
   `time` time NOT NULL,
-  `typeaction` enum('ถอน','ฝาก') DEFAULT NULL,
-  `imgbank` varchar(255) NOT NULL
+  `typeaction` enum('ถอน','ฝาก') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `imgbank` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -3272,16 +3414,16 @@ INSERT INTO `totalamountdaily` (`id`, `agentid`, `accountName`, `accountNumber`,
 --
 
 CREATE TABLE `totalturnoverrepost` (
-  `id` bigint(20) NOT NULL,
-  `usernameuser` varchar(100) NOT NULL,
-  `turnover` double(15,2) NOT NULL DEFAULT 0.00,
-  `win` double(15,2) NOT NULL DEFAULT 0.00,
-  `lose` double(15,2) NOT NULL DEFAULT 0.00,
-  `roundplay` int(11) NOT NULL DEFAULT 0,
-  `ag_winlose` double(15,2) NOT NULL DEFAULT 0.00,
-  `ag_comm` double(15,2) NOT NULL DEFAULT 0.00,
-  `ag_total` double(15,2) NOT NULL DEFAULT 0.00,
-  `comny_total` double(15,2) NOT NULL DEFAULT 0.00,
+  `id` bigint NOT NULL,
+  `usernameuser` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `turnover` double(15,2) NOT NULL DEFAULT '0.00',
+  `win` double(15,2) NOT NULL DEFAULT '0.00',
+  `lose` double(15,2) NOT NULL DEFAULT '0.00',
+  `roundplay` int NOT NULL DEFAULT '0',
+  `ag_winlose` double(15,2) NOT NULL DEFAULT '0.00',
+  `ag_comm` double(15,2) NOT NULL DEFAULT '0.00',
+  `ag_total` double(15,2) NOT NULL DEFAULT '0.00',
+  `comny_total` double(15,2) NOT NULL DEFAULT '0.00',
   `day` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -3290,14 +3432,7 @@ CREATE TABLE `totalturnoverrepost` (
 --
 
 INSERT INTO `totalturnoverrepost` (`id`, `usernameuser`, `turnover`, `win`, `lose`, `roundplay`, `ag_winlose`, `ag_comm`, `ag_total`, `comny_total`, `day`) VALUES
-(1, '0990825941', 8.10, 8.46, -0.36, 0, 0.00, 0.00, 0.00, 0.00, '2023-09-22'),
-(2, '0954789788', 9.00, 288.77, -279.77, 0, 0.00, 0.00, 0.00, 0.00, '2023-09-22'),
-(3, '0990825941', 5.40, 6.96, -1.56, 0, 0.00, 0.00, 0.00, 0.00, '2023-09-24'),
-(4, '0954789788', 9.00, 1580.00, -1571.00, 0, 0.00, 0.00, 0.00, 0.00, '2023-09-24'),
-(5, '0990825941', 2473.50, 2223.75, 249.75, 0, 0.00, 0.00, 0.00, 0.00, '2023-09-25'),
-(6, '0954789788', 73.00, 82.90, -9.90, 0, 0.00, 0.00, 0.00, 0.00, '2023-09-25'),
-(8, '0990825941', 848.70, 767.48, 81.22, 127, 81.22, 81.22, 81.22, 73.10, '2023-09-26'),
-(9, '0954789788', 358.00, 266.60, 91.40, 123, 91.40, 91.40, 91.40, 84.09, '2023-09-26');
+(2, '0990825941', 114.30, 18.68, 95.62, 18, 95.62, 0.00, 86.06, 9.56, '2023-10-06');
 
 -- --------------------------------------------------------
 
@@ -3306,22 +3441,24 @@ INSERT INTO `totalturnoverrepost` (`id`, `usernameuser`, `turnover`, `win`, `los
 --
 
 CREATE TABLE `turnoverrepost` (
-  `id` bigint(20) NOT NULL,
-  `usernameuser` varchar(15) NOT NULL,
-  `gamecamp` varchar(50) DEFAULT NULL,
-  `turnover` double(15,2) NOT NULL DEFAULT 0.00,
-  `win` double(15,2) NOT NULL DEFAULT 0.00,
-  `lose` double(15,2) NOT NULL DEFAULT 0.00,
-  `day` date NOT NULL
+  `id` bigint NOT NULL,
+  `usernameuser` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `gamecamp` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `turnover` double(15,2) NOT NULL DEFAULT '0.00',
+  `win` double(15,2) NOT NULL DEFAULT '0.00',
+  `lose` double(15,2) NOT NULL DEFAULT '0.00',
+  `day` date NOT NULL,
+  `roundplay` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `turnoverrepost`
 --
 
-INSERT INTO `turnoverrepost` (`id`, `usernameuser`, `gamecamp`, `turnover`, `win`, `lose`, `day`) VALUES
-(1, '0990825941', 'PGSOFT2', 8.10, 6.06, 2.04, '2023-09-22'),
-(4, '0990825941', '3062', 0.00, 2.40, -2.40, '2023-09-22');
+INSERT INTO `turnoverrepost` (`id`, `usernameuser`, `gamecamp`, `turnover`, `win`, `lose`, `day`, `roundplay`) VALUES
+(2, '0990825941', 'PGSOFT2', 96.30, 7.68, 88.62, '2023-10-06', 16),
+(3, '0990825941', 'AMBSLOT2', 18.00, 11.00, 7.00, '2023-10-06', 2),
+(4, '0819372939', 'DOGZILLA', 0.00, 0.00, 0.00, '2023-10-07', 1);
 
 -- --------------------------------------------------------
 
@@ -3330,21 +3467,21 @@ INSERT INTO `turnoverrepost` (`id`, `usernameuser`, `gamecamp`, `turnover`, `win
 --
 
 CREATE TABLE `user_play` (
-  `id` bigint(1) NOT NULL,
-  `member_id` bigint(20) DEFAULT 0,
-  `game_id` bigint(20) DEFAULT 0,
-  `bet` float(16,2) DEFAULT 0.00,
-  `win` float(16,2) DEFAULT 0.00,
-  `tiles` longtext DEFAULT NULL,
-  `winline` longtext DEFAULT NULL,
-  `winstyle` longtext CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `winCount` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `credit` float(15,2) DEFAULT 0.00,
-  `get_browser` longtext DEFAULT NULL,
+  `id` bigint NOT NULL,
+  `member_id` bigint DEFAULT '0',
+  `game_id` bigint DEFAULT '0',
+  `bet` float(16,2) DEFAULT '0.00',
+  `win` float(16,2) DEFAULT '0.00',
+  `tiles` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
+  `winline` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
+  `winstyle` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci,
+  `winCount` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `credit` float(15,2) DEFAULT '0.00',
+  `get_browser` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
-  `game_Buyfeespin` enum('true','false') CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'false',
-  `game_feespin` enum('true','false') CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'false'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `game_Buyfeespin` enum('true','false') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'false',
+  `game_feespin` enum('true','false') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'false'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Dumping data for table `user_play`
@@ -4567,7 +4704,47 @@ INSERT INTO `user_play` (`id`, `member_id`, `game_id`, `bet`, `win`, `tiles`, `w
 (1213, 27, 5, 9.00, 0.00, '0,2,3', '1', 'UGc7t8eDPunSf', '0', 154143.38, NULL, '2023-09-21 08:13:06', 'false', 'false'),
 (1214, 27, 5, 9.00, 33.12, '0,1,2,4', '3', 'KHysblNQNR0xn', '0', 154109.91, NULL, '2023-09-21 08:17:16', 'false', 'false'),
 (1215, 27, 5, 9.00, 0.00, '0,1,2,3,4', '0', 'VzYbBUlQAhpwE', '0', 0.00, NULL, '2023-09-21 09:08:38', 'false', 'false'),
-(1216, 27, 5, 9.00, 0.00, '0,1,2,3,4', '0', 'nj3mkPZbFXfEZ', '0', 75694.29, NULL, '2023-09-24 04:26:31', 'false', 'false');
+(1216, 27, 5, 9.00, 0.00, '0,1,2,3,4', '0', 'nj3mkPZbFXfEZ', '0', 75694.29, NULL, '2023-09-24 04:26:31', 'false', 'false'),
+(1217, 37, 3, 0.00, 0.00, '5,1,9,3,6,5,5,1,8,1,9,4,11,6,0', '', '', '0', 1000.00, NULL, '2023-10-07 14:42:06', 'false', 'false'),
+(1218, 36, 0, 5.00, 9.20, '1,2', '2', 'dIEBY5lKexN9d', '0', 1004.20, NULL, '2023-10-07 14:58:11', 'false', 'false'),
+(1219, 36, 0, 5.00, 0.00, '0,4', '0', '0B9Zd8MXl4qGy', '0', 999.20, NULL, '2023-10-07 15:00:31', 'false', 'false'),
+(1220, 36, 0, 0.00, 0.00, '0,1,2,3,4', '0', 'dZyyHyuXbtOS0', '0', 0.00, NULL, '2023-10-07 15:01:11', 'false', 'false'),
+(1221, 36, 0, 0.00, 0.00, '0,1,2,3,4', '0', 'pC4t9licK7mvi', '0', 999.20, NULL, '2023-10-07 15:01:59', 'false', 'false'),
+(1222, 36, 0, 1.00, 0.00, '0,1', '0', 'VvD74kVKRNlkJ', '0', 998.20, NULL, '2023-10-07 18:15:12', 'false', 'false'),
+(1223, 36, 0, 0.00, 0.00, '0,1,2,3', '0', 'farlcEgzv1LZL', '0', 0.00, NULL, '2023-10-07 18:15:44', 'false', 'false'),
+(1224, 36, 0, 5.00, 23.00, '0,1,2,3,4', '1', 'UmN6B4rZwdqJl', '0', 1016.20, NULL, '2023-10-07 18:16:00', 'false', 'false'),
+(1225, 36, 0, 5.00, 0.00, '0,1,2,3,4', '0', '2zd6xY0IzlUgU', '0', 1011.20, NULL, '2023-10-07 18:16:22', 'false', 'false'),
+(1226, 36, 0, 5.00, 23.00, '0,1,2,3,4', '0', '4MIrWu6uJTEuh', '0', 1029.20, NULL, '2023-10-07 18:16:47', 'false', 'false'),
+(1227, 36, 0, 1.00, 0.00, '0,1,2,3,4', '1', 'OyGUN9NFsY5c6', '0', 1028.20, NULL, '2023-10-07 18:17:01', 'false', 'false'),
+(1228, 36, 0, 0.00, 0.00, '0,1,2,3,4', '0', 'XSf7jLUSu0Ldp', '0', 0.00, NULL, '2023-10-07 18:18:20', 'false', 'false'),
+(1229, 36, 0, 5.00, 0.00, '0,1,2,3,4', '1', 'p1dQXF2SljHTJ', '0', 1023.20, NULL, '2023-10-08 06:31:42', 'false', 'false'),
+(1230, 36, 0, 5.00, 0.00, '0,1,2,3,4', '3', '3gusZDy1CJ8Nj', '0', 1018.20, NULL, '2023-10-08 06:32:09', 'false', 'false'),
+(1231, 36, 0, 5.00, 0.00, '0,1,2,3,4', '3', 'QjDD07hMxm6I3', '0', 1013.20, NULL, '2023-10-08 06:32:24', 'false', 'false'),
+(1232, 36, 0, 5.00, 0.00, '2,3', '2', 'kpxYpTWb0u1pp', '0', 1008.20, NULL, '2023-10-08 06:32:34', 'false', 'false'),
+(1233, 36, 0, 5.00, 0.00, '0,1,2,3,4', '0', 'uJy46NGrOEuQm', '0', 1003.20, NULL, '2023-10-08 06:32:55', 'false', 'false'),
+(1234, 36, 0, 5.00, 0.00, '0,1,2,3,4', '3', 'xkgwvjHCn2Ggx', '0', 998.20, NULL, '2023-10-08 06:33:04', 'false', 'false'),
+(1235, 36, 0, 5.00, 9.20, '0,2', '0', 'CdFz3Bz72VpNX', '0', 1002.40, NULL, '2023-10-08 06:33:10', 'false', 'false'),
+(1236, 36, 0, 0.00, 0.00, '0,1,2,3,4', '0', 'djAZ2BH8HsQ86', '0', 0.00, NULL, '2023-10-08 06:33:34', 'false', 'false');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `withdraw`
+--
+
+CREATE TABLE `withdraw` (
+  `id` bigint NOT NULL,
+  `bill_number` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `numberbill` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `quantity` int NOT NULL,
+  `accountName` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `accountNumber` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `phonenumber` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `transaction_date` date NOT NULL,
+  `time` time NOT NULL,
+  `status` enum('ยังไม่เรียบร้อย','ทั้งหมด','รอ','ที่ยังไม่ผูก','สำเร็จ','ไม่สำเส็จ') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'รอ',
+  `bank` enum('ธนาคารไทยพาณิชย์','ธนาคารกสิกรไทย','ธนาคารกรุงเทพ','ธนาคารกรุงไทย','ธนาคารกรุงศรีอยุธยา','ธนาคารเกียรตินาคินภัทร','ธนาคารซีไอเอ็มบี ไทย','ธนาคารทหารไทยธนชาต','ธนาคารยูโอบี','ธนาคารออมสิน','ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร','ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)','Agent') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -4576,29 +4753,29 @@ INSERT INTO `user_play` (`id`, `member_id`, `game_id`, `bet`, `win`, `tiles`, `w
 --
 
 CREATE TABLE `withdrawalaccount` (
-  `id` bigint(20) NOT NULL,
-  `bankName` enum('ธนาคารไทยพาณิชย์','ธนาคารกสิกรไทย','ธนาคารกรุงเทพ','ธนาคารกรุงไทย','ธนาคารกรุงศรีอยุธยา','ธนาคารเกียรตินาคินภัทร','ธนาคารซีไอเอ็มบี ไทย','ธนาคารทหารไทยธนชาต','ธนาคารยูโอบี','ธนาคารออมสิน','ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร','ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)') NOT NULL DEFAULT 'ธนาคารไทยพาณิชย์',
-  `accountName` varchar(100) DEFAULT NULL,
-  `accountNumber` varchar(13) NOT NULL,
-  `status` varchar(255) NOT NULL,
-  `balance` int(20) NOT NULL DEFAULT 0,
-  `billmatched` int(20) NOT NULL DEFAULT 0,
-  `complated` int(20) NOT NULL DEFAULT 0,
-  `algorithm` enum('Sms','Bot Bank','Bank API') NOT NULL DEFAULT 'Sms',
-  `activestatus` enum('เปิดใช้งาน','ปิดใช้งาน') NOT NULL DEFAULT 'เปิดใช้งาน',
-  `imgbank` varchar(100) NOT NULL,
-  `nameAccount` varchar(100) NOT NULL,
-  `groupNewMember` enum('true','false') NOT NULL DEFAULT 'false',
-  `groupBronze` enum('true','false') NOT NULL DEFAULT 'false',
-  `groupSilver` enum('true','false') NOT NULL DEFAULT 'false',
-  `groupGold` enum('true','false') NOT NULL DEFAULT 'false',
-  `groupDiamond` enum('true','false') NOT NULL DEFAULT 'false',
-  `auto_withdrawal` enum('true','false') NOT NULL DEFAULT 'false',
-  `savingaccount` enum('true','false') NOT NULL DEFAULT 'false',
-  `use_condition` enum('true','false') NOT NULL DEFAULT 'false',
-  `for_promotion` enum('true','false') NOT NULL DEFAULT 'false',
-  `billingpage` enum('true','false') NOT NULL DEFAULT 'false',
-  `withdraw_over` int(20) NOT NULL DEFAULT 0
+  `id` bigint NOT NULL,
+  `bankName` enum('ธนาคารไทยพาณิชย์','ธนาคารกสิกรไทย','ธนาคารกรุงเทพ','ธนาคารกรุงไทย','ธนาคารกรุงศรีอยุธยา','ธนาคารเกียรตินาคินภัทร','ธนาคารซีไอเอ็มบี ไทย','ธนาคารทหารไทยธนชาต','ธนาคารยูโอบี','ธนาคารออมสิน','ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร','ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'ธนาคารไทยพาณิชย์',
+  `accountName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `accountNumber` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `balance` int NOT NULL DEFAULT '0',
+  `billmatched` int NOT NULL DEFAULT '0',
+  `complated` int NOT NULL DEFAULT '0',
+  `algorithm` enum('Sms','Bot Bank','Bank API') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Sms',
+  `activestatus` enum('เปิดใช้งาน','ปิดใช้งาน') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'เปิดใช้งาน',
+  `imgbank` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `nameAccount` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `groupNewMember` enum('true','false') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'false',
+  `groupBronze` enum('true','false') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'false',
+  `groupSilver` enum('true','false') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'false',
+  `groupGold` enum('true','false') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'false',
+  `groupDiamond` enum('true','false') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'false',
+  `auto_withdrawal` enum('true','false') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'false',
+  `savingaccount` enum('true','false') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'false',
+  `use_condition` enum('true','false') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'false',
+  `for_promotion` enum('true','false') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'false',
+  `billingpage` enum('true','false') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'false',
+  `withdraw_over` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -4659,6 +4836,12 @@ ALTER TABLE `depositaccount`
 -- Indexes for table `game`
 --
 ALTER TABLE `game`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `gamecamptotal`
+--
+ALTER TABLE `gamecamptotal`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -4764,6 +4947,12 @@ ALTER TABLE `user_play`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `withdraw`
+--
+ALTER TABLE `withdraw`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `withdrawalaccount`
 --
 ALTER TABLE `withdrawalaccount`
@@ -4777,157 +4966,169 @@ ALTER TABLE `withdrawalaccount`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `agent`
 --
 ALTER TABLE `agent`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `allgame`
 --
 ALTER TABLE `allgame`
-  MODIFY `id` bigint(22) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `comgogoldplanet`
 --
 ALTER TABLE `comgogoldplanet`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `commissionsubagent`
 --
 ALTER TABLE `commissionsubagent`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `creditpromotion`
 --
 ALTER TABLE `creditpromotion`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `depositaccount`
 --
 ALTER TABLE `depositaccount`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `game`
 --
 ALTER TABLE `game`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `gamecamptotal`
+--
+ALTER TABLE `gamecamptotal`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `gameweb`
 --
 ALTER TABLE `gameweb`
-  MODIFY `id` bigint(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `imgpromotion`
 --
 ALTER TABLE `imgpromotion`
-  MODIFY `id` bigint(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `logdaygame`
 --
 ALTER TABLE `logdaygame`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `logedit`
 --
 ALTER TABLE `logedit`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `logeditadmin`
 --
 ALTER TABLE `logeditadmin`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `logeditagent`
 --
 ALTER TABLE `logeditagent`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `logfinanceuser`
 --
 ALTER TABLE `logfinanceuser`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `loggame`
 --
 ALTER TABLE `loggame`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `mastergroup`
 --
 ALTER TABLE `mastergroup`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `percentgame`
 --
 ALTER TABLE `percentgame`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `repostgame`
 --
 ALTER TABLE `repostgame`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2277;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2356;
 
 --
 -- AUTO_INCREMENT for table `subagent`
 --
 ALTER TABLE `subagent`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `totalamountdaily`
 --
 ALTER TABLE `totalamountdaily`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `totalturnoverrepost`
 --
 ALTER TABLE `totalturnoverrepost`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `turnoverrepost`
 --
 ALTER TABLE `turnoverrepost`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `user_play`
 --
 ALTER TABLE `user_play`
-  MODIFY `id` bigint(1) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1217;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1237;
+
+--
+-- AUTO_INCREMENT for table `withdraw`
+--
+ALTER TABLE `withdraw`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `withdrawalaccount`
 --
 ALTER TABLE `withdrawalaccount`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

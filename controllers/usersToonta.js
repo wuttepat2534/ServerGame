@@ -325,7 +325,7 @@ exports.getlistPromotion = (require, response) => {
 http: //localhost:5000/post/getlistPromotion Add getPromotion
 exports.getOnePromotion = (require, response) => {
     const passwordpromotion = require.params.passwordpromotion;
-    let sql = `SELECT * FROM creditpromotion WHERE passwordpromotion = '${passwordpromotion}`;
+    let sql = `SELECT * FROM creditpromotion WHERE passwordpromotion = '${passwordpromotion}'`;
     connection.query(sql, async (error, results) => {
         if (error) { console.log(error); }
         response.send({

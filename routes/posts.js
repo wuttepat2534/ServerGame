@@ -13,6 +13,7 @@ const gameAmbApi = require('../controllers/GameAmbApi')
 const gameAmbApiSu = require('../controllers/GameAmbApisu')
 const liveCasino = require('../controllers/LiveCasion')
 const userToonta = require('../controllers/usersToonta')
+const userstoonTaII = require('../controllers/usersToonta_II')
 const cors = require('cors');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
@@ -80,7 +81,7 @@ router.post('/getRepostWebdaily', userToonta.getRepostWebdaily)
 router.post('/getRepostTotalTurnOver', userToonta.getRepostTurnover)
 router.post('/getRepostTurnoverGameCamp', userToonta.getRepostTurnoverGameCamp)
 router.post('/getRepostGameCamp', userToonta.getRepostGameCamp)
-
+router.post('/GetWithdrawStatus', userstoonTaII.GetWithdrawStatus)
 router.post('/test', userToonta.testtesttest)
 
 router.get('/getDepositaccount/:agent_id', userToonta.getDepositaccount)

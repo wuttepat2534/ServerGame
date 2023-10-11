@@ -406,7 +406,7 @@ exports.financeUser = (req, res) => {
     const formattedDateBill = `${year}-${month}-${day}`;
     //console.log(statusFinance);
     try {
-        let sql_before = `SELECT * FROM member WHERE phonenumber ='${phonenumber}' agent_id = '${agent_id}' ORDER BY phonenumber ASC`;
+        let sql_before = `SELECT * FROM member WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}' ORDER BY phonenumber ASC`;
         connection.query(sql_before, (error, resultUser) => {
             if (error) {
                 console.log(error)
@@ -576,7 +576,7 @@ exports.WinhdrawUser = (req, res) => {
                             const formattedNumber = formatNumber(billnum);
                             //console.log(formattedNumber)
                             const statusWitdraw = 'ถอน';
-                            Finance.Withdrawmoney(resultUser[0], formattedDate, formattedNumber, billnum, quantity, resultUser[0].accountNumber, phonenumber, 'ยังไม่เรียบร้อย')
+                            Finance.Withdrawmoney(resultUser[0], formattedDate, formattedNumber, billnum, quantity, resultUser[0].accountNumber, phonenumber, 'in_progress')
                                 .then(calculatedValues => {
                                     console.log(calculatedValues);
                                 })

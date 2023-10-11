@@ -139,7 +139,7 @@ module.exports = class Post {
                                                             nameimg: dataUsers.filename,
                                                             transRef: resFinance.data.transRef,
                                                             qrcodeData: resFinance.data.qrcodeData,
-                                                            agent_id : dataUsers.agent_id,
+                                                            agent_id: dataUsers.agent_id,
                                                         });
                                                         //console.log(response.data.message)
                                                         if (response.data.message === "เติมเงินสำเร็จ") {
@@ -160,7 +160,7 @@ module.exports = class Post {
                                                             nameimg: dataUsers.filename,
                                                             transRef: resFinance.data.transRef,
                                                             qrcodeData: resFinance.data.qrcodeData,
-                                                            agent_id : dataUsers.agent_id,
+                                                            agent_id: dataUsers.agent_id,
                                                         });
                                                         if (response.data.message === "บันทึกสำเร็จ") {
                                                             resolve("ชื่อบัญชีที่ได้ลงทะเบียนไม่ถูกต้อง กรุณาตรวจสอบ สลิปโอนเงิน ")
@@ -229,7 +229,7 @@ module.exports = class Post {
                                                             nameimg: dataUsers.filename,
                                                             transRef: resFinance.data.transRef,
                                                             qrcodeData: resFinance.data.qrcodeData,
-                                                            agent_id : dataUsers.agent_id,
+                                                            agent_id: dataUsers.agent_id,
                                                         });
                                                         if (response.data.message === "เติมเงินสำเร็จ") {
                                                             resolve("ฝากเงินสำเสร็จ")
@@ -249,7 +249,7 @@ module.exports = class Post {
                                                             nameimg: dataUsers.filename,
                                                             transRef: resFinance.data.transRef,
                                                             qrcodeData: resFinance.data.qrcodeData,
-                                                            agent_id : dataUsers.agent_id,
+                                                            agent_id: dataUsers.agent_id,
                                                         });
                                                         if (response.data.message === "เติมเงินไม่สำเร็จ") {
                                                             resolve("ชื่อบัญชีที่ได้ลงทะเบียนไม่ถูกต้อง กรุณาตรวจสอบ สลิปโอนเงิน ")
@@ -280,72 +280,36 @@ module.exports = class Post {
 
     static Withdrawmoney(resultUser, formattedDate, formattedNumber, billnum, quantity, accountNumber, phonenumber, status) {
         return new Promise((resolve, reject) => {
-            console.log(resultUser.bank);
+            //console.log(resultUser.bank);
+            let sql_Bank = `SELECT id FROM banknames WHERE bankname_name ='${resultUser.bank}' AND status = 'Y' AND status_delete = 'N'`;
+            connection.query(sql_Bank, (error, usernameAgent) => {
+                console.log(usernameAgent);
+                try {
+                    if (error) {
+                        console.log(error)
+                    } else {
+                        let statusValus;
 
-            let Bank;
-
-            switch (resultUser.bank) {
-                case '002':
-                    Bank = "ธนาคารกรุงเทพ";
-                    break;
-                case '004':
-                    Bank = "ธนาคารกสิกรไทย";
-                    break;
-                case '006':
-                    Bank = "ธนาคารกรุงไทย";
-                    break;
-                case '011':
-                    Bank = "ธนาคารทหารไทยธนชาต";
-                    break;
-                case '014':
-                    Bank = "ธนาคารไทยพาณิชย์";
-                    break;
-                case '025':
-                    Bank = "ธนาคารกรุงศรีอยุธยา";
-                    break;
-                case '069':
-                    Bank = "ธนาคารเกียรตินาคินภัทร";
-                    break;
-                case '022':
-                    Bank = "ธนาคารซีไอเอ็มบีไทย";
-                    break;
-                case '071':
-                    Bank = "ธนาคารไทยเครดิตเพื่อรายย่อย";
-                    break;
-                case '067':
-                    Bank = "ธนาคารทิสโก้";
-                    break;
-                case '024':
-                    Bank = "ธนาคารยูโอบี";
-                    break;
-                case '070':
-                    Bank = 'ธนาคารไอซีบีซี (ไทย)';
-                    break;
-                case '098':
-                    Bank = "ธนาคารพัฒนาวิสาหกิจขนาดกลางและขนาดย่อมแห่งประเทศไทย";
-                    break;
-                case '034':
-                    Bank = "ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร";
-                    break;
-                case '035':
-                    Bank = "ธนาคารเพื่อการส่งออกและนำเข้าแห่งประเทศไทย";
-                    break;
-                case '030':
-                    Bank = "ธนาคารออมสิน";
-                    break;
-                case '033':
-                    Bank = 'ธนาคารอาคารสงเคราะห์';
-                    break;
-                default:
-                    Bank = "ธนาคารไทยพาณิชย์";
-            }
-
-            let sql_before = `INSERT INTO withdraw (agent_id, bill_number, numberbill, quantity, accountName, accountNumber, phonenumber, transaction_date, time, status_withdraw, bank ) value 
-            ('${resultUser.agent_id}','T${formattedDate}${formattedNumber}','${billnum}','${quantity}','${resultUser.accountName}','${accountNumber}','${phonenumber}', now(), now(),'${status}','${Bank}')`;
-            connection.query(sql_before, (error, result) => {
-                let jsArray = "ระบบกำลังดำเนินการ";
-                resolve(jsArray);
-            });
+                        if (quantity < 1000) {
+                            statusValus = 'N'
+                        } else {
+                            statusValus = 'Y'
+                        }
+                        //console.log(Bank, resultUser.agent_id, status)
+                        let sql_before = `INSERT INTO withdraw (agent_id, bill_number, numberbill, quantity, accountName, accountNumber, phonenumber, transaction_date, time, bank, status_withdraw, status_value) value 
+                        ('${resultUser.agent_id}','T${formattedDate}${formattedNumber}','${billnum}','${quantity}','${resultUser.accountName}','${accountNumber}','${phonenumber}', now(), now(),'${usernameAgent[0].id}','${status}','${statusValus}')`;
+                        connection.query(sql_before, (error, result) => {
+                            let jsArray = "ระบบกำลังดำเนินการ";
+                            resolve(jsArray);
+                        });
+                    }
+                } catch (err) {
+                    if (!err.statusCode) {
+                        err.statusCode = 500;
+                    }
+                    next(err);
+                }
+            })
         });
     }
 };

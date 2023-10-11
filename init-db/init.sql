@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Oct 11, 2023 at 08:11 AM
+-- Generation Time: Oct 11, 2023 at 12:51 PM
 -- Server version: 8.0.34
 -- PHP Version: 8.2.8
 
@@ -135,6 +135,46 @@ INSERT INTO `allgame` (`id`, `namegame`, `img`, `linkgame`) VALUES
 (3, 'CowBoys VS Aliens', 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/size_tall/size_square/icon_1.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_CowboyVSAlien/index.html'),
 (4, 'Buunty Balloon', 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/size_tall/size_square/icon_5.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_BountyBalloon/index.html'),
 (6, 'RoBo Farm', 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/size_tall/size_square/icon_4.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_RoboFarm/index.html');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `banknames`
+--
+
+CREATE TABLE `banknames` (
+  `id` bigint UNSIGNED NOT NULL,
+  `bankname_code` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `bankname_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `images` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `status` enum('Y','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'Y',
+  `status_delete` enum('Y','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'N',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+--
+-- Dumping data for table `banknames`
+--
+
+INSERT INTO `banknames` (`id`, `bankname_code`, `bankname_name`, `images`, `status`, `status_delete`, `created_at`, `updated_at`) VALUES
+(1, 'BBL', 'ธนาคารกรุงเทพ', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-bbl.png', 'Y', 'N', '2022-01-04 08:54:54', '2023-05-05 14:04:29'),
+(2, 'KBANK', 'ธนาคารกสิกรไทย', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-kbank.png', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54'),
+(3, 'SCB', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54'),
+(4, 'BAY', 'ธนาคารกรุงศรีอยุธยา', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-bay.png', 'Y', 'N', '2022-01-04 08:54:54', '2023-05-05 12:19:41'),
+(5, 'KTB', 'ธนาคารกรุงไทย', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-ktb.png', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54'),
+(6, 'TMB', 'ทหารไทย', '6.png', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54'),
+(7, 'KKP', 'ธนาคารเกียรตินาคินภัทร', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-kk.png', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54'),
+(8, 'CIMB', 'ธนาคารซีไอเอ็มบีไทย', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-cimb.png', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54'),
+(9, 'TISCO', 'ธนาคารทิสโก้', '9.png', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54'),
+(10, 'TBANK', 'ธนาคารทหารไทยธนชาต', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-ttb.png', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54'),
+(11, 'LHBANK', 'แลนด์ แอนด์ เฮ้าส์', '11.png', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54'),
+(12, 'UOB', 'ธนาคารยูโอบี', 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.uob.co.th%2Fpersonal%2Findex.page&psig=AOvVaw2KddkKwBRjVK_cWM1YgvvI&ust=1690280164670000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMDwyriOp4ADFQAAAAAdAAAAABAE', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54'),
+(13, 'STAN', 'สแตนดาร์ดชาร์เตอร์ด', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-sc.png', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54'),
+(14, 'ICBC', 'ธนาคารไอซีบีซี (ไทย)', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-cimb.png', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54'),
+(15, 'GSB', 'ธนาคารออมสิน', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-gsb.png', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54'),
+(16, 'GHBANK', 'ธนาคารอาคารสงเคราะห์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-baac.png', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54'),
+(17, 'IBANK', 'อิสลามแห่งประเทศไทย', '17.png', 'Y', 'N', '2022-01-04 08:54:54', '2022-01-04 08:54:54');
 
 -- --------------------------------------------------------
 
@@ -736,7 +776,7 @@ INSERT INTO `logfinanceuser` (`id`, `bill_number`, `numberbill`, `idUser`, `agen
 (64, 'T2023091400005', 5, 29, 2, 'ฝาก', 'อิจิโกะคุโรซากิ', '2892287535', '0990825941', '2023-09-14', '23:30:20', 1, 0, 1004.00, 1005.00, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'MR. JRIRAKHIT CHOKPARITKUN', '0358449174', '2023091338ovTHoXbnWVBfe01', '00460006000001010301402252023091338ovTHoXbnWVBfe015102TH9104DCB2', 'file_dateVal_1694709018537_376508351_6515107511858187_2065484110484613921_n.png'),
 (67, 'T2023091500001', 1, 29, 2, 'ฝาก', 'อิจิโกะคุโรซากิ', 'ไม่มีเลขบัญชี', '0990825941', '2023-09-15', '14:51:16', 0, 0, 1005.00, 1005.40, 'รอ', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย จิรกฤต โชคพฤทธิ์กุล', '0358449174', '013253224738BTF09724', '0041000600000101030040220013253224738BTF097245102TH9104C69C', 'file_dateVal_1694764259115_376508351_6515107511858187_2065484110484613921_n.png'),
 (75, '2023101100001', 1, 1, 2, 'ฝาก', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-10-11', '05:54:21', 3, 0, 0.00, 3.00, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย พีรวัส ขวัญแก้ว', '020042001691', '202310111r8W5Pd1ox9RTS2p8', '0046000600000101030140225202310111r8W5Pd1ox9RTS2p85102TH910459CE', 'file_dateVal_1697003660664_370058145_697707622254655_7753147660782486478_n.jpg'),
-(76, 'T2023101100001', 1, 1, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-10-11', '06:05:35', 1, 0, 3.00, 1.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย พีรวัส ขวัญแก้ว', '8852932451', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent');
+(78, 'T2023101100002', 2, 1, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-10-11', '09:06:14', 1, 0, 3.00, 1.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย พีรวัส ขวัญแก้ว', '8852932451', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent');
 
 -- --------------------------------------------------------
 
@@ -842,8 +882,8 @@ CREATE TABLE `member` (
 --
 
 INSERT INTO `member` (`id`, `agent_id`, `username_agent`, `member_code`, `name`, `credit`, `bet_latest`, `username`, `password`, `status`, `status_delete`, `created_at`, `created_attime`, `updated_at`, `ip_address`, `browserlogin`, `customerGroup`, `userrank`, `lineid`, `note`, `currency`, `bank`, `accountName`, `accountNumber`, `phonenumber`, `lastName`, `recharge_times`, `bonususer`, `deposit`, `withdraw_member`, `groupmember`, `turnover`, `total_top_up_amount`) VALUES
-(1, 2, 'agent01', '2', 'นาย พีรวัส ขวัญแก้ว', 3.00, 0.00, '0990825942', '1c8a0fb0f77321b2fea4124168f33eef', 'Y', 'N', '2023-10-11', '2023-10-11 05:20:16', '2023-10-11 05:20:16', '172.27.0.4', 'Google Chrome', NULL, 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', 'นาย พีรวัส ขวัญแก้ว', 1, 0, 0.00, 0.00, 'NewMember', 0.00, 3.00),
-(2, 2, 'agent01', '2', 'จิราภรณ์ แหขุนทด', 0.00, 0.00, '0840811863', 'b2e7106eafbafdcd5b9a29bb6ff0600d', 'Y', 'N', '2023-10-11', '2023-10-11 06:28:39', '2023-10-11 06:28:39', '172.27.0.4', 'Google Chrome', NULL, 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารกสิกรไทย', 'จิราภรณ์ แหขุนทด', '0568925165', '0840811863', 'จิราภรณ์ แหขุนทด', 0, 0, 0.00, 0.00, 'NewMember', 0.00, 0.00);
+(1, 2, 'agent01', '2', 'นาย พีรวัส ขวัญแก้ว', 3.00, 0.00, '0990825942', '1c8a0fb0f77321b2fea4124168f33eef', 'Y', 'N', '2023-10-11', '2023-10-11 05:20:16', '2023-10-11 05:20:16', '172.28.0.4', 'Google Chrome', NULL, 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', 'นาย พีรวัส ขวัญแก้ว', 1, 0, 0.00, 0.00, 'NewMember', 0.00, 3.00),
+(2, 2, 'agent01', '2', 'จิราภรณ์ แหขุนทด', 0.00, 0.00, '0840811863', 'b2e7106eafbafdcd5b9a29bb6ff0600d', 'Y', 'N', '2023-10-11', '2023-10-11 06:28:39', '2023-10-11 06:28:39', 'null', 'null', NULL, 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารกสิกรไทย', 'จิราภรณ์ แหขุนทด', '0568925165', '0840811863', 'จิราภรณ์ แหขุนทด', 0, 0, 0.00, 0.00, 'NewMember', 0.00, 0.00);
 
 -- --------------------------------------------------------
 
@@ -4743,15 +4783,16 @@ CREATE TABLE `withdraw` (
   `transaction_date` date NOT NULL,
   `time` time NOT NULL,
   `bank` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-  `status_withdraw` enum('success','in_progress','failed') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'in_progress'
+  `status_withdraw` enum('success','in_progress','failed') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'in_progress',
+  `status_value` enum('Y','N') NOT NULL DEFAULT 'N'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `withdraw`
 --
 
-INSERT INTO `withdraw` (`id`, `agent_id`, `bill_number`, `numberbill`, `quantity`, `accountName`, `accountNumber`, `phonenumber`, `transaction_date`, `time`, `bank`, `status_withdraw`) VALUES
-(1, 2, 'T2023101100001', '1', 1, 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-10-11', '06:05:35', '014', 'in_progress');
+INSERT INTO `withdraw` (`id`, `agent_id`, `bill_number`, `numberbill`, `quantity`, `accountName`, `accountNumber`, `phonenumber`, `transaction_date`, `time`, `bank`, `status_withdraw`, `status_value`) VALUES
+(1, 2, 'T2023101100002', '2', 1, 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-10-11', '09:06:14', '3', 'in_progress', 'N');
 
 -- --------------------------------------------------------
 
@@ -4813,6 +4854,12 @@ ALTER TABLE `agent`
 -- Indexes for table `allgame`
 --
 ALTER TABLE `allgame`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `banknames`
+--
+ALTER TABLE `banknames`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -4988,6 +5035,12 @@ ALTER TABLE `allgame`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `banknames`
+--
+ALTER TABLE `banknames`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
 -- AUTO_INCREMENT for table `comgogoldplanet`
 --
 ALTER TABLE `comgogoldplanet`
@@ -5063,7 +5116,7 @@ ALTER TABLE `logeditagent`
 -- AUTO_INCREMENT for table `logfinanceuser`
 --
 ALTER TABLE `logfinanceuser`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- AUTO_INCREMENT for table `loggame`

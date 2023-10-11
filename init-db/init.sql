@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Oct 10, 2023 at 04:38 PM
+-- Generation Time: Oct 11, 2023 at 08:11 AM
 -- Server version: 8.0.34
 -- PHP Version: 8.2.8
 
@@ -251,15 +251,16 @@ CREATE TABLE `creditpromotion` (
   `passwordpromotion` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `promotionsupport` varchar(500) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `webtype` varchar(250) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-  `multiplier` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL
+  `multiplier` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `typelistsuppost` enum('เลือกทั้งหมด','UpGame','DelletGame') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'เลือกทั้งหมด'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `creditpromotion`
 --
 
-INSERT INTO `creditpromotion` (`id`, `agnetidcreate`, `repost`, `startpromotion`, `endpromotion`, `typebonus`, `bunus`, `maxbunus`, `valusbunus`, `groupuser`, `afterPromotion`, `receiving_data_type`, `valus_receiving`, `data_type`, `valus_day`, `numberoftimes_person`, `ipAddress_attempts`, `reset`, `withdrawalType`, `withdraw_data_type`, `withdraw_max`, `withdraw_valus`, `statuspromotion`, `promotiontype`, `namepromotion`, `leakedPro`, `receiving_data_typeI`, `receiving_data_typeII`, `data_typeI`, `data_typeII`, `resetI`, `resetII`, `withdrawalTypeII`, `withdrawalTypeIII`, `withdraw_valusII`, `withdraw_valusIII`, `status_topup`, `filename`, `details`, `passwordpromotion`, `promotionsupport`, `webtype`, `multiplier`) VALUES
-(2, 2, 'ทั่วไป', '2023-10-10', '2023-10-30', 'Percent', 30.00, 1000.00, 100.00, 'undefined', '', 'ฝากเงินครั้งแรก', 0, '', 0, 0, 0, '00.00.00', 'Turnover Rate', '', 0.00, 0, 'Y', 'ฝาก', 'เติมเงินครั้งแรกรับไปเลย', 'ค่าคงที่', '', '', '', '', '00.00.00', '00.00.00', '', '', 0, 0, 'N', 'file_dateVal_1696955652462_banner2.jpg', 'เงือน\n1.ธธธธธธธธธธธธธธธธธธธธธธธธ\n2.ฌฌฌฌฌฌฌฌฌฌฌฌฌฌฌ\n3.ฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑ', 'cost-type-7j1eot', 'PG Soft,Slotxo,Joker123,Askmebet,Habanero,Spade Gaming,Micro Gaming,Simple Play,Live22,Evoplay,CQ9,Jili,Mannaplay,Funky Games,Yggdrasil Gaming,UPG Slot,Ameba,Ambslot,Netent2,Red Tiger,Dragon Gaming,Ace333,I8,WmSlot,Spinix,Ninja slot,918 Kiss,Pragmatic Play Slot', 'slot', '2');
+INSERT INTO `creditpromotion` (`id`, `agnetidcreate`, `repost`, `startpromotion`, `endpromotion`, `typebonus`, `bunus`, `maxbunus`, `valusbunus`, `groupuser`, `afterPromotion`, `receiving_data_type`, `valus_receiving`, `data_type`, `valus_day`, `numberoftimes_person`, `ipAddress_attempts`, `reset`, `withdrawalType`, `withdraw_data_type`, `withdraw_max`, `withdraw_valus`, `statuspromotion`, `promotiontype`, `namepromotion`, `leakedPro`, `receiving_data_typeI`, `receiving_data_typeII`, `data_typeI`, `data_typeII`, `resetI`, `resetII`, `withdrawalTypeII`, `withdrawalTypeIII`, `withdraw_valusII`, `withdraw_valusIII`, `status_topup`, `filename`, `details`, `passwordpromotion`, `promotionsupport`, `webtype`, `multiplier`, `typelistsuppost`) VALUES
+(2, 2, 'ทั่วไป', '2023-10-10', '2023-10-30', 'Percent', 30.00, 1000.00, 100.00, 'NewMember, Bronze, Silver, Gold, Diamond', '', 'ฝากเงินครั้งแรก', 0, '', 0, 0, 0, '00.00.00', 'Turnover Rate', '', 0.00, 0, 'Y', 'ฝาก', 'เติมเงินครั้งแรกรับไปเลย', 'ค่าคงที่', '', '', '', '', '00.00.00', '00.00.00', '', '', 0, 0, 'N', 'file_dateVal_1696955652462_banner2.jpg', 'เงือน\n1.ธธธธธธธธธธธธธธธธธธธธธธธธ\n2.ฌฌฌฌฌฌฌฌฌฌฌฌฌฌฌ\n3.ฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑฑ', 'cost-type-7j1eot', 'PG Soft,Slotxo,Joker123,Askmebet,Habanero,Spade Gaming,Micro Gaming,Simple Play,Live22,Evoplay,CQ9,Jili,Mannaplay,Funky Games,Yggdrasil Gaming,UPG Slot,Ameba,Ambslot,Netent2,Red Tiger,Dragon Gaming,Ace333,I8,WmSlot,Spinix,Ninja slot,918 Kiss,Pragmatic Play Slot', 'slot', '2', 'เลือกทั้งหมด');
 
 -- --------------------------------------------------------
 
@@ -293,10 +294,10 @@ CREATE TABLE `depositaccount` (
 INSERT INTO `depositaccount` (`id`, `webname`, `agent_id`, `bankName`, `status`, `balance`, `billMatched`, `complated`, `accountNumber`, `algorithm`, `activestatus`, `accountRocked`, `autorocker`, `imgbank`, `accountName`, `nameAccount`) VALUES
 (1, 'TOONTA', 2, 'ธนาคารไทยพาณิชย์', 'แก้ไขไม่ได้ เนื่องจากผูก Api ', 53295, 53295, 60495, '1568996524', 'Sms', 'ปิดใช้งาน', 'RockedTest', 50000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย ทรงยศ เปล่งรัตน์', 'นาย ทรงยศ เปล่งรัตน์'),
 (4, 'TOONTA', 2, 'ธนาคารกรุงเทพ', 'แก้ไขไม่ได้ เนื่องจากผูก Api ', 52500, 52500, 59700, '1568996524', 'Sms', 'ปิดใช้งาน', 'RockedTest', 50000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-bbl.png', 'นาย ทรงยศ แสงใส', 'นาย ทรงยศ แสงใส'),
-(5, 'TOONTA', NULL, 'ธนาคารไทยพาณิชย์', 'แก้ไขไม่ได้ เนื่องจากผูก Api', 7, 7, 7, '8852932451', 'Sms', 'ปิดใช้งาน', 'Test', 30000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', 'นาย พีรวัส ขวัญแก้ว'),
+(5, 'TOONTA', 2, 'ธนาคารออมสิน', 'แก้ไขไม่ได้ เนื่องจากผูก Api', 31, 31, 31, '020042001691', 'Sms', 'เปิดใช้งาน', 'Test', 30000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', 'นาย พีรวัส ขวัญแก้ว'),
 (6, 'TOONTA', NULL, 'ธนาคารกสิกรไทย', 'แก้ไขไม่ได้ เนื่องจากผูก Api', 6, 6, 6, '0358449174', 'Sms', 'ปิดใช้งาน', 'Test', 1000000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-kbank.png', 'MR. JRIRAKHIT CHOKPARITKUN', 'MR. JRIRAKHIT CHOKPARITKUN'),
-(7, 'TOONTA', NULL, 'ธนาคารไทยพาณิชย์', 'แก้ไขไม่ได้ เนื่องจากผูก Api', 2, 2, 2, '4370390228', 'Sms', 'เปิดใช้งาน', 'Test', 1000000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นางสาว จิราภรณ์ แหขุนทด', 'นางสาว จิราภรณ์ แหขุนทด'),
-(8, 'TOONTA', NULL, 'ธนาคารกสิกรไทย', 'แก้ไขไม่ได้ เนื่องจากผูก Api', 0, 0, 0, '1653149774', 'Sms', 'เปิดใช้งาน', 'Test', 1000000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-kbank.png', 'MS. MY HAY MAR -', 'MYHAYMAR');
+(7, 'TOONTA', 2, 'ธนาคารไทยพาณิชย์', 'แก้ไขไม่ได้ เนื่องจากผูก Api', 2, 2, 2, '4370390228', 'Sms', 'เปิดใช้งาน', 'Test', 1000000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นางสาว จิราภรณ์ แหขุนทด', 'นางสาว จิราภรณ์ แหขุนทด'),
+(8, 'TOONTA', NULL, 'ธนาคารกสิกรไทย', 'แก้ไขไม่ได้ เนื่องจากผูก Api', 0, 0, 0, '1653149774', 'Sms', 'ปิดใช้งาน', 'Test', 1000000, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-kbank.png', 'MS. MY HAY MAR -', 'MYHAYMAR');
 
 -- --------------------------------------------------------
 
@@ -733,7 +734,9 @@ INSERT INTO `logfinanceuser` (`id`, `bill_number`, `numberbill`, `idUser`, `agen
 (62, 'T2023091400003', 3, 29, 2, 'ฝาก', 'อิจิโกะคุโรซากิ', '2892287535', '0990825941', '2023-09-14', '23:28:11', 1, 0, 1002.00, 1003.00, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'MR. JRIRAKHIT CHOKPARITKUN', '0358449174', '2023091338ovTHoXbnWVBfe01', '00460006000001010301402252023091338ovTHoXbnWVBfe015102TH9104DCB2', 'file_dateVal_1694708889204_376508351_6515107511858187_2065484110484613921_n.png'),
 (63, 'T2023091400004', 4, 29, 2, 'ฝาก', 'อิจิโกะคุโรซากิ', '2892287535', '0990825941', '2023-09-14', '23:29:02', 1, 0, 1003.00, 1004.00, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'MR. JRIRAKHIT CHOKPARITKUN', '0358449174', '2023091338ovTHoXbnWVBfe01', '00460006000001010301402252023091338ovTHoXbnWVBfe015102TH9104DCB2', 'file_dateVal_1694708941130_376508351_6515107511858187_2065484110484613921_n.png'),
 (64, 'T2023091400005', 5, 29, 2, 'ฝาก', 'อิจิโกะคุโรซากิ', '2892287535', '0990825941', '2023-09-14', '23:30:20', 1, 0, 1004.00, 1005.00, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'MR. JRIRAKHIT CHOKPARITKUN', '0358449174', '2023091338ovTHoXbnWVBfe01', '00460006000001010301402252023091338ovTHoXbnWVBfe015102TH9104DCB2', 'file_dateVal_1694709018537_376508351_6515107511858187_2065484110484613921_n.png'),
-(67, 'T2023091500001', 1, 29, 2, 'ฝาก', 'อิจิโกะคุโรซากิ', 'ไม่มีเลขบัญชี', '0990825941', '2023-09-15', '14:51:16', 0, 0, 1005.00, 1005.40, 'รอ', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย จิรกฤต โชคพฤทธิ์กุล', '0358449174', '013253224738BTF09724', '0041000600000101030040220013253224738BTF097245102TH9104C69C', 'file_dateVal_1694764259115_376508351_6515107511858187_2065484110484613921_n.png');
+(67, 'T2023091500001', 1, 29, 2, 'ฝาก', 'อิจิโกะคุโรซากิ', 'ไม่มีเลขบัญชี', '0990825941', '2023-09-15', '14:51:16', 0, 0, 1005.00, 1005.40, 'รอ', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย จิรกฤต โชคพฤทธิ์กุล', '0358449174', '013253224738BTF09724', '0041000600000101030040220013253224738BTF097245102TH9104C69C', 'file_dateVal_1694764259115_376508351_6515107511858187_2065484110484613921_n.png'),
+(75, '2023101100001', 1, 1, 2, 'ฝาก', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-10-11', '05:54:21', 3, 0, 0.00, 3.00, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย พีรวัส ขวัญแก้ว', '020042001691', '202310111r8W5Pd1ox9RTS2p8', '0046000600000101030140225202310111r8W5Pd1ox9RTS2p85102TH910459CE', 'file_dateVal_1697003660664_370058145_697707622254655_7753147660782486478_n.jpg'),
+(76, 'T2023101100001', 1, 1, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-10-11', '06:05:35', 1, 0, 3.00, 1.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย พีรวัส ขวัญแก้ว', '8852932451', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent');
 
 -- --------------------------------------------------------
 
@@ -829,23 +832,18 @@ CREATE TABLE `member` (
   `bonususer` int NOT NULL DEFAULT '0',
   `deposit` double(15,2) NOT NULL DEFAULT '0.00',
   `withdraw_member` double(15,2) NOT NULL DEFAULT '0.00',
-  `groupmember` enum('NewMember','Bronze','Silver','Gold','Diamond') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'NewMember',
-  `turnover` double(15,2) NOT NULL DEFAULT '0.00'
+  `groupmember` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'NewMember',
+  `turnover` double(15,2) NOT NULL DEFAULT '0.00',
+  `total_top_up_amount` double(15,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Dumping data for table `member`
 --
 
-INSERT INTO `member` (`id`, `agent_id`, `username_agent`, `member_code`, `name`, `credit`, `bet_latest`, `username`, `password`, `status`, `status_delete`, `created_at`, `created_attime`, `updated_at`, `ip_address`, `browserlogin`, `customerGroup`, `userrank`, `lineid`, `note`, `currency`, `bank`, `accountName`, `accountNumber`, `phonenumber`, `lastName`, `recharge_times`, `bonususer`, `deposit`, `withdraw_member`, `groupmember`, `turnover`) VALUES
-(27, 2, 'agent01', '2', 'พีรวัสTestAc', 154109.91, 9.00, '0990825943', '1c8a0fb0f77321b2fea4124168f33eef', 'Y', 'N', '2023-07-16', '2023-07-18 19:22:34', '2023-07-16 10:20:06', 'null', 'null', 'Bronze', 'Bronze', 'NoobTest', 'สร้างขึ้นเพื่อการทดสอบ', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย พีรวัส ขวัญแก้ว', '2147483647', '0990825943', 'นุเคราะห์ชีพTestTest', 13, 150, 0.00, 0.00, 'Bronze', 165.00),
-(29, 2, 'agent01', '2', 'คุโรซากิ', 1011.55, 9.00, '0990825941', '1c8a0fb0f77321b2fea4124168f33eef', 'N', 'N', '2023-07-16', '2023-07-18 19:22:34', '2023-07-16 11:24:17', 'null', 'null', 'NEW ALL', 'Bronze', 'WorkFromHome', 'TestTestTest', 'บาท', 'ธนาคารไทยพาณิชย์', 'อิจิโกะคุโรซากิ', '2892287535', '0990825941', 'อิจิโกะ', 5, 0, 0.00, 0.00, 'NewMember', 0.00),
-(30, 2, 'agent01', '2', 'hjklljlhujlh', 2000.00, 0.00, '0852369877', 'cdc4a43766bedd38cc0ac9a007ef7b5a', 'Y', 'N', '2023-07-16', '2023-08-06 19:24:14', '2023-07-16 11:49:30', NULL, NULL, 'NEW ALL', 'Bronze', 'jkioujj', 'testtestest', 'บาท', 'ธนาคารไทยพาณิชย์', '1245621244', '2147483647', '0852369877', 'ljljjljljljlj', 0, 0, 0.00, 0.00, 'NewMember', 0.00),
-(31, 2, 'agent01', '2', 'พีรวัส ขวัญแก้ว', 3000.00, 0.00, '0990825955', '8006d0ab269ea94538b5be36aa74c3c6', 'Y', 'N', '2023-07-18', '2023-08-13 19:24:05', '2023-07-18 10:26:17', 'null', 'null', 'NEW ALL', 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'พีรวัส ขวัญแก้ว', '2147483647', '0990825955', 'พีรวัส ขวัญแก้ว', 1, 0, 0.00, 0.00, 'NewMember', 0.00),
-(35, 2, 'agent01', '2', 'นาย พีรวัส ขวัญแก้ว', 0.00, 0.00, '0990825942', '1c8a0fb0f77321b2fea4124168f33eef', 'Y', 'N', '2023-10-07', '2023-10-07 13:48:58', '2023-10-07 13:48:58', 'null', 'null', NULL, 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย พีรวัส ขวัญแก้ว', '1587456984', '0990825942', 'นาย พีรวัส ขวัญแก้ว', 0, 0, 0.00, 0.00, 'NewMember', 0.00),
-(36, 2, 'agent01', '2', 'นาย จิรกฤต โชคพฤทธิ์กุล', 1002.40, 5.00, '0954789782', '52c69e3a57331081823331c4e69d3f2e', 'Y', 'N', '2023-10-07', '2023-10-07 13:50:28', '2023-10-07 13:50:28', 'null', 'null', NULL, 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย จิรกฤต โชคพฤทธิ์กุล', '2892287535', '0954789782', 'นาย จิรกฤต โชคพฤทธิ์กุล', 0, 0, 0.00, 0.00, 'NewMember', 0.00),
-(37, 2, 'agent01', '2', 'ธีร์จุฑา ศรีครุฑ', 1000.00, 0.00, '0819372939', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'N', '2023-10-07', '2023-10-07 13:57:07', '2023-10-07 13:57:07', '172.18.0.5', 'Google Chrome', NULL, 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารออมสิน', 'ธีร์จุฑา ศรีครุฑ', '1234567890', '0819372939', 'ธีร์จุฑา ศรีครุฑ', 0, 0, 0.00, 0.00, 'NewMember', 0.00),
-(38, 2, 'agent01', '2', 'นิธิธร', 0.00, 0.00, '0951789155', 'cf8c105ec5b1554187508d61aa4a325d', 'Y', 'N', '2023-10-07', '2023-10-07 18:11:39', '2023-10-07 18:11:39', 'null', 'null', NULL, 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารกสิกรไทย', 'นิธิธร', '0972831476', '0951789155', 'นิธิธร', 0, 0, 0.00, 0.00, 'NewMember', 0.00);
+INSERT INTO `member` (`id`, `agent_id`, `username_agent`, `member_code`, `name`, `credit`, `bet_latest`, `username`, `password`, `status`, `status_delete`, `created_at`, `created_attime`, `updated_at`, `ip_address`, `browserlogin`, `customerGroup`, `userrank`, `lineid`, `note`, `currency`, `bank`, `accountName`, `accountNumber`, `phonenumber`, `lastName`, `recharge_times`, `bonususer`, `deposit`, `withdraw_member`, `groupmember`, `turnover`, `total_top_up_amount`) VALUES
+(1, 2, 'agent01', '2', 'นาย พีรวัส ขวัญแก้ว', 3.00, 0.00, '0990825942', '1c8a0fb0f77321b2fea4124168f33eef', 'Y', 'N', '2023-10-11', '2023-10-11 05:20:16', '2023-10-11 05:20:16', '172.27.0.4', 'Google Chrome', NULL, 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', 'นาย พีรวัส ขวัญแก้ว', 1, 0, 0.00, 0.00, 'NewMember', 0.00, 3.00),
+(2, 2, 'agent01', '2', 'จิราภรณ์ แหขุนทด', 0.00, 0.00, '0840811863', 'b2e7106eafbafdcd5b9a29bb6ff0600d', 'Y', 'N', '2023-10-11', '2023-10-11 06:28:39', '2023-10-11 06:28:39', '172.27.0.4', 'Google Chrome', NULL, 'Bronze', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารกสิกรไทย', 'จิราภรณ์ แหขุนทด', '0568925165', '0840811863', 'จิราภรณ์ แหขุนทด', 0, 0, 0.00, 0.00, 'NewMember', 0.00, 0.00);
 
 -- --------------------------------------------------------
 
@@ -3405,7 +3403,8 @@ INSERT INTO `totalamountdaily` (`id`, `agentid`, `accountName`, `accountNumber`,
 (6, 2, 'สุรชัยTestUser', '1568996524', 200.00, 200.00, 0.00, '', '2023-08-17', '00:32:19', 'ฝาก', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png'),
 (7, 2, 'สุรชัยTestUser', '1568996524', 400.00, 400.00, 0.00, '', '2023-08-24', '17:04:43', 'ฝาก', ''),
 (8, 2, 'นาย ทรงยศ เปล่งรัตน์', '1568996524', 796.08, 796.08, 796.08, 'ธนาคารไทยพาณิชย์', '2023-09-02', '02:02:23', 'ฝาก', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png'),
-(9, 2, 'MR. JRIRAKHIT CHOKPARITKUN', '0358449174', 5.00, 5.00, 5.00, 'ธนาคารกสิกรไทย', '2023-09-14', '23:26:45', 'ฝาก', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-kbank.png');
+(9, 2, 'MR. JRIRAKHIT CHOKPARITKUN', '0358449174', 5.00, 5.00, 5.00, 'ธนาคารกสิกรไทย', '2023-09-14', '23:26:45', 'ฝาก', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-kbank.png'),
+(10, 2, 'นาย พีรวัส ขวัญแก้ว', '020042001691', 24.00, 24.00, 24.00, 'ธนาคารออมสิน', '2023-10-11', '05:25:36', 'ฝาก', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png');
 
 -- --------------------------------------------------------
 
@@ -4734,6 +4733,7 @@ INSERT INTO `user_play` (`id`, `member_id`, `game_id`, `bet`, `win`, `tiles`, `w
 
 CREATE TABLE `withdraw` (
   `id` bigint NOT NULL,
+  `agent_id` bigint DEFAULT NULL,
   `bill_number` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `numberbill` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `quantity` int NOT NULL,
@@ -4742,9 +4742,16 @@ CREATE TABLE `withdraw` (
   `phonenumber` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `transaction_date` date NOT NULL,
   `time` time NOT NULL,
-  `status` enum('ยังไม่เรียบร้อย','ทั้งหมด','รอ','ที่ยังไม่ผูก','สำเร็จ','ไม่สำเส็จ') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'รอ',
-  `bank` enum('ธนาคารไทยพาณิชย์','ธนาคารกสิกรไทย','ธนาคารกรุงเทพ','ธนาคารกรุงไทย','ธนาคารกรุงศรีอยุธยา','ธนาคารเกียรตินาคินภัทร','ธนาคารซีไอเอ็มบี ไทย','ธนาคารทหารไทยธนชาต','ธนาคารยูโอบี','ธนาคารออมสิน','ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร','ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)','Agent') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
+  `bank` varchar(10) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `status_withdraw` enum('success','in_progress','failed') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'in_progress'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `withdraw`
+--
+
+INSERT INTO `withdraw` (`id`, `agent_id`, `bill_number`, `numberbill`, `quantity`, `accountName`, `accountNumber`, `phonenumber`, `transaction_date`, `time`, `bank`, `status_withdraw`) VALUES
+(1, 2, 'T2023101100001', '1', 1, 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-10-11', '06:05:35', '014', 'in_progress');
 
 -- --------------------------------------------------------
 
@@ -5056,7 +5063,7 @@ ALTER TABLE `logeditagent`
 -- AUTO_INCREMENT for table `logfinanceuser`
 --
 ALTER TABLE `logfinanceuser`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 
 --
 -- AUTO_INCREMENT for table `loggame`
@@ -5074,7 +5081,7 @@ ALTER TABLE `mastergroup`
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `percentgame`
@@ -5098,7 +5105,7 @@ ALTER TABLE `subagent`
 -- AUTO_INCREMENT for table `totalamountdaily`
 --
 ALTER TABLE `totalamountdaily`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `totalturnoverrepost`
@@ -5122,7 +5129,7 @@ ALTER TABLE `user_play`
 -- AUTO_INCREMENT for table `withdraw`
 --
 ALTER TABLE `withdraw`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `withdrawalaccount`

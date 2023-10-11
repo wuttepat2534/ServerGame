@@ -449,7 +449,7 @@ http://localhost:5000/login/member  Login Member
 app.post('/login/member', async (require, response, next) => {
     let phoneNumber = require.body.phoneNumber;
     let password = require.body.password;
-
+    let agent_id = require.body.agent_id;
     //start check ip address
     const networkInterfaces = os.networkInterfaces();
     const ipAddress = Object.keys(networkInterfaces).reduce((acc, interfaceName) => {
@@ -482,10 +482,10 @@ app.post('/login/member', async (require, response, next) => {
         browser = 'Google Chrome';
     }
     // end check ip Browser
-    let sql = `SELECT id, credit, name, password, phonenumber FROM member WHERE phonenumber='${phoneNumber}' AND status_delete='N'`;
+    let sql = `SELECT id, credit, name, password, phonenumber FROM member WHERE phonenumber='${phoneNumber}' AND status_delete='N' AND agent_id = '${agent_id}'`;
     connection.query(sql, async (error, results) => {
         try {
-            let update = `UPDATE member set ip_address = '${ipAddress}',browserlogin = '${browser}' WHERE id='${results[0].id}'`;
+            let update = `UPDATE member set ip_address = '${ipAddress}',browserlogin = '${browser}' WHERE id='${results[0].id}' AND agent_id = '${agent_id}' `;
             connection.query(update, async (error, results) => {
                 if (error) { console.log(error) }
             })

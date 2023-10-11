@@ -141,16 +141,17 @@ exports.creditPromotion = async (req, res, next) => {
     const statusTopup = req.body.statusTopup;
     const promotionSuppost = req.body.promotionSuppost;
     const webtype = req.body.webtype;
+    const typelistsuppost = res.body.typelistsuppost;
 
     let sql = `INSERT INTO creditpromotion (passwordpromotion, agnetidcreate, repost, startpromotion, endpromotion, typebonus, bunus, maxbunus, valusbunus, groupuser, afterPromotion, 
         receiving_data_type, receiving_data_typeI, receiving_data_typeII, valus_receiving, data_type, data_typeI, data_typeII, valus_day, numberoftimes_person, ipAddress_attempts, 
         reset, resetI, resetII, withdrawalType, withdraw_data_type, withdraw_max, withdraw_valus, statuspromotion, promotiontype, namepromotion, leakedPro, multiplier,
-        withdrawalTypeII, withdrawalTypeIII, withdraw_valusII, 	withdraw_valusIII, status_topup, promotionsupport, webtype) 
+        withdrawalTypeII, withdrawalTypeIII, withdraw_valusII, 	withdraw_valusIII, status_topup, promotionsupport, webtype, typelistsuppost) 
 value ('${passwordpromotion}','${agnetidcreate}','${repost}','${startpromotion}','${endpromotion}','${typebonus}','${bunus}','${maxbunus}','${valusbunus}','${groupuser}',
  '${afterPromotion}','${receiving_data_type}','${receiving_data_typeI}','${receiving_data_typeII}','${valus_receiving}','${data_type}','${data_typeI}',
  '${data_typeII}','${valus_day}','${numberoftimes_person}','${ipAddress_attempts}','${reset}','${resetI}','${resetII}','${withdrawalType}','${withdraw_data_type}',
  '${withdraw_max}','${withdraw_valus}','${statuspromotion}','${promotiontype}','${namepromotion}','${leakedPro}','${multiplier}','${withdrawalTypeII}',
- '${withdrawalTypeIII}','${withdraw_valusII}','${withdraw_valusIII}','${statusTopup}','${promotionSuppost}','${webtype}')`;
+ '${withdrawalTypeIII}','${withdraw_valusII}','${withdraw_valusIII}','${statusTopup}','${promotionSuppost}','${webtype}','${typelistsuppost}')`;
 
     connection.query(sql, (error, result) => {
         try {
@@ -211,6 +212,7 @@ exports.EditPromotion = async (req, res, next) => {
     const statusTopup = req.body.statusTopup;
     const promotionSuppost = req.body.promotionSuppost;
     const webtype = req.body.webtype;
+    const typelistsuppost = res.body.typelistsuppost;
 
     let sql = `UPDATE creditpromotion set  agnetidcreate ='${agnetidcreate}', repost ='${repost}', startpromotion ='${startpromotion}', 
     endpromotion ='${endpromotion}', typebonus ='${typebonus}', bunus ='${bunus}', maxbunus ='${maxbunus}', valusbunus ='${valusbunus}', groupuser ='${groupuser}',
@@ -219,7 +221,7 @@ exports.EditPromotion = async (req, res, next) => {
     ipAddress_attempts ='${ipAddress_attempts}', reset ='${reset}', resetI ='${resetI}', resetII ='${resetII}', withdrawalType ='${withdrawalType}', withdraw_data_type ='${withdraw_data_type}',
     withdraw_max ='${withdraw_max}', withdraw_valus ='${withdraw_valus}', statuspromotion ='${statuspromotion}', promotiontype ='${promotiontype}', namepromotion ='${namepromotion}',
     leakedPro ='${leakedPro}', multiplier ='${multiplier}', withdrawalTypeII ='${withdrawalTypeII}', withdrawalTypeIII ='${withdrawalTypeIII}', withdraw_valusII ='${withdraw_valusII}',
-    withdraw_valusIII ='${withdraw_valusIII}', status_topup ='${statusTopup}', promotionsupport ='${promotionSuppost}', webtype ='${webtype}' 
+    withdraw_valusIII ='${withdraw_valusIII}', status_topup ='${statusTopup}', promotionsupport ='${promotionSuppost}', webtype ='${webtype}', typelistsuppost ='${typelistsuppost}' 
     WHERE passwordpromotion = '${passwordpromotion}'`;
 
     connection.query(sql, (error, result) => {
@@ -394,6 +396,7 @@ exports.financeUser = (req, res) => {
     const transRef = req.body.transRef;
     const qrcodeData = req.body.qrcodeData;
     const typePromotion = req.body.typePromotion;
+    const agent_id = req.body.agent_id;
     const today = new Date();
     // Format the date as "ddmmyyyy"
     const day = String(today.getDate()).padStart(2, '0');
@@ -403,7 +406,7 @@ exports.financeUser = (req, res) => {
     const formattedDateBill = `${year}-${month}-${day}`;
     //console.log(statusFinance);
     try {
-        let sql_before = `SELECT * FROM member WHERE phonenumber ='${phonenumber}' ORDER BY phonenumber ASC`;
+        let sql_before = `SELECT * FROM member WHERE phonenumber ='${phonenumber}' agent_id = '${agent_id}' ORDER BY phonenumber ASC`;
         connection.query(sql_before, (error, resultUser) => {
             if (error) {
                 console.log(error)
@@ -435,7 +438,7 @@ exports.financeUser = (req, res) => {
                                     if (error) {
                                         console.log(error)
                                     } else {
-                                        if (typePromotion !== '0') {
+                                        if (typePromotion === '0') {
                                             let postpromotionDeposit = promotiontoonta.promotionDeposit(quantity, resultUser[0], typePromotion, formattedNumber, totaltopup);
                                         } else {
                                             let rank = 'NewMember';
@@ -450,8 +453,8 @@ exports.financeUser = (req, res) => {
                                             } else {
                                                 rank = "NewMember";
                                             }
-                                            let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}', 
-                                            total_top_up_amount = '${totaltopup}' groupmember = '${rank}' WHERE phonenumber ='${phonenumber}'`;
+                                            let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}',
+                                            total_top_up_amount = '${totaltopup}', groupmember = '${rank}' WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'`;
                                             connection.query(sql, (error, resultAfter) => {
                                                 if (error) {
                                                     console.log(error);
@@ -504,7 +507,7 @@ exports.financeUser = (req, res) => {
                                         if (error) {
                                             console.log(error)
                                         } else {
-                                            let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}' WHERE phonenumber ='${phonenumber}'`;
+                                            let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}' WHERE phonenumber ='${phonenumber}' agent_id = '${agent_id}'`;
                                             connection.query(sql, (error, resultAfter) => {
                                                 if (error) {
                                                     console.log(error);
@@ -544,6 +547,7 @@ exports.WinhdrawUser = (req, res) => {
     const quantity = req.body.quantity;
     const phonenumber = req.body.phonenumber;
     //const statusFinance = req.body.statusFinance;
+    const agent_id = req.body.agent_id;
     const today = new Date();
     // Format the date as "ddmmyyyy"
     const day = String(today.getDate()).padStart(2, '0');
@@ -553,7 +557,7 @@ exports.WinhdrawUser = (req, res) => {
     const formattedDateBill = `${year}-${month}-${day}`;
     //console.log(statusFinance);
     try {
-        let sql_before = `SELECT * FROM member WHERE phonenumber ='${phonenumber}' ORDER BY phonenumber ASC`;
+        let sql_before = `SELECT * FROM member WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'  ORDER BY phonenumber ASC`;
         connection.query(sql_before, (error, resultUser) => {
             if (error) {
                 console.log(error)
@@ -572,7 +576,7 @@ exports.WinhdrawUser = (req, res) => {
                             const formattedNumber = formatNumber(billnum);
                             //console.log(formattedNumber)
                             const statusWitdraw = 'ถอน';
-                            Finance.Withdrawmoney(resultUser[0] ,formattedDate, formattedNumber, billnum, quantity, resultUser[0].accountNumber, phonenumber, 'ยังไม่เรียบร้อย')
+                            Finance.Withdrawmoney(resultUser[0], formattedDate, formattedNumber, billnum, quantity, resultUser[0].accountNumber, phonenumber, 'ยังไม่เรียบร้อย')
                                 .then(calculatedValues => {
                                     console.log(calculatedValues);
                                 })
@@ -592,7 +596,7 @@ exports.WinhdrawUser = (req, res) => {
                                     console.log(error)
                                 } else {
                                     if (statusWitdraw === "สำเร็จ") {
-                                        let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}' WHERE phonenumber ='${phonenumber}'`;
+                                        let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}' WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'`;
                                         connection.query(sql, (error, resultAfter) => {
                                             if (error) {
                                                 console.log(error);

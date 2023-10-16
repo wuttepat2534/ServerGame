@@ -111,28 +111,28 @@ exports.convertToken = async (req, res) => {
       connection.query(splip, (error, resultsIp) => {
         if (error) { console.log(error) }
 
-        if (resultsIp[0].ip_address !== ipAddress) {
-          const error = new Error('A user with this ip_address could not be found.');
-          error.statusCode = 500;
-          res.json({ status: "A user with this ip_address could not be found." });
-        }
-        else {
-          if (resultsIp[0].browserlogin !== browser) {
-            const error = new Error('A user with this browserlogin could not be found.');
-            error.statusCode = 500;
-            res.json({ status: "A user with this browserlogin could not be found." });
-          }
-          else {
-            let sql = `SELECT id, credit, bet_latest, name FROM member WHERE username ='${decodedToken.phonenumber}' AND status_delete='N' 
+        // if (resultsIp[0].ip_address !== ipAddress) {
+        //   const error = new Error('A user with this ip_address could not be found.');
+        //   error.statusCode = 500;
+        //   res.json({ status: "A user with this ip_address could not be found." });
+        // }
+        // else {
+        //   if (resultsIp[0].browserlogin !== browser) {
+        //     const error = new Error('A user with this browserlogin could not be found.');
+        //     error.statusCode = 500;
+        //     res.json({ status: "A user with this browserlogin could not be found." });
+        //   }
+        //else {
+        let sql = `SELECT id, credit, bet_latest, name FROM member WHERE username ='${decodedToken.phonenumber}' AND status_delete='N' 
             ORDER BY member_code ASC`;
-            connection.query(sql, (error, results) => {
-              if (error) { console.log(error) }
-              else {
-                res.json(results[0]);
-              }
-            });
+        connection.query(sql, (error, results) => {
+          if (error) { console.log(error) }
+          else {
+            res.json(results[0]);
           }
-        }
+        });
+        //     }
+        //   }
       })
     } catch (err) {
       err.statusCode = 500;
@@ -546,6 +546,27 @@ exports.getBalance = async (req, res, next) => {
         const balanceUser = parseFloat(results[0].credit);
         res.send({
           balance: balanceUser,
+        });
+        res.end();
+      }
+    });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
+exports.getBank = async (req, res, next) => {
+  const id_Bank = req.body.idBank;
+  let sql = `SELECT * FROM banknames WHERE id ='${id_Bank}' AND status = 'Y' AND status_delete = 'N'`;
+  try {
+    connection.query(sql, (error, results) => {
+      if (error) { console.log(error); }
+      else {
+        res.send({
+          dataBank: results[0],
         });
         res.end();
       }

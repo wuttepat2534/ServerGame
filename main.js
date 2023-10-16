@@ -796,6 +796,9 @@ app.put('/member/:id', async (req, res, next) => {
     const accountName = req.body.accountName;
     const accountNumber = req.body.accountNumber;
     const listCheckBox = req.body.listCheckBox;
+    const withdraw_member = req.body.withdraw_member;
+    const total_top_up_amount = req.body.total_top_up_amount;
+    const turnover = req.body.turnover;
 
     let statuscheck = 'N';
     if (listCheckBox === 'เปิดใช้งาน') {
@@ -820,8 +823,8 @@ app.put('/member/:id', async (req, res, next) => {
 
                 let sql = `UPDATE member set name = '${firstName}', username = '${contact_number}', status = '${statuscheck}',
                  lastName = '${lastName}', groupmember = '${customerGroup}', userrank = '${Rank}', phonenumber = '${contact_number}',
-                lineid = '${IDLIne}', note = '${note}', bank = '${bank}', accountName = '${accountName}', accountNumber = '${accountNumber}'
-                WHERE id='${id}'`;
+                lineid = '${IDLIne}', note = '${note}', bank = '${bank}', accountName = '${accountName}', accountNumber = '${accountNumber}',
+                withdraw_member = '${withdraw_member}', total_top_up_amount = '${total_top_up_amount}', turnover = '${turnover}' WHERE id='${id}'`;
                 connection.query(sql, (error, result) => {
                     if (error) { console.log(error) }
                     else {
@@ -1105,7 +1108,7 @@ app.post('/otpRequestForgotPassword', async (req, res) => {
     connection.query(sql_check, async (error, results) => {
         try {
             const data = results;
-            if (data.length === 1 || data.length < 1) {
+            if (data.length === 1 || data.length > 1) {
                 sdk.postV2OtpRequest({
                     key: '1771680550307989',
                     secret: 'f7452e51ee54238076d2c04a1af5aeb7',
@@ -1137,7 +1140,7 @@ app.post('/otpVerify', async (req, res) => {
         pin: pin,
     }, { accept: 'application/json' })
         .then(data => { res.json({ dataRes: data }) })
-        .catch(err => console.error(err));
+        .catch(err => { res.json({ dataRes: err.data.errors[0].message }) });
 });
 
 //-----------------------------------------------------------------------------------------------------------------------------

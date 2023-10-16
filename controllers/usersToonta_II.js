@@ -64,3 +64,216 @@ exports.GetWithdrawStatus = async (req, res, next) => {
         }
     })
 };
+
+http: //localhost:5000/GetWithdrawConfirmation Get GetWithdrawConfirmation
+exports.GetWithdrawConfirmation = async (req, res, next) => {
+
+    const pageSize = req.body.pageSize;
+    const pageNumber = req.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+
+    let sql_agent = `SELECT * FROM withdraw WHERE status_withdraw = 'in_progress' LIMIT ${pageSize} OFFSET ${offset}`;
+    connection.query(sql_agent, (error, usernameAgent) => {
+        try {
+            if (error) {
+                console.log(error)
+            } else {
+                if (usernameAgent.length !== 0) {
+                    const totalCount = `SELECT COUNT(*) as count FROM withdraw WHERE status_withdraw = 'in_progress'`
+                    connection.query(totalCount, (error, resdata) => {
+                        if (error) { console.log(error); }
+                        else {
+                            res.send({
+                                message: 'sentData',
+                                data: usernameAgent,
+                                valusData: usernameAgent.length,
+                                total: resdata[0].count
+                            });
+                            res.end();
+                        }
+                    })
+                } else {
+                    res.send({
+                        message: 'NotConfirmation'
+                    });
+                    res.end();
+                }
+            }
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+    })
+};
+
+http: //localhost:5000/ConfirmationWithdraw Get ConfirmationWithdraw
+exports.ConfirmationWithdraw = async (req, res, next) => {
+    const statusWithdraw = req.body.statusWithdraw
+
+    let sql_agent = `UPDATE withdraw set status_withdraw = '${statusWithdraw}' WHERE bill_number ='${bill_number}'`;
+    connection.query(sql_agent, (error, usernameAgent) => {
+        try {
+            if (error) {
+                console.log(error)
+            } else {
+                res.send({
+                    message: 'OK WithDraw',
+                });
+            }
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+    })
+};
+
+//http://localhost:5000/post/apiGetAgentWeb getapiGetAgentWeb
+exports.apiGetAgentWeb = (require, response) => {
+    const usernanme = require.body.username;
+    const agent_id = require.body.agent_id;
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+
+    if (usernanme === '') {
+        let sql = `SELECT * FROM employee WHERE agent_id = "${agent_id}" AND status = "true" LIMIT ${pageSize} OFFSET ${offset}`;
+        connection.query(sql, async (error, results) => {
+            if (error) { console.log(error); }
+            const totalCount = `SELECT COUNT(*) as count FROM employee WHERE agent_id = "${agent_id}" `
+            connection.query(totalCount, (error, res) => {
+                if (error) { console.log(error); }
+                else {
+                    response.send({
+                        data: results,
+                        total: res[0].count
+                    });
+                    response.end();
+                }
+            });
+        });
+    } else {
+        let sql_ = `SELECT * FROM employee WHERE  agent_id = ? AND status = ? AND username LIKE ? LIMIT ? OFFSET ?`;
+        const searchPattern = `%${usernanme}%`;
+        const values = [agent_id, "true", searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, resultstatusFalse) => {
+            if (error) { console.log(error); }
+            else {
+                response.send({
+                    data: resultstatusFalse,
+                    total: resultstatusFalse.length
+                });
+                response.end();
+            }
+        });
+    }
+}
+
+http: //localhost:5000/signupEmployeeAgent Add signupEmployeeAgent
+exports.signupEmployeeAgent = async (req, res, next) => {
+    const agent_id = req.body.agent_id;
+    const username = req.body.username;
+    const password = req.body.password;
+    const name = req.body.name;
+    const phonenumber = req.body.phonenumber;
+    const role = req.body.role;
+    const levelRole = req.body.levelRole;
+
+    const hashedPassword = md5(password);
+    let sql_agent = `SELECT username FROM employee WHERE agent_id ='${agent_id}' AND username = '${username}'`;
+    connection.query(sql_agent, (error, usernameAgent) => {
+        try {
+            if (error) {
+                console.log(error)
+            } else {
+                if (usernameAgent.length === 0 || usernameAgent < 1) {
+                    let sql = `INSERT INTO employee (agent_id, username, password, name, phonenumber, status, created_at, login_latest, role, levelrole) 
+                value ('${agent_id}','${username}','${hashedPassword}','${name}','${phonenumber}','${'true'}',now() ,now(),'${role}', '${levelRole}')`;
+                    connection.query(sql, (error, result) => {
+                        if (error) { console.log(error) }
+                        res.send({
+                            message: "Data created Success"
+                        });
+                        res.end();
+                    });
+                } else {
+                    res.send({
+                        message: "Data created False"
+                    });
+                    res.end();
+                }
+            }
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+    })
+};
+
+http: //localhost:5000/EditEmployeeAgent EditEmployeeAgent
+exports.EditEmployeeAgent = async (req, res, next) => {
+    const id = req.body.id;
+    const username = req.body.username;
+    const name = req.body.name;
+    const phonenumber = req.body.phonenumber;
+    const status = req.body.status;
+    const role = req.body.role;
+    const levelRole = req.body.levelRole;
+
+    let sql_update = `UPDATE employee set username = '${username}', name = '${name}', phonenumber = '${phonenumber}', role = '${role}', 
+    status = '${status}', levelrole = '${levelRole}' WHERE id ='${id}'`;
+    connection.query(sql_update, (error, resultAfter) => {
+        try {
+            if (error) {
+                console.log(error)
+            } else {
+                res.send({
+                    message: "Data Update Success"
+                });
+                res.end();
+            }
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+    });
+};
+
+//http://localhost:5000/post/GetOneAgentWeb getOneAgentWeb
+exports.GetOneAgentWeb = (require, response) => {
+    const id = require.params.id;
+    let sql = `SELECT * FROM employee WHERE id = "${id}" AND status = "true"`;
+    connection.query(sql, async (error, results) => {
+        if (error) { console.log(error); }
+        else {
+            response.send({
+                data: results,
+            });
+            response.end();
+        }
+    });
+}
+
+//http://localhost:5000/post/DeleteAgentWeb getOneAgentWeb
+exports.DeleteAgentWeb = (require, response) => {
+    const id = require.body.id;
+    const agent_id = require.body.agent_id
+    
+    let sql_update = `UPDATE employee set status = 'false' WHERE id ='${id}' AND agent_id ='${agent_id}'`;
+    connection.query(sql_update, async (error, results) => {
+        if (error) { console.log(error); }
+        else {
+            response.send({
+                data: results,
+            });
+            response.end();
+        }
+    });
+}

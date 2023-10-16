@@ -33,7 +33,7 @@ exports.signupMember = async (req, res, next) => {
     const firstName = req.body.accountName;
     const lastName = req.body.accountName;
     const customerGroup = "NewMember";
-    const Rank = "Bronze";
+    const Rank = "NewMember";
     const contact_number = req.body.contact_number;
     const IDLIne = "";
     const note = "สมัครจากหน้าเว็บไซต์";
@@ -141,7 +141,7 @@ exports.creditPromotion = async (req, res, next) => {
     const statusTopup = req.body.statusTopup;
     const promotionSuppost = req.body.promotionSuppost;
     const webtype = req.body.webtype;
-    const typelistsuppost = res.body.typelistsuppost;
+    const typelistsuppost = req.body.typelistsuppost;
 
     let sql = `INSERT INTO creditpromotion (passwordpromotion, agnetidcreate, repost, startpromotion, endpromotion, typebonus, bunus, maxbunus, valusbunus, groupuser, afterPromotion, 
         receiving_data_type, receiving_data_typeI, receiving_data_typeII, valus_receiving, data_type, data_typeI, data_typeII, valus_day, numberoftimes_person, ipAddress_attempts, 
@@ -212,7 +212,7 @@ exports.EditPromotion = async (req, res, next) => {
     const statusTopup = req.body.statusTopup;
     const promotionSuppost = req.body.promotionSuppost;
     const webtype = req.body.webtype;
-    const typelistsuppost = res.body.typelistsuppost;
+    const typelistsuppost = req.body.typelistsuppost;
 
     let sql = `UPDATE creditpromotion set  agnetidcreate ='${agnetidcreate}', repost ='${repost}', startpromotion ='${startpromotion}', 
     endpromotion ='${endpromotion}', typebonus ='${typebonus}', bunus ='${bunus}', maxbunus ='${maxbunus}', valusbunus ='${valusbunus}', groupuser ='${groupuser}',
@@ -240,6 +240,33 @@ exports.EditPromotion = async (req, res, next) => {
 
     });
 };
+
+http: //localhost:5000/post/creditImgPromotion Add creditImgPromotion
+exports.upDateImgPromotion = (req, res) => {
+    const data = JSON.parse(req.body.data);
+    const {
+        details,
+        passwordpromotion
+    } = data;
+    const fileimg = req.file;
+
+    let sql_update = `UPDATE creditpromotion set filename = '${fileimg.filename}', details = '${details}' WHERE passwordpromotion ='${passwordpromotion}'`;
+    connection.query(sql_update, (error, resultAfter) => {
+        try {
+            if (error) {
+                console.log(error);
+            }
+            res.send({
+                message: "Data created Success"
+            });
+            res.end();
+        } catch (err) {
+            if (!err.statusCode) { err.statusCode = 500; }
+            next(err);
+        }
+    });
+};
+
 
 http: //localhost:5000/post/creditImgPromotion Add creditImgPromotion
 exports.creditImgPromotion = (req, res) => {
@@ -275,6 +302,24 @@ exports.creditImgPromotion = (req, res) => {
     });
 };
 
+http: //localhost:5000/post/creditImgPromotion Add creditImgPromotion
+exports.DeletePromotion = (req, res) => {
+    const passwordpromotion = req.body.passwordpromotion;
+    let sql_update = `UPDATE creditpromotion set statuspromotion = 'N' WHERE passwordpromotion ='${passwordpromotion}'`;
+    connection.query(sql_update, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            res.send({
+                message: "Data Delete Success"
+            });
+            res.end();
+        } catch (err) {
+            if (!err.statusCode) { err.statusCode = 500; }
+            next(err);
+        }
+    });
+};
+
 http: //localhost:5000/post/getPromotion Add getPromotion
 exports.getPromotion = (require, response) => {
     const searchKeyword = require.body.name;
@@ -282,7 +327,7 @@ exports.getPromotion = (require, response) => {
     const pageNumber = require.body.pageIndex;
     const offset = (pageNumber - 1) * pageSize;
     if (searchKeyword === '') {
-        let sql = `SELECT * FROM creditpromotion LIMIT ${pageSize} OFFSET ${offset}`;
+        let sql = `SELECT * FROM creditpromotion WHERE statuspromotion = 'Y' LIMIT ${pageSize} OFFSET ${offset}`;
         connection.query(sql, async (error, results) => {
             if (error) { console.log(error); }
             const totalCount = `SELECT COUNT(*) as count FROM creditpromotion`
@@ -297,7 +342,7 @@ exports.getPromotion = (require, response) => {
             });
         });
     } else {
-        let sql = `SELECT * FROM creditpromotion WHERE repost LIKE '%${searchKeyword}%' OR namepromotion LIKE '%${searchKeyword}%' OR agnetidcreate LIKE '%${searchKeyword}%' OR promotiontype LIKE '%${searchKeyword}%'
+        let sql = `SELECT * FROM creditpromotion WHERE statuspromotion = 'Y' AND repost LIKE '%${searchKeyword}%' OR namepromotion LIKE '%${searchKeyword}%' OR agnetidcreate LIKE '%${searchKeyword}%' OR promotiontype LIKE '%${searchKeyword}%'
         LIMIT ${pageSize} OFFSET ${offset}`;
         connection.query(sql, async (error, results) => {
             if (error) { console.log(error); }
@@ -313,7 +358,7 @@ exports.getPromotion = (require, response) => {
 
 http: //localhost:5000/post/getlistPromotion Get getPromotion
 exports.getlistPromotion = (require, response) => {
-    let sql = `SELECT * FROM creditpromotion`;
+    let sql = `SELECT * FROM creditpromotion WHERE statuspromotion = 'Y'`;
     connection.query(sql, async (error, results) => {
         if (error) { console.log(error); }
         response.send({
@@ -327,7 +372,7 @@ exports.getlistPromotion = (require, response) => {
 http: //localhost:5000/post/getlistPromotion Add getPromotion
 exports.getOnePromotion = (require, response) => {
     const passwordpromotion = require.params.passwordpromotion;
-    let sql = `SELECT * FROM creditpromotion WHERE passwordpromotion = '${passwordpromotion}'`;
+    let sql = `SELECT * FROM creditpromotion WHERE passwordpromotion = '${passwordpromotion}' AND statuspromotion = 'Y'`;
     connection.query(sql, async (error, results) => {
         if (error) { console.log(error); }
         response.send({
@@ -454,7 +499,8 @@ exports.financeUser = (req, res) => {
                                                 rank = "NewMember";
                                             }
                                             let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}',
-                                            total_top_up_amount = '${totaltopup}', groupmember = '${rank}' WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'`;
+                                            total_top_up_amount = '${totaltopup}', groupmember = '${rank}', turnover = '${resultUser[0].turnover + quantity}' 
+                                            WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'`;
                                             connection.query(sql, (error, resultAfter) => {
                                                 if (error) {
                                                     console.log(error);
@@ -1641,6 +1687,26 @@ exports.PutUserGroupInformation = async (req, res, next) => {
     });
 };
 
+http: //localhost:5000/post/DeleteUserGroupInformation Put DeleteUserGroupInformation
+exports.DeleteUserGroupInformation = async (req, res, next) => {
+    const id = req.body.id;
+    let sql = `UPDATE mastergroup set status_delete = '${'Y'}' WHERE id ='${id}'`;
+    connection.query(sql, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            res.send({
+                message: "Delete Success"
+            });
+            res.end();
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+    });
+};
+
 
 //http://localhost:5000/post/getGroupccount/:agent_id getGroupccount
 exports.getGroup = (require, response) => {
@@ -1651,10 +1717,10 @@ exports.getGroup = (require, response) => {
     const offset = (pageNumber - 1) * pageSize;
     //console.log(agent_id)
     if (searchKeyword === '') {
-        let sql = `SELECT * FROM mastergroup WHERE agent_id = "${agent_id}" LIMIT ${pageSize} OFFSET ${offset}`;
+        let sql = `SELECT * FROM mastergroup WHERE agent_id = "${agent_id}" AND status_delete='N' LIMIT ${pageSize} OFFSET ${offset}`;
         connection.query(sql, async (error, results) => {
             if (error) { console.log(error); }
-            const totalCount = `SELECT COUNT(*) as count FROM admin WHERE status_delete='N' `
+            const totalCount = `SELECT COUNT(*) as count FROM mastergroup WHERE status_delete='N' `
             connection.query(totalCount, (error, res) => {
                 if (error) { console.log(error); }
                 response.send({
@@ -1666,11 +1732,11 @@ exports.getGroup = (require, response) => {
             });
         });
     } else {
-        let sql_statusWait = `SELECT * FROM mastergroup WHERE tpyefinance = ? AND transaction_date = ? AND status = ?
+        let sql_statusWait = `SELECT * FROM mastergroup WHERE tpyefinance = ? AND transaction_date = ? AND status_delete = ?
         AND accountName LIKE ? OR accountNumber LIKE ? OR phonenumber LIKE ? LIMIT ? OFFSET ?`;
         const searchPattern = `%${searchPhones}%`;
-        const values = [depositwithdrawal, date, "รอ", searchKeyword, searchKeyword, searchPattern, pageSize, offset];
-        connection.query(sql, async (error, results) => {
+        const values = [depositwithdrawal, date, "N", searchKeyword, searchKeyword, searchPattern, pageSize, offset];
+        connection.query(sql_statusWait, values, async (error, results) => {
             if (error) { console.log(error); }
             response.send({
                 data: results,
@@ -1684,7 +1750,7 @@ exports.getGroup = (require, response) => {
 //http://localhost:5000/post/getOneGroup getOneGroup
 exports.getOneGroup = (req, res) => {
     const idGroup = req.params.idGroup;
-    let sql = `SELECT * FROM mastergroup WHERE id = ${idGroup}`;
+    let sql = `SELECT * FROM mastergroup WHERE id = ${idGroup} AND status_delete='N'`;
     connection.query(sql, (error, results) => {
         if (error) { console.log(error) }
         console.log(results)

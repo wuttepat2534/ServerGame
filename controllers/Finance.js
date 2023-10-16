@@ -281,7 +281,7 @@ module.exports = class Post {
     static Withdrawmoney(resultUser, formattedDate, formattedNumber, billnum, quantity, accountNumber, phonenumber, status) {
         return new Promise((resolve, reject) => {
             //console.log(resultUser.bank);
-            let sql_Bank = `SELECT id FROM banknames WHERE bankname_name ='${resultUser.bank}' AND status = 'Y' AND status_delete = 'N'`;
+            let sql_Bank = `SELECT id, images FROM banknames WHERE bankname_name ='${resultUser.bank}' AND status = 'Y' AND status_delete = 'N'`;
             connection.query(sql_Bank, (error, usernameAgent) => {
                 console.log(usernameAgent);
                 try {
@@ -296,8 +296,8 @@ module.exports = class Post {
                             statusValus = 'Y'
                         }
                         //console.log(Bank, resultUser.agent_id, status)
-                        let sql_before = `INSERT INTO withdraw (agent_id, bill_number, numberbill, quantity, accountName, accountNumber, phonenumber, transaction_date, time, bank, status_withdraw, status_value) value 
-                        ('${resultUser.agent_id}','T${formattedDate}${formattedNumber}','${billnum}','${quantity}','${resultUser.accountName}','${accountNumber}','${phonenumber}', now(), now(),'${usernameAgent[0].id}','${status}','${statusValus}')`;
+                        let sql_before = `INSERT INTO withdraw (agent_id, bill_number, numberbill, quantity, accountName, accountNumber, phonenumber, transaction_date, time, bank, status_withdraw, status_value, images) value 
+                        ('${resultUser.agent_id}','T${formattedDate}${formattedNumber}','${billnum}','${quantity}','${resultUser.accountName}','${accountNumber}','${phonenumber}', now(), now(),'${usernameAgent[0].id}','${status}','${statusValus}','${usernameAgent[0].images}')`;
                         connection.query(sql_before, (error, result) => {
                             let jsArray = "ระบบกำลังดำเนินการ";
                             resolve(jsArray);

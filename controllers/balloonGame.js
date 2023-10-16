@@ -31,7 +31,8 @@ exports.saveTestGame = async (require, response) => {
     const bet = require.params.bet;
     const game_id = require.params.game_id;
     const choose = require.params.choose;
-    const authHeader = require.body.Authorization;
+    //const authHeader = require.body.Authorization;
+    const authHeader = require.params.token;
     const passwordRound = require.body.passwordRound;
     const userAgent = require.headers['user-agent'];
     const userAgentt = require.useragent;

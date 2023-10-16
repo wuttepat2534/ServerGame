@@ -434,6 +434,7 @@ function turnoverrepost(post) {
     const date = today.toISOString().slice(0, 10);
     const lose = floatbet - floatwit;
     console.log(floatwit, floatbet);
+    let turnoverUserGame = turnoverUser(post);
     let sql = `SELECT * FROM turnoverrepost WHERE day = '${date}' AND usernameuser = '${post.username}' AND gamecamp = '${post.gameid}'`;
     connection.query(sql, (error, results) => {
         if (error) {
@@ -569,6 +570,24 @@ function gamecamptotal(post) {
                     });
                 }
             })
+        }
+    })
+}
+
+function turnoverUser(post) {
+    const floatbet = parseFloat(post.bet);
+    let sql = `SELECT turnover_playuser FROM member WHERE username = '${post.username}' AND agent_id = '2'`;
+    connection.query(sql, (error, results) => {
+        if (error) {
+            console.log(error);
+            reject(error);
+        } else {
+            let sql = `UPDATE member set turnover_playuser = '${results[0].turnover_playuser + floatbet}'
+            WHERE username = '${post.username}' AND agent_id = '2'`;
+            connection.query(sql, (error, resultAfter) => {
+                if (error) { console.log(error); }
+                return 'OK';
+            });
         }
     })
 }

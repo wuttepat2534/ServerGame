@@ -67,7 +67,6 @@ exports.GetWithdrawStatus = async (req, res, next) => {
 
 http: //localhost:5000/GetWithdrawConfirmation Get GetWithdrawConfirmation
 exports.GetWithdrawConfirmation = async (req, res, next) => {
-
     const pageSize = req.body.pageSize;
     const pageNumber = req.body.pageIndex;
     const offset = (pageNumber - 1) * pageSize;
@@ -110,24 +109,47 @@ exports.GetWithdrawConfirmation = async (req, res, next) => {
 
 http: //localhost:5000/ConfirmationWithdraw Get ConfirmationWithdraw
 exports.ConfirmationWithdraw = async (req, res, next) => {
-    const statusWithdraw = req.body.statusWithdraw
+    const bill_number = req.body.bill_number;
+    const statusWithdraw = req.body.statusWithdraw;
+    const noteConfirmation = req.body.statusWithdraw;
+    const usernameUser = req.body.username
+    const agent_id = req.body.agent_id;
+    //statusWithdraw = success, failed
 
-    let sql_agent = `UPDATE withdraw set status_withdraw = '${statusWithdraw}' WHERE bill_number ='${bill_number}'`;
-    connection.query(sql_agent, (error, usernameAgent) => {
-        try {
-            if (error) {
-                console.log(error)
-            } else {
-                res.send({
-                    message: 'OK WithDraw',
-                });
+    let sql_agent = `SELECT * FROM member WHERE username ='${usernameUser}' AND agent_id ='${agent_id}'`;
+    connection.query(sql_agent, (error, userMember) => {
+        
+        const convertedCredit = parseFloat(userMember[0].credit);
+        const convertedLatest_withdrawal = parseFloat(userMember[0].latest_withdrawal);
+        const convertedWithdraw_member = parseFloat(userMember[0].withdraw_member);
+
+        let sql_Withdraw = `UPDATE withdraw set status_withdraw = '${statusWithdraw}', note = '${noteConfirmation}' WHERE bill_number ='${bill_number}'`;
+        connection.query(sql_Withdraw, (error, withdraw) => {
+            try {
+                if (error) {
+                    console.log(error)
+                } else {
+                    if (statusWithdraw === 'failed') {
+                        let sql = `UPDATE member set credit = '${convertedCredit + convertedLatest_withdrawal}', latest_withdrawal = '${0.00}',
+                        withdraw_member = '${convertedWithdraw_member - convertedLatest_withdrawal}'  WHERE username ='${usernameUser}' AND agent_id ='${agent_id}'`;
+                        connection.query(sql, (error, resultAfter) => {
+                            if (error) {
+                                console.log(error);
+                            }
+                            res.send({
+                                message: "รอการอนุมัติการถอนเงิน",
+                            });
+                            res.end();
+                        });
+                    }
+                }
+            } catch (err) {
+                if (!err.statusCode) {
+                    err.statusCode = 500;
+                }
+                next(err);
             }
-        } catch (err) {
-            if (!err.statusCode) {
-                err.statusCode = 500;
-            }
-            next(err);
-        }
+        })
     })
 };
 
@@ -265,9 +287,25 @@ exports.GetOneAgentWeb = (require, response) => {
 exports.DeleteAgentWeb = (require, response) => {
     const id = require.body.id;
     const agent_id = require.body.agent_id
-    
+
     let sql_update = `UPDATE employee set status = 'false' WHERE id ='${id}' AND agent_id ='${agent_id}'`;
     connection.query(sql_update, async (error, results) => {
+        if (error) { console.log(error); }
+        else {
+            response.send({
+                data: results,
+            });
+            response.end();
+        }
+    });
+}
+
+//http://localhost:5000/post/GetOneBank getOneBank
+exports.GetOneBank = (require, response) => {
+    const nameBank = require.body.nameBank;
+    console.log(nameBank)
+    let sql = `SELECT * FROM banknames WHERE bankname_name = "${nameBank}" AND status = "Y"`;
+    connection.query(sql, async (error, results) => {
         if (error) { console.log(error); }
         else {
             response.send({

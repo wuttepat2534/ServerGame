@@ -246,11 +246,13 @@ exports.upDateImgPromotion = (req, res) => {
     const data = JSON.parse(req.body.data);
     const {
         details,
-        passwordpromotion
+        passwordpromotion,
+        imgPromotion
     } = data;
-    const fileimg = req.file;
-
-    let sql_update = `UPDATE creditpromotion set filename = '${fileimg.filename}', details = '${details}' WHERE passwordpromotion ='${passwordpromotion}'`;
+    //let fileimg = '';
+    console.log(req.file, imgPromotion);
+    if (req.file === undefined){
+        let sql_update = `UPDATE creditpromotion set filename = '${imgPromotion}', details = '${details}' WHERE passwordpromotion ='${passwordpromotion}'`;
     connection.query(sql_update, (error, resultAfter) => {
         try {
             if (error) {
@@ -265,6 +267,23 @@ exports.upDateImgPromotion = (req, res) => {
             next(err);
         }
     });
+    } else {
+        let sql_update = `UPDATE creditpromotion set filename = '${req.file.filename}', details = '${details}' WHERE passwordpromotion ='${passwordpromotion}'`;
+    connection.query(sql_update, (error, resultAfter) => {
+        try {
+            if (error) {
+                console.log(error);
+            }
+            res.send({
+                message: "Data created Success"
+            });
+            res.end();
+        } catch (err) {
+            if (!err.statusCode) { err.statusCode = 500; }
+            next(err);
+        }
+    });
+    }
 };
 
 
@@ -521,7 +540,8 @@ exports.financeUser = (req, res) => {
                         }
                     })
                 } else {
-                    if (resultUser[0].credit > quantity) {
+                    let moneyUserWithDraw = resultUser[0].credit - resultUser[0].turnover
+                    if (resultUser[0].credit > quantity && quantity <= moneyUserWithDraw) {
                         let totalamountdaily = logTotalAmountWithdraw(resultUser, formattedDateBill, 'ถอน', destinationAccount, destinationAccountNumber, quantity, statusFinance)
                         let bill = `SELECT numberbill FROM logfinanceuser WHERE transaction_date = ? AND tpyefinance = 'ถอน' ORDER BY numberbill DESC LIMIT 1`;
                         connection.query(bill, [formattedDateBill], (error, resultBill) => {
@@ -566,8 +586,16 @@ exports.financeUser = (req, res) => {
                                         }
                                     });
                                 } else {
-                                    res.send({
-                                        message: "ยอดเงินมีไม่เพียงพอ",
+                                    let sql = `UPDATE member set credit = '${balance}', withdraw_member = '${resultUser[0].withdraw_member + quantity}', latest_withdrawal = '${quantity}'
+                                    WHERE phonenumber ='${phonenumber}' agent_id = '${agent_id}'`;
+                                    connection.query(sql, (error, resultAfter) => {
+                                        if (error) {
+                                            console.log(error);
+                                        }
+                                        res.send({
+                                            message: "รอการอนุมัติการถอนเงิน",
+                                        });
+                                        res.end();
                                     });
                                 }
                             }
@@ -1734,7 +1762,7 @@ exports.getGroup = (require, response) => {
     } else {
         let sql_statusWait = `SELECT * FROM mastergroup WHERE tpyefinance = ? AND transaction_date = ? AND status_delete = ?
         AND accountName LIKE ? OR accountNumber LIKE ? OR phonenumber LIKE ? LIMIT ? OFFSET ?`;
-        const searchPattern = `%${searchPhones}%`;
+        const searchPattern = `%${searchKeyword}%`;
         const values = [depositwithdrawal, date, "N", searchKeyword, searchKeyword, searchPattern, pageSize, offset];
         connection.query(sql_statusWait, values, async (error, results) => {
             if (error) { console.log(error); }

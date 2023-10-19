@@ -88,6 +88,7 @@ router.post('/GetWithdrawConfirmation', userstoonTaII.GetWithdrawConfirmation)
 router.post('/test', userToonta.testtesttest)
 router.post('/apiGetAgentWeb', userstoonTaII.apiGetAgentWeb)
 router.post('/signupEmployeeAgent', userstoonTaII.signupEmployeeAgent)
+router.post('/GetOneBank', userstoonTaII.GetOneBank)
 
 router.get('/getDepositaccount/:agent_id', userToonta.getDepositaccount)
 router.get('/getWithdrawalaccount', userToonta.getWithdrawalaccount)

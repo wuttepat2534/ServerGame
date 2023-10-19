@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Oct 19, 2023 at 04:22 AM
+-- Generation Time: Oct 19, 2023 at 10:23 AM
 -- Server version: 8.0.34
 -- PHP Version: 8.2.8
 
@@ -402,7 +402,8 @@ CREATE TABLE `gamecamptotal` (
 
 INSERT INTO `gamecamptotal` (`id`, `namegamecamp`, `grossComm`, `turnover`, `win`, `lose`, `commmember`, `totalmamber`, `w_l_agent`, `comm_agent`, `tatal_agent`, `w_l_commny`, `comm_commny`, `tatal_commny`, `roundplay`, `day`) VALUES
 (1, 'DOGZILLA', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 13, '2023-10-17'),
-(2, 'DOGZILLA', 0.00, 10.00, 9.20, 0.80, 0.00, 8.40, 0.80, 0.00, 0.74, 0.80, 0.00, 0.06, 2, '2023-10-18');
+(2, 'DOGZILLA', 0.00, 10.00, 9.20, 0.80, 0.00, 8.40, 0.80, 0.00, 0.74, 0.80, 0.00, 0.06, 2, '2023-10-18'),
+(3, 'DOGZILLA', 0.00, 15.00, 32.20, -17.20, 0.00, 49.40, -17.20, 0.00, -15.82, -17.20, 0.00, -1.38, 6, '2023-10-19');
 
 -- --------------------------------------------------------
 
@@ -902,7 +903,10 @@ INSERT INTO `game_feespin` (`member_id`, `game_id`, `game_feespin`) VALUES
 (1, 3, 'false'),
 (1, 3, 'false'),
 (1, 3, 'false'),
-(1, 4, 'false');
+(1, 4, 'false'),
+(7, 1, 'false'),
+(7, 1, 'false'),
+(7, 1, 'false');
 
 -- --------------------------------------------------------
 
@@ -974,7 +978,8 @@ INSERT INTO `logedit` (`id`, `edittype`, `idedit`, `idmember`, `name`, `editbefo
 (1, 'agent', 2, 1, 'agent01', 'Credit ก่อนหน้า   0\n              ', 'Credit ปัจจุบัน = 1000มีการเปลี่ยนโดย agent ชื่อ agent01', '2023-10-18 15:50:39', '2023-10-18'),
 (2, 'agent', 2, 1, 'agent01', 'Credit ก่อนหน้า   1000\n              ', 'Credit ปัจจุบัน = 900มีการเปลี่ยนโดย agent ชื่อ agent01', '2023-10-18 15:51:32', '2023-10-18'),
 (3, 'agent', 2, 1, 'agent01', 'ชื่อจริง จิรกฤต นามสกุล จิรกฤต กลุ่มลูกค้า NewMember Renk NewMember username 0954789782 ไลน์ ', 'ชื่อจริง นาย จิรกฤต โชคพฤทธิ์กุล นามสกุล จิรกฤต กลุ่มลูกค้า NewMember Renk NewMember username 0954789782 ไลน์ แก้ไขโดย agent01', '2023-10-18 15:52:22', '2023-10-18'),
-(4, 'agent', 2, 5, 'agent01', 'Credit ก่อนหน้า   0\n              ', 'Credit ปัจจุบัน = 100มีการเปลี่ยนโดย agent ชื่อ agent01', '2023-10-18 16:45:15', '2023-10-18');
+(4, 'agent', 2, 5, 'agent01', 'Credit ก่อนหน้า   0\n              ', 'Credit ปัจจุบัน = 100มีการเปลี่ยนโดย agent ชื่อ agent01', '2023-10-18 16:45:15', '2023-10-18'),
+(5, 'agent', 2, 7, 'agent01', 'Credit ก่อนหน้า   0\n              ', 'Credit ปัจจุบัน = 1000มีการเปลี่ยนโดย agent ชื่อ agent01', '2023-10-19 05:51:28', '2023-10-19');
 
 -- --------------------------------------------------------
 
@@ -1049,6 +1054,15 @@ CREATE TABLE `logfinanceuser` (
   `nameimg` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'เพิ่มจากเว็บAgent'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `logfinanceuser`
+--
+
+INSERT INTO `logfinanceuser` (`id`, `bill_number`, `numberbill`, `idUser`, `agent_id`, `tpyefinance`, `accountName`, `accountNumber`, `phonenumber`, `transaction_date`, `time`, `quantity`, `creditbonus`, `balance_before`, `balance`, `status`, `bank`, `imgBank`, `destinationAccount`, `destinationAccountNumber`, `trans_ref`, `qrcodeData`, `nameimg`) VALUES
+(3, 'T2023101900001', 1, 5, 2, 'ถอน', 'นาย ประยุทธิ์ จันทร์โอชา', '1234567910', '0990825942', '2023-10-19', '07:59:36', 120, 0, 1000.00, 120.00, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย ประยุทธิ์ จันทร์โอชา', '1234567910', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(4, 'T2023101900002', 2, 5, 2, 'ถอน', 'นาย ประยุทธิ์ จันทร์โอชา', '1234567910', '0990825942', '2023-10-19', '08:13:25', 300, 0, 880.00, 300.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย ประยุทธิ์ จันทร์โอชา', '1234567910', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(5, 'T2023101900003', 3, 5, 2, 'ถอน', 'นาย ประยุทธิ์ จันทร์โอชา', '1234567910', '0990825942', '2023-10-19', '08:42:33', 150, 0, 880.00, 150.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย ประยุทธิ์ จันทร์โอชา', '1234567910', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent');
+
 -- --------------------------------------------------------
 
 --
@@ -1111,7 +1125,7 @@ INSERT INTO `mastergroup` (`id`, `agent_id`, `account_name`, `account_number`, `
 (4, 2, 'พีรวัส ขวัญแก้ว', '1839900569939', '#b0b0b0', 'รหัส', 0.00, 0, 'Silver', 0.00, 0, 'NewMember', 'พีรวัส ขวัญแก้ว', '1839900569939', '', '', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'N'),
 (5, 2, 'พีรวัส ขวัญแก้ว', '1839900569939', '#bc9338', 'ycps0u', 0.00, 0, 'Gold', 0.00, 0, 'NewMember', 'พีรวัส ขวัญแก้ว', '1839900569939', '', '', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'N'),
 (6, 2, 'พีรวัส ขวัญแก้ว', '1839900569939', '#5ce4ff', 'da47gd', 0.00, 0, 'Diamond', 0.00, 0, 'NewMember', 'พีรวัส ขวัญแก้ว', '1839900569939', '', '', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'N'),
-(7, 2, 'พีรวัส ขวัญแก้ว', '1839900569939', '#0000ff', 'u2gav5', 500.00, 100000, 'Kit', 1.00, 10, 'NewMember', 'พีรวัส ขวัญแก้ว', '1839900569939', '', '', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'N');
+(7, 2, 'พีรวัส ขวัญแก้ว', '1839900569939', '#0000ff', 'u2gav5', 500.00, 100000, 'Kit', 1.00, 10, 'NewMember', 'พีรวัส ขวัญแก้ว', '1839900569939', '', '', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'Y');
 
 -- --------------------------------------------------------
 
@@ -1164,10 +1178,11 @@ CREATE TABLE `member` (
 --
 
 INSERT INTO `member` (`id`, `agent_id`, `username_agent`, `member_code`, `name`, `credit`, `bet_latest`, `username`, `password`, `status`, `status_delete`, `created_at`, `created_attime`, `updated_at`, `ip_address`, `browserlogin`, `customerGroup`, `userrank`, `lineid`, `note`, `currency`, `bank`, `accountName`, `accountNumber`, `phonenumber`, `lastName`, `recharge_times`, `bonususer`, `deposit`, `withdraw_member`, `latest_withdrawal`, `groupmember`, `turnover`, `total_top_up_amount`, `promotionuser`, `passwordpromotion`, `turnover_playuser`) VALUES
-(1, 2, 'Toonta', '2', 'จิรกฤต', 899.20, 5.00, '0954789782', '52c69e3a57331081823331c4e69d3f2e', 'N', 'N', '2023-10-17', '2023-10-17 10:52:48', '2023-10-17 10:52:48', '192.168.80.5', 'Apple Safari', 'NewMember', 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย จิรกฤต โชคพฤทธิ์กุล', '2892287535', '0954789782', 'จิรกฤต', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 10.00),
+(1, 2, 'Toonta', '2', 'จิรกฤต', 899.20, 5.00, '0954789782', '52c69e3a57331081823331c4e69d3f2e', 'N', 'N', '2023-10-17', '2023-10-17 10:52:48', '2023-10-17 10:52:48', 'null', 'null', 'NewMember', 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย จิรกฤต โชคพฤทธิ์กุล', '2892287535', '0954789782', 'จิรกฤต', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 10.00),
 (3, 2, 'Toonta', '2', 'Kittisak', 0.00, 0.00, '0879914004', '8a6f2805b4515ac12058e79e66539be9', 'Y', 'N', '2023-10-18', NULL, '2023-10-18 14:47:55', NULL, NULL, 'Null', 'New Member', '', '', 'บาท', 'ธนาคารกสิกรไทย', 'Kittisak', '1100700320579', '0879914004', 'Null', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 0.00),
-(5, 2, 'Toonta', '2', 'นาย ประยุทธิ์ จันทร์โอชา', 100.00, 0.00, '0990825942', '1c8a0fb0f77321b2fea4124168f33eef', 'Y', 'N', '2023-10-18', '2023-10-18 15:27:37', '2023-10-18 15:27:37', '192.168.80.5', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย ประยุทธิ์ จันทร์โอชา', '1234567910', '0990825942', 'นาย ประยุทธิ์ จันทร์โอชา', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 0.00),
-(6, 2, 'Toonta', '2', 'Kittisak', 0.00, 0.00, '0659150592', 'afdd0b4ad2ec172c586e2150770fbf9e', 'Y', 'N', '2023-10-19', NULL, '2023-10-19 01:34:57', NULL, NULL, 'Null', 'New Member', '', '', 'บาท', 'ธนาคารกสิกรไทย', 'Kittisak', '0102294078', '0659150592', 'Null', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 0.00);
+(5, 2, 'Toonta', '2', 'นาย ประยุทธิ์ จันทร์โอชา', 880.00, 0.00, '0990825942', '1c8a0fb0f77321b2fea4124168f33eef', 'Y', 'N', '2023-10-18', '2023-10-18 15:27:37', '2023-10-18 15:27:37', '192.168.176.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย ประยุทธิ์ จันทร์โอชา', '1234567910', '0990825942', 'นาย ประยุทธิ์ จันทร์โอชา', 0, 0, 0.00, 120000000.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 0.00),
+(6, 2, 'Toonta', '2', 'Kittisak', 0.00, 0.00, '0659150592', 'afdd0b4ad2ec172c586e2150770fbf9e', 'Y', 'N', '2023-10-19', NULL, '2023-10-19 01:34:57', NULL, NULL, 'Null', 'New Member', '', '', 'บาท', 'ธนาคารกสิกรไทย', 'Kittisak', '0102294078', '0659150592', 'Null', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 0.00),
+(7, 2, 'agent01', '2', 'จิราภรณ์ แหขุนทด', 1017.20, 5.00, '0840811863', 'b2e7106eafbafdcd5b9a29bb6ff0600d', 'Y', 'N', '2023-10-19', '2023-10-19 05:42:53', '2023-10-19 05:42:53', 'null', 'null', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารกสิกรไทย', 'จิราภรณ์ แหขุนทด', '0568925165', '0840811863', 'จิราภรณ์ แหขุนทด', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 15.00);
 
 -- --------------------------------------------------------
 
@@ -1268,7 +1283,13 @@ INSERT INTO `repostgame` (`id`, `iduser`, `username`, `gameid`, `bet`, `win`, `b
 (12, 1, '0954789782', 'DOGZILLA', 0.00, 0.00, 0.00, 'Google Chrome', 'PC', 'NO', '2023-10-17', '11:01:13'),
 (13, 1, '0954789782', 'DOGZILLA', 0.00, 0.00, 0.00, 'Google Chrome', 'PC', 'NO', '2023-10-17', '11:01:13'),
 (14, 1, '0954789782', 'DOGZILLA', 5.00, 9.20, 904.20, 'Apple Safari', 'PC', 'NO', '2023-10-18', '19:50:39'),
-(15, 1, '0954789782', 'DOGZILLA', 5.00, 0.00, 899.20, 'Apple Safari', 'PC', 'NO', '2023-10-18', '19:52:49');
+(15, 1, '0954789782', 'DOGZILLA', 5.00, 0.00, 899.20, 'Apple Safari', 'PC', 'NO', '2023-10-18', '19:52:49'),
+(16, 7, '0840811863', 'DOGZILLA', 0.00, 0.00, 0.00, 'Google Chrome', 'PC', 'NO', '2023-10-19', '05:45:29'),
+(17, 7, '0840811863', 'DOGZILLA', 0.00, 0.00, 0.00, 'Google Chrome', 'PC', 'NO', '2023-10-19', '05:45:33'),
+(18, 7, '0840811863', 'DOGZILLA', 0.00, 0.00, 0.00, 'Google Chrome', 'PC', 'NO', '2023-10-19', '05:45:36'),
+(19, 7, '0840811863', 'DOGZILLA', 5.00, 23.00, 1018.00, 'Google Chrome', 'PC', 'NO', '2023-10-19', '05:52:19'),
+(20, 7, '0840811863', 'DOGZILLA', 5.00, 0.00, 1013.00, 'Google Chrome', 'PC', 'NO', '2023-10-19', '05:52:39'),
+(21, 7, '0840811863', 'DOGZILLA', 5.00, 9.20, 1017.20, 'Google Chrome', 'PC', 'NO', '2023-10-19', '05:53:02');
 
 -- --------------------------------------------------------
 
@@ -1370,7 +1391,8 @@ CREATE TABLE `totalturnoverrepost` (
 
 INSERT INTO `totalturnoverrepost` (`id`, `usernameuser`, `turnover`, `win`, `lose`, `roundplay`, `ag_winlose`, `ag_comm`, `ag_total`, `comny_total`, `day`) VALUES
 (1, '0954789782', 0.00, 0.00, 0.00, 13, 0.00, 0.00, 0.00, 0.00, '2023-10-17'),
-(2, '0954789782', 10.00, 9.20, 0.80, 2, 0.80, 0.00, 0.74, 0.06, '2023-10-18');
+(2, '0954789782', 10.00, 9.20, 0.80, 2, 0.80, 0.00, 0.74, 0.06, '2023-10-18'),
+(3, '0840811863', 15.00, 32.20, -17.20, 6, -17.20, 0.00, -15.82, -1.38, '2023-10-19');
 
 -- --------------------------------------------------------
 
@@ -1395,7 +1417,8 @@ CREATE TABLE `turnoverrepost` (
 
 INSERT INTO `turnoverrepost` (`id`, `usernameuser`, `gamecamp`, `turnover`, `win`, `lose`, `day`, `roundplay`) VALUES
 (1, '0954789782', 'DOGZILLA', 0.00, 0.00, 0.00, '2023-10-17', 13),
-(2, '0954789782', 'DOGZILLA', 10.00, 9.20, 0.80, '2023-10-18', 2);
+(2, '0954789782', 'DOGZILLA', 10.00, 9.20, 0.80, '2023-10-18', 2),
+(3, '0840811863', 'DOGZILLA', 15.00, 32.20, -17.20, '2023-10-19', 6);
 
 -- --------------------------------------------------------
 
@@ -1443,7 +1466,17 @@ INSERT INTO `user_play` (`id`, `member_id`, `game_id`, `bet`, `win`, `tiles`, `w
 (16, 1, 0, 0.00, 0.00, '0,1,2,3,4', '0', 'MME81SfpBNrUL', '0', 0.00, NULL, '2023-10-18 14:37:20', 'false', 'false'),
 (17, 1, 0, 5.00, 9.20, '0,3', '0', 'zVlaustRBZKCS', '0', 904.20, NULL, '2023-10-18 19:50:24', 'false', 'false'),
 (18, 1, 0, 5.00, 0.00, '1,2', '1', 'WHlpHM4zrMUOD', '0', 899.20, NULL, '2023-10-18 19:52:27', 'false', 'false'),
-(19, 1, 0, 0.00, 0.00, '0,1,2,3,4', '0', 'epPgvnfF96jrt', '0', 0.00, NULL, '2023-10-18 19:52:55', 'false', 'false');
+(19, 1, 0, 0.00, 0.00, '0,1,2,3,4', '0', 'epPgvnfF96jrt', '0', 0.00, NULL, '2023-10-18 19:52:55', 'false', 'false'),
+(20, 7, 1, 0.00, 0.00, '5,0,1,9,10,5,3,5,0,4,8,1,5,11,6', '', '', '0', 0.00, NULL, '2023-10-19 05:45:29', 'false', 'false'),
+(21, 7, 1, 0.00, 0.00, '5,2,0,7,0,6,4,10,1,0,2,8,5,12,6', '', '', '0', 0.00, NULL, '2023-10-19 05:45:33', 'false', 'false'),
+(22, 7, 1, 0.00, 0.00, '1,9,3,9,10,5,12,1,0,1,8,6,11,6,0', '', '', '0', 0.00, NULL, '2023-10-19 05:45:36', 'false', 'false'),
+(23, 1, 0, 0.00, 0.00, '0,1,2,3,4', '0', '5mFSx7nlATdVO', '0', 899.20, NULL, '2023-10-19 05:46:42', 'false', 'false'),
+(24, 7, 0, 0.00, 0.00, '0,1,2,3,4', '0', 'JLBvNM5NE6RH0', '0', 0.00, NULL, '2023-10-19 05:49:11', 'false', 'false'),
+(25, 7, 0, 0.00, 0.00, '0,1,2,3,4', '0', 'o1PHRJWsBf9ut', '0', 0.00, NULL, '2023-10-19 05:50:38', 'false', 'false'),
+(26, 7, 0, 5.00, 23.00, '0,1,2,3,4', '1', 'wbsJuBqRBEpWX', '0', 1018.00, NULL, '2023-10-19 05:52:11', 'false', 'false'),
+(27, 1, 0, 0.00, 0.00, '0,1,2,3,4', '0', 'mrWlDOaoJ9Pwb', '0', 899.20, NULL, '2023-10-19 05:52:24', 'false', 'false'),
+(28, 7, 0, 5.00, 0.00, '0,1,2,3,4', '4', 'rEV3pqQsqgQJM', '0', 1013.00, NULL, '2023-10-19 05:52:34', 'false', 'false'),
+(29, 7, 0, 5.00, 9.20, '1,2', '2', 'K3V8vYDL90njB', '0', 1017.20, NULL, '2023-10-19 05:52:48', 'false', 'false');
 
 -- --------------------------------------------------------
 
@@ -1468,6 +1501,16 @@ CREATE TABLE `withdraw` (
   `images` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `note` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'รอการอนุมัตื'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `withdraw`
+--
+
+INSERT INTO `withdraw` (`id`, `agent_id`, `bill_number`, `numberbill`, `quantity`, `accountName`, `accountNumber`, `phonenumber`, `transaction_date`, `time`, `bank`, `status_withdraw`, `status_value`, `images`, `note`) VALUES
+(1, 2, 'T01910202300001', '1', 100, 'นาย ประยุทธิ์ จันทร์โอชา', '1234567910', '0990825942', '2023-10-19', '11:28:52', '3', 'success', 'Y', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'ข้อมูลถูกต้อง'),
+(4, 2, 'T2023101900001', '1', 120, 'นาย ประยุทธิ์ จันทร์โอชา', '1234567910', '0990825942', '2023-10-19', '07:59:36', '3', 'success', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'จำนวนถูกต้อง'),
+(5, 2, 'T2023101900002', '2', 300, 'นาย ประยุทธิ์ จันทร์โอชา', '1234567910', '0990825942', '2023-10-19', '08:13:25', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'จำนวนเงินไม่ถูกต้อง'),
+(6, 2, 'T2023101900003', '3', 150, 'นาย ประยุทธิ์ จันทร์โอชา', '1234567910', '0990825942', '2023-10-19', '08:42:33', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'ยอดไม่ถูกต้อง');
 
 -- --------------------------------------------------------
 
@@ -1753,7 +1796,7 @@ ALTER TABLE `game`
 -- AUTO_INCREMENT for table `gamecamptotal`
 --
 ALTER TABLE `gamecamptotal`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `gameweb`
@@ -1777,7 +1820,7 @@ ALTER TABLE `logdaygame`
 -- AUTO_INCREMENT for table `logedit`
 --
 ALTER TABLE `logedit`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `logeditadmin`
@@ -1795,7 +1838,7 @@ ALTER TABLE `logeditagent`
 -- AUTO_INCREMENT for table `logfinanceuser`
 --
 ALTER TABLE `logfinanceuser`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `loggame`
@@ -1813,7 +1856,7 @@ ALTER TABLE `mastergroup`
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `percentgame`
@@ -1825,7 +1868,7 @@ ALTER TABLE `percentgame`
 -- AUTO_INCREMENT for table `repostgame`
 --
 ALTER TABLE `repostgame`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `subagent`
@@ -1843,25 +1886,25 @@ ALTER TABLE `totalamountdaily`
 -- AUTO_INCREMENT for table `totalturnoverrepost`
 --
 ALTER TABLE `totalturnoverrepost`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `turnoverrepost`
 --
 ALTER TABLE `turnoverrepost`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user_play`
 --
 ALTER TABLE `user_play`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `withdraw`
 --
 ALTER TABLE `withdraw`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `withdrawalaccount`

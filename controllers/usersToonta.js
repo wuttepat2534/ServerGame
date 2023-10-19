@@ -251,38 +251,38 @@ exports.upDateImgPromotion = (req, res) => {
     } = data;
     //let fileimg = '';
     console.log(req.file, imgPromotion);
-    if (req.file === undefined){
+    if (req.file === undefined) {
         let sql_update = `UPDATE creditpromotion set filename = '${imgPromotion}', details = '${details}' WHERE passwordpromotion ='${passwordpromotion}'`;
-    connection.query(sql_update, (error, resultAfter) => {
-        try {
-            if (error) {
-                console.log(error);
+        connection.query(sql_update, (error, resultAfter) => {
+            try {
+                if (error) {
+                    console.log(error);
+                }
+                res.send({
+                    message: "Data created Success"
+                });
+                res.end();
+            } catch (err) {
+                if (!err.statusCode) { err.statusCode = 500; }
+                next(err);
             }
-            res.send({
-                message: "Data created Success"
-            });
-            res.end();
-        } catch (err) {
-            if (!err.statusCode) { err.statusCode = 500; }
-            next(err);
-        }
-    });
+        });
     } else {
         let sql_update = `UPDATE creditpromotion set filename = '${req.file.filename}', details = '${details}' WHERE passwordpromotion ='${passwordpromotion}'`;
-    connection.query(sql_update, (error, resultAfter) => {
-        try {
-            if (error) {
-                console.log(error);
+        connection.query(sql_update, (error, resultAfter) => {
+            try {
+                if (error) {
+                    console.log(error);
+                }
+                res.send({
+                    message: "Data created Success"
+                });
+                res.end();
+            } catch (err) {
+                if (!err.statusCode) { err.statusCode = 500; }
+                next(err);
             }
-            res.send({
-                message: "Data created Success"
-            });
-            res.end();
-        } catch (err) {
-            if (!err.statusCode) { err.statusCode = 500; }
-            next(err);
-        }
-    });
+        });
     }
 };
 
@@ -636,7 +636,8 @@ exports.WinhdrawUser = (req, res) => {
             if (error) {
                 console.log(error)
             } else {
-                if (resultUser[0].credit > quantity) {
+                let moneyUserWithDraw = resultUser[0].credit - resultUser[0].turnover
+                if (resultUser[0].credit > quantity && quantity <= moneyUserWithDraw) {
                     //let totalamountdaily = logTotalAmountWithdraw(resultUser, formattedDateBill, 'ถอน', destinationAccount, destinationAccountNumber, quantity, statusFinance)
                     let bill = `SELECT numberbill FROM logfinanceuser WHERE transaction_date = ? AND tpyefinance = 'ถอน' ORDER BY numberbill DESC LIMIT 1`;
                     connection.query(bill, [formattedDateBill], (error, resultBill) => {
@@ -659,36 +660,52 @@ exports.WinhdrawUser = (req, res) => {
                                 });
 
                             const balance = quantity;
-                            let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
-                                    balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value 
-                                ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${resultUser[0].accountNumber}','${phonenumber}','${'ถอน'}','${quantity}','${0}','${resultUser[0].credit}'
-                                ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${'ยังไม่เรียบร้อย'}',now(),now(),'${resultUser[0].bank}','${resultUser[0].imgBank}'
-                                ,'${resultUser[0].accountName}','${resultUser[0].accountNumber}')`;
-
-                            connection.query(sql_before, (error, result) => {
+                            let sql_Bank = `SELECT * FROM banknames WHERE bankname_name ='${resultUser[0].bank}'`;
+                            connection.query(sql_Bank, (error, resultBank) => {
                                 if (error) {
                                     console.log(error)
                                 } else {
-                                    if (statusWitdraw === "สำเร็จ") {
-                                        let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}' WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'`;
-                                        connection.query(sql, (error, resultAfter) => {
-                                            if (error) {
-                                                console.log(error);
+                                    let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
+                                        balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value 
+                                    ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${resultUser[0].accountNumber}','${phonenumber}','${'ถอน'}','${quantity}','${0}','${resultUser[0].credit}'
+                                    ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${'ยังไม่เรียบร้อย'}',now(),now(),'${resultUser[0].bank}','${resultBank[0].images}'
+                                    ,'${resultUser[0].accountName}','${resultUser[0].accountNumber}')`;
+
+                                    connection.query(sql_before, (error, result) => {
+                                        if (error) {
+                                            console.log(error)
+                                        } else {
+                                            const balanceNow = resultUser[0].credit - quantity;
+                                            if (statusWitdraw === "สำเร็จ") {
+                                                let sql = `UPDATE member set credit = '${balanceNow}', recharge_times = '${resultUser[0].recharge_times + 1}'
+                                            WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'`;
+                                                connection.query(sql, (error, resultAfter) => {
+                                                    if (error) {
+                                                        console.log(error);
+                                                    }
+                                                    res.send({
+                                                        message: "ถอนเงินสำเร็จ",
+                                                    });
+                                                    res.end();
+                                                });
                                             }
-                                            res.send({
-                                                message: "ถอนเงินสำเร็จ",
-                                            });
-                                            res.end();
-                                        });
-                                    }
-                                    else {
-                                        console.log(statusWitdraw);
-                                        res.send({
-                                            message: statusWitdraw
-                                        });
-                                    }
+                                            else {
+                                                let sql = `UPDATE member set credit = '${balanceNow}', withdraw_member = '${resultUser[0].withdraw_member + quantity}', latest_withdrawal = '${quantity}'
+                                            WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'`;
+                                                connection.query(sql, (error, resultAfter) => {
+                                                    if (error) {
+                                                        console.log(error);
+                                                    }
+                                                    res.send({
+                                                        message: "รอการอนุมัติการถอนเงิน",
+                                                    });
+                                                    res.end();
+                                                });
+                                            }
+                                        }
+                                    });
                                 }
-                            });
+                            })
                         }
                     })
                 } else {

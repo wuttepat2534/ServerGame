@@ -63,7 +63,8 @@ module.exports = class Post {
                                         rank = "NewMember";
                                     }
                                     let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}', turnover = '${turnover}',
-                                    total_top_up_amount = '${totaltopup}' groupmember = '${rank}' WHERE id='${dataUser.id}'`;
+                                    total_top_up_amount = '${totaltopup}' groupmember = '${rank}', promotionuser = '${resultPromotion[0].namepromotion}'  
+                                    WHERE id='${dataUser.id}'`;
                                     connection.query(sql, (error, result) => {
                                         if (error) {
                                             console.log(error)

@@ -70,15 +70,16 @@ exports.GetWithdrawConfirmation = async (req, res, next) => {
     const pageSize = req.body.pageSize;
     const pageNumber = req.body.pageIndex;
     const offset = (pageNumber - 1) * pageSize;
+    const statusWithdraw = req.body.statusWithdraw;
 
-    let sql_agent = `SELECT * FROM withdraw WHERE status_withdraw = 'in_progress' LIMIT ${pageSize} OFFSET ${offset}`;
+    let sql_agent = `SELECT * FROM withdraw WHERE status_withdraw = '${statusWithdraw}' LIMIT ${pageSize} OFFSET ${offset}`;
     connection.query(sql_agent, (error, usernameAgent) => {
         try {
             if (error) {
                 console.log(error)
             } else {
                 if (usernameAgent.length !== 0) {
-                    const totalCount = `SELECT COUNT(*) as count FROM withdraw WHERE status_withdraw = 'in_progress'`
+                    const totalCount = `SELECT COUNT(*) as count FROM withdraw WHERE status_withdraw = '${statusWithdraw}'`
                     connection.query(totalCount, (error, resdata) => {
                         if (error) { console.log(error); }
                         else {
@@ -111,14 +112,14 @@ http: //localhost:5000/ConfirmationWithdraw Get ConfirmationWithdraw
 exports.ConfirmationWithdraw = async (req, res, next) => {
     const bill_number = req.body.bill_number;
     const statusWithdraw = req.body.statusWithdraw;
-    const noteConfirmation = req.body.statusWithdraw;
-    const usernameUser = req.body.username
+    const noteConfirmation = req.body.noteConfirmation;
+    const usernameUser = req.body.username;
     const agent_id = req.body.agent_id;
     //statusWithdraw = success, failed
 
     let sql_agent = `SELECT * FROM member WHERE username ='${usernameUser}' AND agent_id ='${agent_id}'`;
     connection.query(sql_agent, (error, userMember) => {
-        
+
         const convertedCredit = parseFloat(userMember[0].credit);
         const convertedLatest_withdrawal = parseFloat(userMember[0].latest_withdrawal);
         const convertedWithdraw_member = parseFloat(userMember[0].withdraw_member);
@@ -130,17 +131,30 @@ exports.ConfirmationWithdraw = async (req, res, next) => {
                     console.log(error)
                 } else {
                     if (statusWithdraw === 'failed') {
-                        let sql = `UPDATE member set credit = '${convertedCredit + convertedLatest_withdrawal}', latest_withdrawal = '${0.00}',
-                        withdraw_member = '${convertedWithdraw_member - convertedLatest_withdrawal}'  WHERE username ='${usernameUser}' AND agent_id ='${agent_id}'`;
-                        connection.query(sql, (error, resultAfter) => {
-                            if (error) {
-                                console.log(error);
-                            }
+                        let sql_Withdraw = `UPDATE logfinanceuser set status = 'ยังไม่เรียบร้อย' WHERE bill_number ='${bill_number}'`;
+                        connection.query(sql_Withdraw, (error, withdraw) => {
+                            let sql = `UPDATE member set credit = '${convertedCredit + convertedLatest_withdrawal}', latest_withdrawal = '${0.00}',
+                            withdraw_member = '${convertedWithdraw_member - convertedLatest_withdrawal}'  WHERE username ='${usernameUser}' AND agent_id ='${agent_id}'`;
+                            connection.query(sql, (error, resultAfter) => {
+                                if (error) {
+                                    console.log(error);
+                                }
+                                res.send({
+                                    message: "รอการอนุมัติการถอนเงิน",
+                                });
+                                res.end();
+                            });
+                        })
+
+                    } else {
+                        let sql_Withdraw = `UPDATE logfinanceuser set status = 'สำเร็จ' WHERE bill_number ='${bill_number}'`;
+                        connection.query(sql_Withdraw, (error, withdraw) => {
                             res.send({
-                                message: "รอการอนุมัติการถอนเงิน",
+                                message: "ถอนเงินสำเร็จ",
                             });
                             res.end();
-                        });
+                        })
+                      
                     }
                 }
             } catch (err) {
@@ -312,6 +326,62 @@ exports.GetOneBank = (require, response) => {
                 data: results,
             });
             response.end();
+        }
+    });
+}
+
+//http://localhost:5000/post/loginEnployee loginEnployee
+exports.LoginAgentWeb = (require, response) => {
+    let username = require.body.username;
+    let password = require.body.password;
+    let agent_id = require.body.agent_id;
+    //start check ip address
+    const networkInterfaces = os.networkInterfaces();
+    const ipAddress = Object.keys(networkInterfaces).reduce((acc, interfaceName) => {
+        const interfaceInfo = networkInterfaces[interfaceName];
+        const ipv4Info = interfaceInfo.find(info => info.family === 'IPv4' && !info.internal);
+        if (ipv4Info) {
+            acc = ipv4Info.address;
+        }
+        return acc;
+    }, '');
+  
+    let sql = `SELECT id, name, phonenumber, levelrole FROM employee WHERE username='${username}' AND status='true' AND agent_id = '${agent_id}'`;
+    connection.query(sql, async (error, results) => {
+        try {
+            let update = `UPDATE employee set ip_address = '${ipAddress}' WHERE id='${results[0].id}' AND agent_id = '${agent_id}' `;
+            connection.query(update, async (error, results) => {
+                if (error) { console.log(error) }
+            })
+            const data = results;
+            if (data.length !== 1) {
+                const error = new Error('A user with this email could not be found.');
+                error.statusCode = 401;
+                throw error;
+            }
+            const storedUser = data[0];
+
+            const hashedPassword = md5(password)
+            if (hashedPassword !== storedUser.password) {
+                return response.status(401).json({ message: 'Incorrect password' });
+            }
+            const token = jwt.sign(
+                {
+                    id: storedUser.id,
+                    name: storedUser.name,
+                    levelrole: storedUser.levelrole,
+                    phonenumber: storedUser.phonenumber,
+                    type: 'agent',
+                },
+                'secretfortoken',
+                { expiresIn: '24h' }
+            );
+            response.status(201).json({ token: token, data: storedUser});
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
         }
     });
 }

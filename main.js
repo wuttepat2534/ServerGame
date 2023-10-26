@@ -406,35 +406,46 @@ http://localhost:5000/login/agent  Login Agent
 app.post('/login/agent', async (require, response, next) => {
     let username = require.body.username;
     let password = require.body.password;
-
+    let agent_id = require.body.agent_id
     let sql = `SELECT * FROM agent WHERE username='${username}' AND status_delete='N' ORDER BY username ASC`;
     connection.query(sql, async (error, results) => {
         try {
             const data = results;
             if (data.length !== 1) {
-                const error = new Error('A user with this email could not be found.');
-                error.statusCode = 401;
-                throw error;
-            }
-            const storedUser = data[0];
-            const passwordMatches = await bcrypt.compare(password, storedUser.password);
+                const responseEnployee = await axios.post("https://relaxtimecafe.fun/post/loginEnployee", {
+                    username: username,
+                    password: password,
+                    agent_id: agent_id,
+                });
+                //console.log(responseEnployee.data);
+                if (responseEnployee.data.message === 'OkLogin') {
+                    response.status(201).json({ token: responseEnployee.data.token, data: responseEnployee.data.data });
+                } else {
+                    const error = new Error('notData');
+                    error.statusCode = 401;
+                    throw error;
+                }
+            } else {
+                const storedUser = data[0];
+                const passwordMatches = await bcrypt.compare(password, storedUser.password);
 
-            if (!passwordMatches) {
-                const error = new Error('Wrong password!');
-                error.statusCode = 401;
-                throw error;
+                if (!passwordMatches) {
+                    const error = new Error('Wrong password!');
+                    error.statusCode = 401;
+                    throw error;
+                }
+                const token = jwt.sign(
+                    {
+                        username: storedUser.username,
+                        userId: storedUser.id,
+                        name: storedUser.name,
+                        type: 'agent'
+                    },
+                    'secretfortoken',
+                    { expiresIn: '5h' }
+                );
+                response.status(201).json({ token: token, data: storedUser });
             }
-            const token = jwt.sign(
-                {
-                    username: storedUser.username,
-                    userId: storedUser.id,
-                    name: storedUser.name,
-                    type: 'agent'
-                },
-                'secretfortoken',
-                { expiresIn: '5h' }
-            );
-            response.status(201).json({ token: token, data: storedUser });
         } catch (err) {
             if (!err.statusCode) {
                 err.statusCode = 500;
@@ -978,20 +989,39 @@ app.get('/getallData', async (require, response, next) => {
     });
 });
 
+function tokenWebGame(dataBody) {
+    const crypto = require('crypto');
+    const { v5: uuidv5 } = require('uuid');
+    const dataString = JSON.stringify(dataBody);
+    const hash = crypto.createHash('sha256').update(dataString).digest('hex');
+    const MY_NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
+    const uuidToken = uuidv5(hash, MY_NAMESPACE);
+    return uuidToken;
+}
+
 http://localhost:5000/seamlesslogIn
 app.get('/seamlesslogIn/:codeGame/:productId/:playerPlay', (require, response) => {
+
     const usernamePlayer = require.params.playerPlay;
     const productId = require.params.productId;
     const codeGame = require.params.codeGame;
     const agentUsername = 'victest2';
     const xApiKey = 'f47e5065-412c-40d1-9e4c-f6c248919509';
     const authHeader = `Basic ${Buffer.from(`${agentUsername}:${xApiKey}`).toString('base64')}`;
+    
+    const dataBody = {
+        username: usernamePlayer,
+        productId: productId,
+        gameCode: codeGame,
+    };
+    let uuidToken = tokenWebGame(dataBody)
+
     const body = {
         username: usernamePlayer,
         productId: productId,
         gameCode: codeGame,
         isMobileLogin: true,
-        sessionToken: "d4be70d1-349f-4fc1-a955-35d2a4bff244",
+        sessionToken: uuidToken,
         betLimit: []
     };
     const config = {
@@ -1000,15 +1030,21 @@ app.get('/seamlesslogIn/:codeGame/:productId/:playerPlay', (require, response) =
             'Content-Type': 'application/json'
         }
     };
-
-    axios.post('https://test.ambsuperapi.com/seamless/logIn', body, config)
-        .then(res => {
-            console.log(res.data);
-            response.status(201).json({ data: res.data });
-        })
-        .catch(error => {
-            console.log(error);
-        });
+    
+    let sqlDeleteAgent = `UPDATE member set tokenplaygame = '${uuidToken}' WHERE username ='${usernamePlayer}'`;
+    connection.query(sqlDeleteAgent, (error, result) => {
+        if (error) { console.log(error); }
+        else {
+            axios.post('https://test.ambsuperapi.com/seamless/logIn', body, config)
+                .then(res => {
+                    console.log(res.data);
+                    response.status(201).json({ data: res.data });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+    });
 });
 
 http://localhost:5000/listGame
@@ -1303,23 +1339,36 @@ function getItem(key) {
     return storage[key];
 }
 
-// app.post('/testToken', async (req, res) => {
-//     const token = getItem('id');
-//     console.log(token); // Outputs: your-token-value
-// })
-
 app.post('/testToken', async (req, res) => {
-    const today = new Date();
-    const date = '2023-08-20';
-    const sql = 'SELECT * FROM repostgame WHERE created_atdate = ? ORDER BY win DESC LIMIT 10';
+    const crypto = require('crypto');
+    const { v5: uuidv5 } = require('uuid');
 
-    connection.query(sql, [date], (err, results) => {
-        if (err) throw err;
+    const data = { username: "0990825942" };
+    const dataString = JSON.stringify(data);
 
-        console.log('Top 10 Highest Balances:');
-        results.forEach((row, index) => {
-            console.log(`${index + 1}. Account: ${row.username}, Balance: ${row.win}`);
-        });
-        connection.end();
-    });
+    // สร้าง hash จากข้อมูล
+    const hash = crypto.createHash('sha256').update(dataString).digest('hex');
+
+    // ใช้ Namespace URL (ตามที่ UUID กำหนด) เพื่อใช้ในการแปลง hash เป็น UUID v5
+    const MY_NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
+    const uuidToken = uuidv5(hash, MY_NAMESPACE);
+
+    console.log(uuidToken);
+
 })
+
+// app.post('/testToken', async (req, res) => {
+//     const today = new Date();
+//     const date = '2023-08-20';
+//     const sql = 'SELECT * FROM repostgame WHERE created_atdate = ? ORDER BY win DESC LIMIT 10';
+
+//     connection.query(sql, [date], (err, results) => {
+//         if (err) throw err;
+
+//         console.log('Top 10 Highest Balances:');
+//         results.forEach((row, index) => {
+//             console.log(`${index + 1}. Account: ${row.username}, Balance: ${row.win}`);
+//         });
+//         connection.end();
+//     });
+// })

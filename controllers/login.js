@@ -108,8 +108,7 @@ exports.authenticate = async (req, res) => {
   const timestamp = req.body.timestamp;
   let username = '0990825941';
   console.log(authHeader)
-  let spl = `SELECT credit FROM member WHERE phonenumber ='${username}' AND status_delete='N' 
-  ORDER BY member_code ASC`;
+  let spl = `SELECT credit, username FROM member WHERE tokenplaygame ='${authHeader}' AND status_delete='N'`;
   try {
     connection.query(spl, (error, results) => {
       if (error) { console.log(error) }
@@ -118,7 +117,7 @@ exports.authenticate = async (req, res) => {
         res.status(201).json({
           Status: 0,
           Message: "Success",
-          Username: "victest2",
+          Username: results[0].username,
           Balance: 10000
         });
       }
@@ -673,9 +672,9 @@ http://localhost:5000/post/Jili/auth
 exports.PlayerAuthenticationJili = async (req, res) => {
   const reqId = req.body.reqId;
   const authHeader = req.body.token;
-  const username = '0990825941';
-  console.log(authHeader);
-  let spl = `SELECT credit FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
+  //const username = '0990825941';
+  console.log(req.body);
+  let spl = `SELECT credit, username FROM member WHERE tokenplaygame ='${authHeader}' AND status_delete='N'`;
   try {
     connection.query(spl, (error, results) => {
       if (error) { console.log(error) }
@@ -684,7 +683,7 @@ exports.PlayerAuthenticationJili = async (req, res) => {
         res.status(201).json({
           errorCode: 0,
           message: "success",
-          username: username,
+          username: results[0].username,
           currency: "THB",
           balance: balanceUser,
           token: authHeader
@@ -708,7 +707,7 @@ exports.PlayerBetJili = async (req, res) => {
   const winloseAmount = req.body.winloseAmount;
   const userAgent = req.headers['user-agent'];
   const game= req.body.game;
-  let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
+  let spl = `SELECT credit, turnover, username FROM member WHERE tokenplaygame ='${authHeader}' AND status_delete='N'`;
   try {
     connection.query(spl, (error, results) => {
       if (error) { console.log(error) }
@@ -721,18 +720,18 @@ exports.PlayerBetJili = async (req, res) => {
           postTurnover = 0;
         }
         const post = {
-          username: username, gameid: 'JILI', bet: betAmount, win: winloseAmount, balance_credit: balanceNowwit, userAgent: userAgent, platform: userAgent
+          username: results[0].username, gameid: 'JILI', bet: betAmount, win: winloseAmount, balance_credit: balanceNowwit, userAgent: userAgent, platform: userAgent
         }
         let repost = repostGame.uploadLogRepostGame(post)
         const sql_update = `UPDATE member set credit='${balanceNowwit}',bet_latest='${betAmount}', turnover='${postTurnover}'
-        WHERE phonenumber ='${username}'`;
+        WHERE phonenumber ='${results[0].username}'`;
         connection.query(sql_update, (error, resultsGame) => {
           if (error) { console.log(error) }
           else {
             res.status(201).json({
               errorCode: 0,
               message: "success",
-              username: username,
+              username: results[0].username,
               currency: "THB",
               balance: balanceNowwit,
               txId: round,
@@ -755,7 +754,7 @@ exports.CancelBetJili = async (req, res) => {
   const round = req.body.round;
   username = 'member001';
 
-  let spl = `SELECT credit FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
+  let spl = `SELECT credit, username FROM member WHERE tokenplaygame ='${authHeader}' AND status_delete='N'`;
   try {
     connection.query(spl, (error, results) => {
       if (error) { console.log(error) }
@@ -764,7 +763,7 @@ exports.CancelBetJili = async (req, res) => {
         res.status(201).json({
           errorCode: 0,
           message: "Success",
-          username: "victest2",
+          username: results[0].username,
           currency: "THB",
           balance: balanceUser,
           txId: round,

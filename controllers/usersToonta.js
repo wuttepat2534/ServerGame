@@ -142,16 +142,20 @@ exports.creditPromotion = async (req, res, next) => {
     const promotionSuppost = req.body.promotionSuppost;
     const webtype = req.body.webtype;
     const typelistsuppost = req.body.typelistsuppost;
+    const quantity = req.body.quantity;
+    const quantityI = req.body.quantityI;
+    const quantityII = req.body.quantityII;
 
+    //console.log(req.body)
     let sql = `INSERT INTO creditpromotion (passwordpromotion, agnetidcreate, repost, startpromotion, endpromotion, typebonus, bunus, maxbunus, valusbunus, groupuser, afterPromotion, 
         receiving_data_type, receiving_data_typeI, receiving_data_typeII, valus_receiving, data_type, data_typeI, data_typeII, valus_day, numberoftimes_person, ipAddress_attempts, 
         reset, resetI, resetII, withdrawalType, withdraw_data_type, withdraw_max, withdraw_valus, statuspromotion, promotiontype, namepromotion, leakedPro, multiplier,
-        withdrawalTypeII, withdrawalTypeIII, withdraw_valusII, 	withdraw_valusIII, status_topup, promotionsupport, webtype, typelistsuppost) 
+        withdrawalTypeII, withdrawalTypeIII, withdraw_valusII, 	withdraw_valusIII, status_topup, promotionsupport, webtype, typelistsuppost, quantity, quantityI, quantityII) 
 value ('${passwordpromotion}','${agnetidcreate}','${repost}','${startpromotion}','${endpromotion}','${typebonus}','${bunus}','${maxbunus}','${valusbunus}','${groupuser}',
  '${afterPromotion}','${receiving_data_type}','${receiving_data_typeI}','${receiving_data_typeII}','${valus_receiving}','${data_type}','${data_typeI}',
  '${data_typeII}','${valus_day}','${numberoftimes_person}','${ipAddress_attempts}','${reset}','${resetI}','${resetII}','${withdrawalType}','${withdraw_data_type}',
  '${withdraw_max}','${withdraw_valus}','${statuspromotion}','${promotiontype}','${namepromotion}','${leakedPro}','${multiplier}','${withdrawalTypeII}',
- '${withdrawalTypeIII}','${withdraw_valusII}','${withdraw_valusIII}','${statusTopup}','${promotionSuppost}','${webtype}','${typelistsuppost}')`;
+ '${withdrawalTypeIII}','${withdraw_valusII}','${withdraw_valusIII}','${statusTopup}','${promotionSuppost}','${webtype}','${typelistsuppost}','${quantity}','${quantityI}','${quantityII}')`;
 
     connection.query(sql, (error, result) => {
         try {
@@ -349,7 +353,7 @@ exports.getPromotion = (require, response) => {
         let sql = `SELECT * FROM creditpromotion WHERE statuspromotion = 'Y' LIMIT ${pageSize} OFFSET ${offset}`;
         connection.query(sql, async (error, results) => {
             if (error) { console.log(error); }
-            const totalCount = `SELECT COUNT(*) as count FROM creditpromotion`
+            const totalCount = `SELECT COUNT(*) as count FROM creditpromotion WHERE statuspromotion = 'Y'`
             connection.query(totalCount, (error, res) => {
                 if (error) { console.log(error); }
                 response.send({

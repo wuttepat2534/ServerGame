@@ -481,6 +481,7 @@ function totalTurnoverrepost(post) {
             reject(error);
         } else {
             connection.query(sqlpercentagegame, (error, resultspercen) => {
+                console.log(post.gameid);
                 const commnytotal = (floatbet - floatwit)
                 const commy_agentTotal = commnytotal * (resultspercen[0].percentagegame / 100);
                 const tatal_commny = commnytotal - commy_agentTotal;

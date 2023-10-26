@@ -119,6 +119,7 @@ router.put('/DeleteAgentWeb', userstoonTaII.DeleteAgentWeb)
 router.post('/playGame/:user_id/:bet/:game_id', testGame.saveTestGame)
 router.post('/gameBuySpin/:user_id/:bet/:game_id', testGame.saveTestGameBuy)
 router.post('/balloonGame/:state/:user_id/:bet/:game_id/:choose/:token', balloonGame.saveTestGame)
+router.post('/gameArcade/:state/:user_id/:bet/:game_id/:chooseFloorId/:token', balloonGame.GameArcade)
 // game
 
 // routerSubAgent
@@ -140,18 +141,18 @@ router.post('/checkBalance', loginController.checkBalance)
 router.post('/settleBets', loginController.settleBets)
 
 //SlotXO
-router.post('/authenticate-token', loginController.authenticate)
-router.post('/balance', loginController.balanceXO)
-router.post('/bet', loginController.PlaceBetSlotXo)
-router.post('/settle-bet', loginController.SettlePlaySlotXo)
-router.post('/cancel-bet', loginController.CancelPlaySlotXo)
-router.post('/bonus-win', loginController.bonusPlaySlotXo)
-router.post('/jackpot-win', loginController.JackpotPlaySlotXo)
-router.post('/transaction', loginController.TransactionSlotXo)
-router.post('/withdraw', loginController.WithdrawSlotXo)
-router.post('/deposit', loginController.DepositSlotXo)
-router.post('/authenticate', loginController.MobileauthenticateXoJo)
-router.post('/seamless/getAppUsername', loginController.GetMobileauthenticateXoJo)
+router.post('/joslot/authenticate-token', loginController.authenticate)
+router.post('/joslot/balance', loginController.balanceXO)
+router.post('/joslot/bet', loginController.PlaceBetSlotXo)
+router.post('/joslot/settle-bet', loginController.SettlePlaySlotXo)
+router.post('/joslot/cancel-bet', loginController.CancelPlaySlotXo)
+router.post('/joslot/bonus-win', loginController.bonusPlaySlotXo)
+router.post('/joslot/jackpot-win', loginController.JackpotPlaySlotXo)
+router.post('/joslot/transaction', loginController.TransactionSlotXo)
+router.post('/joslot/withdraw', loginController.WithdrawSlotXo)
+router.post('/joslot/deposit', loginController.DepositSlotXo)
+router.post('/joslot/authenticate', loginController.MobileauthenticateXoJo)
+router.post('/joslot/seamless/getAppUsername', loginController.GetMobileauthenticateXoJo)
 //SlotXO
 
 //ASK

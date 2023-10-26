@@ -346,37 +346,40 @@ exports.LoginAgentWeb = (require, response) => {
         return acc;
     }, '');
   
-    let sql = `SELECT id, name, phonenumber, levelrole FROM employee WHERE username='${username}' AND status='true' AND agent_id = '${agent_id}'`;
+    let sql = `SELECT * FROM employee WHERE username='${username}' AND status='true' AND agent_id = '${agent_id}'`;
     connection.query(sql, async (error, results) => {
         try {
-            let update = `UPDATE employee set ip_address = '${ipAddress}' WHERE id='${results[0].id}' AND agent_id = '${agent_id}' `;
-            connection.query(update, async (error, results) => {
-                if (error) { console.log(error) }
-            })
+            //console.log(results);
             const data = results;
             if (data.length !== 1) {
-                const error = new Error('A user with this email could not be found.');
+                const error = new Error('notEmployee');
                 error.statusCode = 401;
-                throw error;
-            }
-            const storedUser = data[0];
+                response.status(201).json({ message: 'notEmployee' });
+            } else {
+                let update = `UPDATE employee set ip_address = '${ipAddress}' WHERE id='${results[0].id}' AND agent_id = '${agent_id}' `;
+                connection.query(update, async (error, results) => {
+                    if (error) { console.log(error) }
+                })
+                const storedUser = data[0];
 
-            const hashedPassword = md5(password)
-            if (hashedPassword !== storedUser.password) {
-                return response.status(401).json({ message: 'Incorrect password' });
+                const hashedPassword = md5(password)
+                if (hashedPassword !== storedUser.password) {
+                    return response.status(401).json({ message: 'Incorrect password' });
+                }
+                const token = jwt.sign(
+                    {
+                        id: storedUser.id,
+                        name: storedUser.name,
+                        levelrole: storedUser.levelrole,
+                        phonenumber: storedUser.phonenumber,
+                        type: 'agent',
+                    },
+                    'secretfortoken',
+                    { expiresIn: '24h' }
+                );
+                response.status(201).json({message: 'OkLogin' ,token: token, data: storedUser});
             }
-            const token = jwt.sign(
-                {
-                    id: storedUser.id,
-                    name: storedUser.name,
-                    levelrole: storedUser.levelrole,
-                    phonenumber: storedUser.phonenumber,
-                    type: 'agent',
-                },
-                'secretfortoken',
-                { expiresIn: '24h' }
-            );
-            response.status(201).json({ token: token, data: storedUser});
+           
         } catch (err) {
             if (!err.statusCode) {
                 err.statusCode = 500;

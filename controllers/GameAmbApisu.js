@@ -88,6 +88,10 @@ exports.GameCheckBalance = async (req, res) => {
     const productId = req.body.productId;
     const currency = req.body.currency;
     const usernameGame = req.body.username;
+
+    console.log('Requested URL:', req.url);
+    console.log('Original URL:', req.originalUrl);
+    
     let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {

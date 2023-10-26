@@ -344,7 +344,7 @@ exports.EVOPLAYSeamless = async (req, res) => {
                         postTurnover = 0;
                     }
                     const post = {
-                        username: results[0].username, gameid: callback_id, bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: data.action_id
+                        username: results[0].username, gameid: 'EVOPLAY', bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: data.action_id
                     }
                     let repost = repostGame.uploadLogRepostGameAsk(post)
 
@@ -366,7 +366,7 @@ exports.EVOPLAYSeamless = async (req, res) => {
                     const balanceNow = balanceNum + amount
                     const balanceString = balanceNow.toString();
                     const post = {
-                        username: results[0].username, gameid: callback_id, bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: data.action_id
+                        username: results[0].username, gameid: 'EVOPLAY', bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: data.action_id
                     }
                     let repost = repostGame.uploadLogRepostGameAsk(post)
                     const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}' WHERE phonenumber ='${results[0].username}'`;
@@ -455,7 +455,7 @@ exports.PlaceBetFunky = async (req, res) => {
                     postTurnover = 0;
                 }
                 const post = {
-                    username: results[0].username, gameid: bet.gameCode, bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: bet.refNo
+                    username: results[0].username, gameid: 'FUNKY', bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: bet.refNo
                 }
                 let repost = repostGame.uploadLogRepostGameAsk(post)
 
@@ -495,7 +495,7 @@ exports.SettleBetFunky = async (req, res) => {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser + betResultReq.winAmount;
                 const post = {
-                    username: betResultReq.playerId, gameid: betResultReq.gameCode, bet: 0, win: betResultReq.winAmount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: refNo
+                    username: betResultReq.playerId, gameid: 'FUNKY', bet: 0, win: betResultReq.winAmount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: refNo
                 }
                 let repost = repostGame.uploadLogRepostGameAsk(post)
                 const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${betResultReq.winAmount}' WHERE phonenumber ='${betResultReq.playerId}'`;
@@ -628,7 +628,7 @@ exports.PlaceBetYggdrasil = async (req, res) => {
                     postTurnover = 0;
                 }
                 const post = {
-                    username: usernames, gameid: gameId, bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: betId
+                    username: usernames, gameid: "YGGDRASIL", bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: betId
                 }
                 let repost = repostGame.uploadLogRepostGameAsk(post)
 
@@ -671,7 +671,7 @@ exports.PayoutYggdrasil = async (req, res) => {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser + amount;
                 const post = {
-                    username: usernames, gameid: gameId, bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: betId
+                    username: usernames, gameid: "YGGDRASIL", bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: betId
                 }
                 let repost = repostGame.uploadLogRepostGameAsk(post)
 

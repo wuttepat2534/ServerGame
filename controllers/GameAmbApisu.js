@@ -91,7 +91,7 @@ exports.GameCheckBalance = async (req, res) => {
 
     console.log('Requested URL:', req.url);
     console.log('Original URL:', req.originalUrl);
-    
+
     let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
@@ -135,7 +135,7 @@ exports.GamePlaceBets = async (req, res) => {
                 const balanceUser = parseFloat(results[0].credit);
                 const betPlay = txnsGame[0].betAmount;
                 const balanceNow = balanceUser - betPlay;
-                if(balanceNow < 0){
+                if (balanceNow < 0) {
                     balanceNow = 0;
                 }
                 const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${betPlay}' WHERE phonenumber ='${usernameGame}'`;
@@ -184,10 +184,10 @@ exports.GameSettleBets = async (req, res) => {
                 const balanceNow = (balanceUser - betPlay) + betAmount;
                 console.log(betAmount, betPlay)
                 let postTurnover = results[0].turnover - betPlay;
-                if (postTurnover < 0){
+                if (postTurnover < 0) {
                     postTurnover = 0;
                 }
-                if(balanceNow < 0){
+                if (balanceNow < 0) {
                     balanceNow = 0;
                 }
                 const post = {
@@ -493,6 +493,212 @@ exports.GameVoidBets = async (req, res) => {
                             balanceAfter: balanceNow,
                             username: usernameGame
                         });
+                    }
+                });
+            }
+        })
+    } catch (err) {
+        err.statusCode = 500;
+        res.json({ status: "Not Data Request Body." });
+    }
+};
+
+/*------------------------------------------------------------------------------------------------------------------*/
+http://localhost:5000/post/CQ9/transaction/balance/:account
+exports.GameCheckBalanceCQ9 = async (req, res) => {
+    const usernameGame = req.params.account;
+    const today = new Date();
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
+    try {
+        connection.query(spl, (error, results) => {
+            if (error) { console.log(error) }
+            else {
+                const balanceUser = parseFloat(results[0].credit);
+                res.status(201).json({
+                    data: {
+                        balance: balanceUser,
+                        currency: 'THB'
+                    },
+                    status: {
+                        code: '0',
+                        message: 'Success',
+                        datetime: today
+                    }
+                });
+            }
+        })
+    } catch (err) {
+        err.statusCode = 500;
+        res.json({ status: "Not Data Request Body." });
+    }
+};
+
+http://localhost:5000/post/CQ9/transaction/game/bet
+exports.GameBetCQ9 = async (req, res) => {
+    const usernameGame = req.body.account;
+    const amount = req.body.amount;
+    const eventTime = req.body.eventTime;
+    const gamecode = req.body.gamecode;
+    const gamehall = req.body.gamehall;
+    const mtcode = req.body.mtcode;
+    const platform = req.body.platform;
+    const roundid = req.body.roundid;
+    const userAgent = req.headers['user-agent'];
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
+    try {
+        connection.query(spl, (error, results) => {
+            if (error) { console.log(error) }
+            else {
+                const balanceUser = parseFloat(results[0].credit);
+                const amountGame = parseFloat(amount);
+                const balanceNow = balanceUser - amountGame
+
+                const post = {
+                    username: usernameGame, gameid: "CQ9V2", bet: amountGame, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: mtcode
+                }
+                let repost = repostGame.uploadLogRepostGameAsk(post)
+
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amountGame}' WHERE phonenumber ='${usernameGame}'`;
+                connection.query(sql_update, (error, resultsGame) => {
+                    if (error) { console.log(error) }
+                    else {
+                        res.status(201).json({
+                            data: {
+                                balance: balanceNow,
+                                currency: 'THB'
+                            },
+                            status: {
+                                code: '0',
+                                message: 'Success',
+                                datetime: eventTime
+                            }
+                        });
+                    }
+                });
+            }
+        })
+    } catch (err) {
+        err.statusCode = 500;
+        res.json({ status: "Not Data Request Body." });
+    }
+};
+
+http://localhost:5000/post/CQ9/transaction/game/endround
+exports.GameEndRoundCQ9 = async (req, res) => {
+    const usernameGame = req.body.account;
+    const createTime = req.body.createTime;
+    const gamecode = req.body.gamecode;
+    const gamehall = req.body.gamehall;
+    const platform = req.body.platform;
+    const roundid = req.body.roundid;
+    const userAgent = req.headers['user-agent'];
+    const jsonString = req.body.data;
+    const jsonObject = JSON.parse(jsonString);
+    const dataArray = JSON.parse(jsonObject.data);
+    const mtcode = dataArray[0].mtcode;
+    const amount = dataArray[0].amount;
+    const eventtime = dataArray[0].eventtime;
+    const validbet = dataArray[0].validbet;
+
+    let spl = `SELECT credit, bet_latest FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
+    try {
+        connection.query(spl, (error, results) => {
+            if (error) { console.log(error) }
+            else {
+                const balanceUser = parseFloat(results[0].credit);
+                const amountGame = parseFloat(amount);
+                const balanceNow = balanceUser + amountGame
+
+                const post = {
+                    username: usernameGame, gameid: "CQ9V2", bet: results[0].bet_latest, win: amountGame, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: mtcode
+                }
+                let repost = repostGame.uploadLogRepostGameAsk(post)
+
+                const sql_update = `UPDATE member set credit='${balanceNow}' WHERE phonenumber ='${usernameGame}'`;
+                connection.query(sql_update, (error, resultsGame) => {
+                    if (error) { console.log(error) }
+                    else {
+                        res.status(201).json({
+                            data: {
+                                balance: balanceNow,
+                                currency: 'THB'
+                            },
+                            status: {
+                                code: '0',
+                                message: 'Success',
+                                datetime: createTime
+                            }
+                        });
+                    }
+                });
+            }
+        })
+    } catch (err) {
+        err.statusCode = 500;
+        res.json({ status: "Not Data Request Body." });
+    }
+};
+
+http://localhost:5000/post/CQ9/transaction/game/rollout
+exports.GameRolloutCQ9 = async (req, res) => {
+    const usernameGame = req.body.account;
+    const amount = req.body.amount;
+    const eventTime = req.body.eventTime;
+    const gamecode = req.body.gamecode;
+    const gamehall = req.body.gamehall;
+    const mtcode = req.body.mtcode;
+    const roundid = req.body.roundid;
+
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
+    try {
+        connection.query(spl, (error, results) => {
+            if (error) { console.log(error) }
+            else {
+                const balanceUser = parseFloat(results[0].credit);
+                res.status(201).json({
+                    data: {
+                        balance: balanceUser,
+                        currency: 'THB'
+                    },
+                    status: {
+                        code: '0',
+                        message: 'Success',
+                        datetime: eventTime
+                    }
+                });
+            }
+        })
+    } catch (err) {
+        err.statusCode = 500;
+        res.json({ status: "Not Data Request Body." });
+    }
+};
+
+http://localhost:5000/post/CQ9/transaction/game/takeall
+exports.GameTakeAllCQ9 = async (req, res) => {
+    const usernameGame = req.body.account;
+    const eventTime = req.body.eventTime;
+    const gamecode = req.body.gamecode;
+    const gamehall = req.body.gamehall;
+    const mtcode = req.body.mtcode;
+    const roundid = req.body.roundid;
+
+    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
+    try {
+        connection.query(spl, (error, results) => {
+            if (error) { console.log(error) }
+            else {
+                const balanceUser = parseFloat(results[0].credit);
+                res.status(201).json({
+                    data: {
+                        balance: balanceUser,
+                        amount: 0,
+                        currency: 'THB'
+                    },
+                    status: {
+                        code: '0',
+                        message: 'Success',
+                        datetime: eventTime
                     }
                 });
             }

@@ -8,13 +8,15 @@ const md5 = require('md5');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const useragent = require('express-useragent')
-
 const logEdit = require('./logEditAll')
 const promotiontoonta = require('./promotiontoonta')
 const repostGame = require('./repostGame')
 const Finance = require('./Finance')
 const app = express();
 app.use(express.static('public'));
+
+const socket = require('../socket')
+
 require('dotenv').config()
 const connection = mysql.createPool({
     host: process.env.DB_HOST,
@@ -528,6 +530,14 @@ exports.financeUser = (req, res) => {
                                                 if (error) {
                                                     console.log(error);
                                                 }
+
+                                                const post = [
+                                                    {username : resultUser[0].username, 
+                                                    deposit_member : quantity,
+                                                    message : "มีการแจ้งฝากเงินจำนวน"
+                                                }]
+
+                                                io.emit('notify-management-deposit', { data: post});
                                                 res.send({
                                                     message: "เติมเงินสำเร็จ",
                                                 });
@@ -633,6 +643,8 @@ exports.WinhdrawUser = (req, res) => {
     const year = today.getFullYear();
     const formattedDate = year + month + day;
     const formattedDateBill = `${year}-${month}-${day}`;
+
+    const io = socket.getIO();
     //console.log(statusFinance);
     try {
         let sql_before = `SELECT * FROM member WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'  ORDER BY phonenumber ASC`;
@@ -657,7 +669,7 @@ exports.WinhdrawUser = (req, res) => {
                             const statusWitdraw = 'ถอน';
                             Finance.Withdrawmoney(resultUser[0], formattedDate, formattedNumber, billnum, quantity, resultUser[0].accountNumber, phonenumber, 'in_progress')
                                 .then(calculatedValues => {
-                                    console.log(calculatedValues);
+                                    //console.log(calculatedValues);
                                 })
                                 .catch(error => {
                                     console.error(error);
@@ -700,6 +712,14 @@ exports.WinhdrawUser = (req, res) => {
                                                     if (error) {
                                                         console.log(error);
                                                     }
+
+                                                    const post = [
+                                                        {username : resultUser[0].username, 
+                                                        withdraw_member : quantity,
+                                                        message : "มีการแจ้งถอนเงินจำนวน"
+                                                    }]
+
+                                                    io.emit('notify-management-withdraw', { data: post});
                                                     res.send({
                                                         message: "รอการอนุมัติการถอนเงิน",
                                                     });

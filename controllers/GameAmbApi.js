@@ -50,14 +50,14 @@ exports.AuthorizationSpade_Gaming = async (req, res) => {
                     if (type === 1) {
                         balanceNow = balanceUser - amount;
                         const post = {
-                            username: acctId, gameid: gameCode, bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transferId
+                            username: acctId, gameid: "SPADE", bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transferId
                         }
                         let repost = repostGame.uploadLogRepostGameAsk(post)
                         if (postTurnover < 0) postTurnover = 0;
                     } else if (type === 2) {
                         balanceNow = balanceUser + amount;
                         const post = {
-                            username: acctId, gameid: gameCode, bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transferId
+                            username: acctId, gameid: "SPADE", bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transferId
                         }
                         let repost = repostGame.uploadLogRepostGameAsk(post)
                         if (postTurnover < 0) postTurnover = 0;
@@ -103,20 +103,24 @@ exports.HabaneroGame = async (req, res) => {
     const auth = req.body.auth;
     const token = '00tcga7cq_d4be70d1-349f-4fc1-a955-35d2a4bff244';
     const secretKey = 'your-secret-key';
-    const gameToken = req.body.playerdetailrequest.token;
-    const gameTokenV = req.body.playerdetailresponse.token;
-    console.log(gameToken);
-    console.log(gameTokenV);
-    console.log(req.body);
-    let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${'0990825941'}' AND status_delete='N'`;
-    try {
-        connection.query(spl, (error, results) => {
-            if (error) { console.log(error) }
-            else {
-                console.log(results)
-                const balanceUser = results[0].credit;
-                if (type === 'playerdetailrequest') {
-                    const playerdetailrequest = req.body.playerdetailrequest;
+
+    //console.log(gameTokenV);
+    //console.log(req.body);
+    const userAgent = req.headers['user-agent'];
+    const userAgentt = req.useragent;
+
+    if (type === 'playerdetailrequest') {
+        const gameToken = req.body.playerdetailrequest.token;
+        const gameTokenV = req.body.playerdetailresponse.token;
+        console.log(gameToken);
+        const playerdetailrequest = req.body.playerdetailrequest;
+        let spl = `SELECT credit, turnover, username FROM member WHERE tokenplaygame ='${gameToken}' AND status_delete='N'`;
+        try {
+            connection.query(spl, (error, results) => {
+                if (error) { console.log(error) }
+                else {
+                    console.log(results)
+                    const balanceUser = results[0].credit;
                     res.status(201).json({
                         playerdetailresponse: {
                             status: {
@@ -134,20 +138,42 @@ exports.HabaneroGame = async (req, res) => {
                             currencycode: "THB"
                         }
                     });
-                } else if (type === 'fundtransferrequest') {
-                    const fundtransferrequest = req.body.fundtransferrequest;
+                }
+            })
+        } catch (err) {
+            err.statusCode = 500;
+            res.json({ status: "Not Data Request Body." });
+        }
+
+    } else if (type === 'fundtransferrequest') {
+        const fundtransferrequest = req.body.fundtransferrequest;
+        let spl = `SELECT credit, turnover, username FROM member WHERE tokenplaygame ='${fundtransferrequest.token}' AND status_delete='N'`;
+        try {
+            connection.query(spl, (error, results) => {
+                if (error) { console.log(error) }
+                else {
                     const gamedetails = req.body.gamedetails;
-                    const amount0 = fundtransferrequest.funds.fundinfo[0].amount
-                    //const amount1 = fundtransferrequest.funds.fundinfo[1].amount
-                    const balanceNum = parseFloat(balanceUser);
-                    const balanceNow = balanceNum + amount0
-                    const balanceString = balanceNow.toString();
+                    const balanceUser = results[0].credit;
+                    const amount0 = parseFloat(fundtransferrequest.funds.fundinfo[0].amount)
+                    const amount1 = parseFloat(fundtransferrequest.funds.fundinfo[1].amount)
+                    const balanceNum = (balanceUser + amount0) + amount1;
+                    const balanceString = balanceNum.toString();
+                    const wingame = 0;
+                    //console.log(balanceUser, amount0, amount1)
                     let postTurnover = results[0].turnover - amount0;
                     if (postTurnover < 0) {
                         postTurnover = 0;
                     }
-                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount0}', turnover='${postTurnover}' 
-                    WHERE phonenumber ='${auth.username}'`;
+                    if (amount0 > 0) {
+                        wingame = amount0;
+                    }
+                    const post = {
+                        username: results[0].username, gameid: "HABANERO", bet: amount0, win: amount1, balance_credit: balanceNum, userAgent: userAgent, platform: userAgentt
+                    }
+                    let repost = repostGame.uploadLogRepostGame(post)
+
+                    const sql_update = `UPDATE member set credit='${balanceNum}',bet_latest='${amount0}', turnover='${postTurnover}' 
+        WHERE tokenplaygame ='${fundtransferrequest.token}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         res.status(201).json({
                             fundtransferresponse: {
@@ -164,21 +190,21 @@ exports.HabaneroGame = async (req, res) => {
                             }
                         });
                     });
-                } else {
-                    const queryrequest = req.body.queryrequest;
-                    res.status(201).json({
-                        fundtransferresponse: {
-                            status: {
-                                success: true,
-                            }
-                        }
-                    });
+                }
+            })
+        } catch (err) {
+            err.statusCode = 500;
+            res.json({ status: "Not Data Request Body." });
+        }
+    } else {
+        const queryrequest = req.body.queryrequest;
+        res.status(201).json({
+            fundtransferresponse: {
+                status: {
+                    success: true,
                 }
             }
-        })
-    } catch (err) {
-        err.statusCode = 500;
-        res.json({ status: "Not Data Request Body." });
+        });
     }
 };
 

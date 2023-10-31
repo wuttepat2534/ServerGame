@@ -115,6 +115,8 @@ router.put('/DeleteUserGroupInformation', userToonta.DeleteUserGroupInformation)
 router.put('/EditEmployeeAgent', userstoonTaII.EditEmployeeAgent)
 router.put('/DeletePromotion', userToonta.DeletePromotion)
 router.put('/DeleteAgentWeb', userstoonTaII.DeleteAgentWeb)
+router.put('/DeleteAccessDeposit', userstoonTaII.DeleteAccessDeposit)
+
 // game
 router.post('/playGame/:user_id/:bet/:game_id', testGame.saveTestGame)
 router.post('/gameBuySpin/:user_id/:bet/:game_id', testGame.saveTestGameBuy)
@@ -318,4 +320,18 @@ router.post('/SexyGaming', urlencodedParser, liveCasino.GetBalanceSexyGaming)
 //SexyGaming
 
 //testGame API
+
+//CQ9
+router.get('/CQ9/transaction/balance/:account', gameAmbApiSu.GameCheckBalanceCQ9)
+router.post('/CQ9/transaction/game/bet', gameAmbApiSu.GameBetCQ9)
+router.post('/CQ9/transaction/game/endround', gameAmbApiSu.GameEndRoundCQ9)
+router.post('/CQ9/transaction/game/rollout', gameAmbApiSu.GameRolloutCQ9)
+router.post('/CQ9/transaction/game/takeall', gameAmbApiSu.GameTakeAllCQ9)
+router.post('/CQ9/transaction/game/refund', gameAmbApiSu.GameRolloutCQ9)
+router.post('/CQ9/transaction/game/credit', gameAmbApiSu.GameRolloutCQ9)
+router.post('/CQ9/transaction/game/debit', gameAmbApiSu.GameRolloutCQ9)
+router.post('/CQ9/transaction/user/payoff', gameAmbApiSu.GameRolloutCQ9)
+//CQ9
+
+
 module.exports = router;

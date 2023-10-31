@@ -24,6 +24,9 @@ const cron = require('node-cron');
 // const fs = require('fs');
 // const path = require('path');
 // const FormData = require('form-data');
+const server = app.listen(5000, () => console.log(`Listening on port... ${5000}`));
+const socket = require('./socket');
+const io = socket.init(server);
 
 require('dotenv').config()
 app.engine("html", ejs.renderFile);
@@ -32,7 +35,6 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use('/post', postsRoutes);
 app.use(express.static('public'));
-app.listen(5000, () => console.log(`Listening on port... ${5000}`));
 
 const connection = mysql.createPool({
     host: process.env.DB_HOST,
@@ -1008,7 +1010,7 @@ app.get('/seamlesslogIn/:codeGame/:productId/:playerPlay', (require, response) =
     const agentUsername = 'victest2';
     const xApiKey = 'f47e5065-412c-40d1-9e4c-f6c248919509';
     const authHeader = `Basic ${Buffer.from(`${agentUsername}:${xApiKey}`).toString('base64')}`;
-    
+
     const dataBody = {
         username: usernamePlayer,
         productId: productId,
@@ -1030,7 +1032,7 @@ app.get('/seamlesslogIn/:codeGame/:productId/:playerPlay', (require, response) =
             'Content-Type': 'application/json'
         }
     };
-    
+
     let sqlDeleteAgent = `UPDATE member set tokenplaygame = '${uuidToken}' WHERE username ='${usernamePlayer}'`;
     connection.query(sqlDeleteAgent, (error, result) => {
         if (error) { console.log(error); }
@@ -1357,18 +1359,115 @@ app.post('/testToken', async (req, res) => {
 
 })
 
-// app.post('/testToken', async (req, res) => {
+
+// function formatNumber(num) {
+//     return String(num).padStart(5, '0');
+// }
+
+// app.post('/testNopicationwindaew', async (req, res) => {
+//     const quantity = req.body.quantity;
+//     const phonenumber = req.body.phonenumber;
+//     const agent_id = req.body.agent_id;
 //     const today = new Date();
-//     const date = '2023-08-20';
-//     const sql = 'SELECT * FROM repostgame WHERE created_atdate = ? ORDER BY win DESC LIMIT 10';
+//     const day = String(today.getDate()).padStart(2, '0');
+//     const month = String(today.getMonth() + 1).padStart(2, '0'); // JavaScript months are 0-based, so we add 1
+//     const year = today.getFullYear();
+//     const formattedDate = year + month + day;
+//     const formattedDateBill = `${year}-${month}-${day}`;
+//     let sql_before = `SELECT * FROM member WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'`;
+//     connection.query(sql_before, async (error, resultUser) => {
+//         try {
+//             if (error) {
+//                 console.log(error)
+//             } else {
+//                 let moneyUserWithDraw = resultUser[0].credit - resultUser[0].turnover
+//                 if (resultUser[0].credit > quantity && quantity <= moneyUserWithDraw) {
+//                     let bill = `SELECT numberbill FROM logfinanceuser WHERE transaction_date = ? AND tpyefinance = 'ถอน' ORDER BY numberbill DESC LIMIT 1`;
+//                     connection.query(bill, [formattedDateBill], (error, resultBill) => {
+//                         if (error) {
+//                             console.log(error)
+//                         } else {
+//                             let billnum = 0
+//                             if (resultBill.length !== 0) {
+//                                 billnum = resultBill[0].numberbill + 1;
+//                             } else { billnum += 1; }
+//                             const formattedNumber = formatNumber(billnum);
+//                             const statusWitdraw = 'ถอน';
+//                             FInance.Withdrawmoney(resultUser[0], formattedDate, formattedNumber, billnum, quantity, resultUser[0].accountNumber, phonenumber, 'in_progress')
+//                                 .then(calculatedValues => {
+//                                     //console.log(calculatedValues);
+//                                 })
+//                                 .catch(error => {
+//                                     console.error(error);
+//                                 });
 
-//     connection.query(sql, [date], (err, results) => {
-//         if (err) throw err;
+//                             const balance = quantity;
+//                             let sql_Bank = `SELECT * FROM banknames WHERE bankname_name ='${resultUser[0].bank}'`;
+//                             connection.query(sql_Bank, (error, resultBank) => {
+//                                 if (error) {
+//                                     console.log(error)
+//                                 } else {
+//                                     let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
+//                                         balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value 
+//                                     ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${resultUser[0].accountNumber}','${phonenumber}','${'ถอน'}','${quantity}','${0}','${resultUser[0].credit}'
+//                                     ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${'ยังไม่เรียบร้อย'}',now(),now(),'${resultUser[0].bank}','${resultBank[0].images}'
+//                                     ,'${resultUser[0].accountName}','${resultUser[0].accountNumber}')`;
 
-//         console.log('Top 10 Highest Balances:');
-//         results.forEach((row, index) => {
-//             console.log(`${index + 1}. Account: ${row.username}, Balance: ${row.win}`);
-//         });
-//         connection.end();
+//                                     connection.query(sql_before, (error, result) => {
+//                                         if (error) {
+//                                             console.log(error)
+//                                         } else {
+//                                             const balanceNow = resultUser[0].credit - quantity;
+//                                             if (statusWitdraw === "สำเร็จ") {
+//                                                 let sql = `UPDATE member set credit = '${balanceNow}', recharge_times = '${resultUser[0].recharge_times + 1}'
+//                                             WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'`;
+//                                                 connection.query(sql, (error, resultAfter) => {
+//                                                     if (error) {
+//                                                         console.log(error);
+//                                                     }
+//                                                     res.send({
+//                                                         message: "ถอนเงินสำเร็จ",
+//                                                     });
+//                                                     res.end();
+//                                                 });
+//                                             }
+//                                             else {
+//                                                 let sql = `UPDATE member set credit = '${resultUser[0].credit}', withdraw_member = '${resultUser[0].withdraw_member + quantity}', latest_withdrawal = '${quantity}'
+//                                             WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'`;
+//                                                 connection.query(sql, (error, resultAfter) => {
+//                                                     if (error) {
+//                                                         console.log(error);
+//                                                     }
+//                                                     const post = [
+//                                                         {username : resultUser[0].username, 
+//                                                         withdraw_member : quantity,
+//                                                         message : "มีการแจ้งถอนเงินจำนวน"
+//                                                     }
+//                                                     ]
+//                                                     io.emit('notify-management-withdraw', { data: post});
+//                                                     res.send({
+//                                                         message: "รอการอนุมัติการถอนเงิน",
+//                                                     });
+//                                                     res.end();
+//                                                 });
+//                                             }
+//                                         }
+//                                     });
+//                                 }
+//                             })
+//                         }
+//                     })
+//                 } else {
+//                     res.send({
+//                         message: "ยอดเงินมีไม่เพียงพอ",
+//                     });
+//                 }
+//             }
+//         } catch (err) {
+//             if (!err.statusCode) {
+//                 err.statusCode = 500;
+//             }
+//         }
 //     });
-// })
+
+// });

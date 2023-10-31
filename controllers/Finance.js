@@ -9,6 +9,7 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const axios = require('axios'); //npm install axios
 const app = express();
+const socketIo = require('socket.io');
 app.use(express.static('public'));
 require('dotenv').config()
 
@@ -278,12 +279,14 @@ module.exports = class Post {
         });
     }
 
+
     static Withdrawmoney(resultUser, formattedDate, formattedNumber, billnum, quantity, accountNumber, phonenumber, status) {
         return new Promise((resolve, reject) => {
             //console.log(resultUser.bank);
+
             let sql_Bank = `SELECT id, images FROM banknames WHERE bankname_name ='${resultUser.bank}' AND status = 'Y' AND status_delete = 'N'`;
             connection.query(sql_Bank, (error, usernameAgent) => {
-                console.log(usernameAgent);
+                //console.log(usernameAgent);
                 try {
                     if (error) {
                         console.log(error)

@@ -388,3 +388,24 @@ exports.LoginAgentWeb = (require, response) => {
         }
     });
 }
+
+http: //localhost:5000/post/DeleteUserGroupInformation Put DeleteUserGroupInformation
+exports.DeleteAccessDeposit = async (req, res, next) => {
+    const id = req.body.id;
+    const agent_id = req.body.agent_id
+    let sql = `UPDATE depositaccount set activestatus = '${'ปิดใช้งาน'}' WHERE id ='${id}' AND agent_id = '${agent_id}'`;
+    connection.query(sql, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            res.send({
+                message: "Delete Success"
+            });
+            res.end();
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+    });
+};

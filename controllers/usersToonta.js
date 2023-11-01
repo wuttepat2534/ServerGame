@@ -13,6 +13,8 @@ const promotiontoonta = require('./promotiontoonta')
 const repostGame = require('./repostGame')
 const Finance = require('./Finance')
 const app = express();
+const moment = require('moment-timezone')
+
 app.use(express.static('public'));
 
 const socket = require('../socket')
@@ -47,6 +49,11 @@ exports.signupMember = async (req, res, next) => {
     //const checkboxListv2 = req.body.checkboxListv2;
     let statuScheck = 'Y';
 
+    const currentTimeInThailand = moment().tz('Asia/Bangkok');
+    const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
+    const formattedTime = currentTimeInThailand.format('HH:mm:ss');
+
+
     const hashedPassword = md5(password);
     let sql_agent = `SELECT username FROM agent WHERE id='${agent_id}'`;
     connection.query(sql_agent, (error, usernameAgent) => {
@@ -56,8 +63,8 @@ exports.signupMember = async (req, res, next) => {
             } else {
                 let sql = `INSERT INTO member (agent_id, username_agent, member_code, name, username, password, credit, created_attime, created_at, updated_at, groupmember, userrank, lineid, status,
                         note, currency, bank, accountName, accountNumber, phonenumber, lastName) 
-                value ('${agent_id}','${usernameAgent[0].username}','${agent_id}','${firstName}','${username}','${hashedPassword}','${credit}' ,now() ,now(), now(), '${customerGroup}', '${Rank}',
-                '${IDLIne}','${statuScheck}', '${note}', '${currency}','${bank}', '${accountName}', '${accountNumber}', '${contact_number}', '${lastName}')`;
+                value ('${agent_id}','${usernameAgent[0].username}','${agent_id}','${firstName}','${username}','${hashedPassword}','${credit}','${formattedDate}','${formattedDate}','${formattedDate}',
+                '${customerGroup}', '${Rank}','${IDLIne}','${statuScheck}', '${note}', '${currency}','${bank}', '${accountName}', '${accountNumber}', '${contact_number}', '${lastName}')`;
                 connection.query(sql, (error, result) => {
                     if (error) { console.log(error) }
                     res.send({
@@ -468,13 +475,9 @@ exports.financeUser = (req, res) => {
     const qrcodeData = req.body.qrcodeData;
     const typePromotion = req.body.typePromotion;
     const agent_id = req.body.agent_id;
-    const today = new Date();
-    // Format the date as "ddmmyyyy"
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // JavaScript months are 0-based, so we add 1
-    const year = today.getFullYear();
-    const formattedDate = year + month + day;
-    const formattedDateBill = `${year}-${month}-${day}`;
+    const currentTimeInThailand = moment().tz('Asia/Bangkok');
+    const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
+    const formattedTime = currentTimeInThailand.format('HH:mm:ss');
     //console.log(statusFinance);
     const io = socket.getIO();
     try {
@@ -486,7 +489,7 @@ exports.financeUser = (req, res) => {
                 //console.log(resultUser[0].accountNumber, accountNumberInt)
                 if (type === 'deposit') {
                     let bill = `SELECT numberbill FROM logfinanceuser WHERE transaction_date = ?  AND tpyefinance = 'ฝาก' ORDER BY numberbill DESC LIMIT 1`;
-                    connection.query(bill, [formattedDateBill], (error, resultBill) => {
+                    connection.query(bill, [formattedDate], (error, resultBill) => {
                         if (error) {
                             console.log(error)
                         } else {
@@ -504,7 +507,7 @@ exports.financeUser = (req, res) => {
                             ,'${balance}','${formattedDate}${formattedNumber}','${billnum}','${statusFinance}',now(),now(),'${resultUser[0].bank}','${resultUser[0].imgBank}'
                             ,'${destinationAccount}','${destinationAccountNumber}','${transRef}', '${qrcodeData}', '${nameimg}')`;
                             if (statusFinance === "สำเร็จ") {
-                                let totalamountdaily = logTotalAmount(resultUser, formattedDateBill, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
+                                let totalamountdaily = logTotalAmount(resultUser, formattedDate, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
                                 const totaltopup = resultUser[0].total_top_up_amount + quantity;
                                 connection.query(sql_before, (error, result) => {
                                     if (error) {
@@ -640,14 +643,9 @@ exports.WinhdrawUser = (req, res) => {
     const phonenumber = req.body.phonenumber;
     //const statusFinance = req.body.statusFinance;
     const agent_id = req.body.agent_id;
-    const today = new Date();
-    // Format the date as "ddmmyyyy"
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // JavaScript months are 0-based, so we add 1
-    const year = today.getFullYear();
-    const formattedDate = year + month + day;
-    const formattedDateBill = `${year}-${month}-${day}`;
-
+    const currentTimeInThailand = moment().tz('Asia/Bangkok');
+    const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
+    const formattedTime = currentTimeInThailand.format('HH:mm:ss');
     const io = socket.getIO();
     //console.log(statusFinance);
     try {
@@ -660,7 +658,7 @@ exports.WinhdrawUser = (req, res) => {
                 if (resultUser[0].credit > quantity && quantity <= moneyUserWithDraw) {
                     //let totalamountdaily = logTotalAmountWithdraw(resultUser, formattedDateBill, 'ถอน', destinationAccount, destinationAccountNumber, quantity, statusFinance)
                     let bill = `SELECT numberbill FROM logfinanceuser WHERE transaction_date = ? AND tpyefinance = 'ถอน' ORDER BY numberbill DESC LIMIT 1`;
-                    connection.query(bill, [formattedDateBill], (error, resultBill) => {
+                    connection.query(bill, [formattedDate], (error, resultBill) => {
                         if (error) {
                             console.log(error)
                         } else {
@@ -688,7 +686,7 @@ exports.WinhdrawUser = (req, res) => {
                                     let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
                                         balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value 
                                     ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${resultUser[0].accountNumber}','${phonenumber}','${'ถอน'}','${quantity}','${0}','${resultUser[0].credit}'
-                                    ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${'ยังไม่เรียบร้อย'}',now(),now(),'${resultUser[0].bank}','${resultBank[0].images}'
+                                    ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${'ยังไม่เรียบร้อย'}','${formattedDate},'${formattedTime}','${resultUser[0].bank}','${resultBank[0].images}'
                                     ,'${resultUser[0].accountName}','${resultUser[0].accountNumber}')`;
 
                                     connection.query(sql_before, (error, result) => {
@@ -989,13 +987,9 @@ exports.depositUserPromotion = (req, res) => {
     const accountNumberInt = parseInt(accountNumber);
     const statusFinance = req.body.statusFinance
     const idPromotion = req.body.idPromotion;
-    const today = new Date();
-    // Format the date as "ddmmyyyy"
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // JavaScript months are 0-based, so we add 1
-    const year = today.getFullYear();
-    const formattedDate = year + month + day;
-    const formattedDateBill = `${year}-${month}-${day}`;
+    const currentTimeInThailand = moment().tz('Asia/Bangkok');
+    const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
+    const formattedTime = currentTimeInThailand.format('HH:mm:ss');
 
     try {
         let sql_Promotion = `SELECT * FROM creditpromotion WHERE id ='${idPromotion}'`;
@@ -1017,7 +1011,7 @@ exports.depositUserPromotion = (req, res) => {
                                             balancebunus = resultPromotion[0].maxbunus
                                         }
                                         const balance = quantity + balancebunus
-                                        let totalamountdaily = logTotalAmount(sql_valusUserDeposit, formattedDateBill, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
+                                        let totalamountdaily = logTotalAmount(sql_valusUserDeposit, formattedDate, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
                                         let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}' WHERE id='${id}'`;
                                         connection.query(sql, (error, result) => {
                                             if (error) {
@@ -1026,7 +1020,7 @@ exports.depositUserPromotion = (req, res) => {
                                                 let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
                                                     balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value 
                                                     ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${accountNumber}','${phonenumber}','${'ฝาก'}','${quantity}','${balancebunus}','${resultUser[0].credit}'
-                                                    ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${statusFinance}',now(),now(),'${resultUser[0].bank}','${resultUser[0].imgBank}'
+                                                    ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${statusFinance}','${formattedDate}','${formattedTime}','${resultUser[0].bank}','${resultUser[0].imgBank}'
                                                     ,'${destinationAccount}','${destinationAccountNumber}')`;
                                                 connection.query(sql_before, (error, resultAfter) => {
                                                     if (error) {

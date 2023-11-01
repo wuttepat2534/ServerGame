@@ -502,7 +502,7 @@ function turnoverrepost(post) {
             console.log(error);
             reject(error);
         } else {
-            console.log(date);
+            //console.log(date);
             if (results.length > 0) {
                 const floatwitapi = parseFloat(results[0].win);
                 const floatturnoverapi = parseFloat(results[0].turnover);
@@ -536,7 +536,7 @@ function totalTurnoverrepost(post) {
     const formattedTime = currentTimeInThailand.format('HH:mm:ss');
     const lose = floatbet - floatwit;
     let sqlpercentagegame = `SELECT percentagegame FROM gameweb WHERE password_img = '${post.gameid}'`;
-    let sql = `SELECT * FROM totalturnoverrepost WHERE day = '${formattedTime}' AND usernameuser = '${post.username}'`;
+    let sql = `SELECT * FROM totalturnoverrepost WHERE day = '${formattedDate}' AND usernameuser = '${post.username}'`;
     connection.query(sql, (error, results) => {
         if (error) {
             console.log(error);
@@ -562,14 +562,14 @@ function totalTurnoverrepost(post) {
                     //const lose = floatbet - floatwit;
                     let sql = `UPDATE totalturnoverrepost set  turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}', roundplay = '${results[0].roundplay + 1}', 
                     ag_winlose = '${numberlose}', ag_comm = '${0.00}', ag_total = '${commy_agentTotalupdate}', comny_total = '${tatal_commnyupdate}'
-                    WHERE day = '${formattedTime}' AND usernameuser = '${post.username}'`;
+                    WHERE day = '${formattedDate}' AND usernameuser = '${post.username}'`;
                     connection.query(sql, (error, resultAfter) => {
                         if (error) { console.log(error); }
                         return 'OK';
                     });
                 } else {
                     let sql_before = `INSERT INTO totalturnoverrepost (	usernameuser, turnover, win, lose, roundplay, ag_winlose, ag_comm, ag_total, comny_total ,day) value 
-                    ('${post.username}','${floatbet}','${floatwit}','${lose}','${1}','${commnytotal}','${0.00}','${commy_agentTotal}','${tatal_commny}','${formattedTime}')`;
+                    ('${post.username}','${floatbet}','${floatwit}','${lose}','${1}','${commnytotal}','${0.00}','${commy_agentTotal}','${tatal_commny}','${formattedDate}')`;
                     connection.query(sql_before, (error, resultAfter) => {
                         if (error) { console.log(error); }
                         return 'OK';

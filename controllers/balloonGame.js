@@ -681,6 +681,8 @@ function EndGame(passwordRound, winGame, winStreak, user_id, bet, isWin, game_id
                 const post = {
                     username: results[0].username, gameid: 'DOGZILLA', bet: bet, win: win, balance_credit: results[0].credit, userAgent: userAgent, platform: userAgent
                 }
+                console.log(post);
+                
                 let repost = repostGame.uploadLogRepostGame(post)
                 let credit = results[0].credit + win;
 

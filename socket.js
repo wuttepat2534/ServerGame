@@ -7,7 +7,7 @@ module.exports = {
         if(!io) {
             io = socketIo(server, {
                 cors: {
-                    origin: "http://localhost:3003",
+                    origin: "*",
                     methods: ["GET", "POST"]
                 }
             });

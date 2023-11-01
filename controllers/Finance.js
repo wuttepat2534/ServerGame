@@ -146,7 +146,7 @@ module.exports = class Post {
                                                             agent_id: dataUsers.agent_id,
                                                             typePromotion: dataUsers.idPromotion
                                                         });
-                                                        //console.log(response.data.message)
+                                                        console.log(response.data.message)
                                                         if (response.data.message === "เติมเงินสำเร็จ") {
                                                             resolve("ฝากเงินสำเสร็จ")
                                                         } else {
@@ -168,6 +168,7 @@ module.exports = class Post {
                                                             agent_id: dataUsers.agent_id,
                                                             typePromotion: dataUsers.idPromotion
                                                         });
+                                                        console.log(response.data.message)
                                                         if (response.data.message === "บันทึกสำเร็จ") {
                                                             resolve("ชื่อบัญชีที่ได้ลงทะเบียนไม่ถูกต้อง กรุณาตรวจสอบ สลิปโอนเงิน ")
                                                         } else {
@@ -238,6 +239,7 @@ module.exports = class Post {
                                                             agent_id: dataUsers.agent_id,
                                                             typePromotion: dataUsers.idPromotion
                                                         });
+                                                        console.log(response.data.message)
                                                         if (response.data.message === "เติมเงินสำเร็จ") {
                                                             resolve("ฝากเงินสำเสร็จ")
                                                         } else {
@@ -259,6 +261,7 @@ module.exports = class Post {
                                                             agent_id: dataUsers.agent_id,
                                                             typePromotion: dataUsers.idPromotion
                                                         });
+                                                        console.log(response.data.message)
                                                         if (response.data.message === "เติมเงินไม่สำเร็จ") {
                                                             resolve("ชื่อบัญชีที่ได้ลงทะเบียนไม่ถูกต้อง กรุณาตรวจสอบ สลิปโอนเงิน ")
                                                         } else {

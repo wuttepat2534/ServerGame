@@ -74,10 +74,6 @@ module.exports = class Post {
                                                 if (error) {
                                                     console.log(error);
                                                 }
-                                                res.send({
-                                                    message: "ฝากเงินสำเร็จ",
-                                                });
-                                                res.end();
                                             });
                                         }
                                     });
@@ -97,19 +93,13 @@ module.exports = class Post {
                                                 if (error) {
                                                     console.log(error);
                                                 }
-                                                res.send({
-                                                    message: "ฝากเงินสำเร็จ",
-                                                });
-                                                res.end();
                                             });
                                         }
                                     });
                                 }
                             }
                         } else {
-                            res.send({
-                                message: "คุณไม่สามารถรับโปรโมชั่นนี่ได้",
-                            });
+                         console.log('ไม่สามารถรับโปรโมชั่นได้')
                         }
                     } else if (resultPromotion[0].receiving_data_type === "รายวัน") {
                         let sql_DipositDay = `SELECT * FROM logfinanceuser WHERE idUser ='${dataUser.id}' AND transaction_date = now()`;
@@ -135,10 +125,6 @@ module.exports = class Post {
                                                         if (error) {
                                                             console.log(error);
                                                         }
-                                                        res.send({
-                                                            message: "ฝากเงินสำเร็จ",
-                                                        });
-                                                        res.end();
                                                     });
                                                 }
                                             });
@@ -158,26 +144,18 @@ module.exports = class Post {
                                                         if (error) {
                                                             console.log(error);
                                                         }
-                                                        res.send({
-                                                            message: "ฝากเงินสำเร็จ",
-                                                        });
-                                                        res.end();
                                                     });
                                                 }
                                             });
                                         }
                                     }
                                 } else {
-                                    res.send({
-                                        message: "คุณไม่สามารถรับโปรโมชั่นนี่ได้",
-                                    });
+                                    console.log('ไม่สามารถรับโปรโมชั่นได้')
                                 }
                             }
                         })
                     } else {
-                        res.send({
-                            message: "เลขบัญชีไม่ถูกต้อง",
-                        });
+                        console.log('ไม่สามารถรับโปรโมชั่นได้')
                     }
                 }
             })

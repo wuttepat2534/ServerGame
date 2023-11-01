@@ -361,6 +361,81 @@ module.exports = class Post {
         });
     }
 
+    static async topWithdraw(post) {
+        return new Promise((resolve, reject) => {
+            const sql = `SELECT * FROM logfinancerepost WHERE day >='${post.startdate}' AND day <= '${post.endDate}' AND transaction = '${ถอน}'  ORDER BY quantity DESC LIMIT 20`;
+            connection.query(sql, (err, results) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    if (results.length !== 0) {
+                        let data = [];
+                        results.forEach((row, index) => {
+                            //console.log(`${index + 1}. Account: ${row.usernameuser	}, Balance: ${row.lose}`);
+                            data.push(row)
+
+                        });
+                        resolve(data);
+                    } else {
+                        let jsArray = { "logfinancerepost": "วันนี้ยังไม่มีผู้เล่นถอน" };
+                        resolve(jsArray);
+                    }
+                }
+            });
+        });
+    }
+
+    static async topWithdraw(post) {
+        return new Promise((resolve, reject) => {
+            const sql = `SELECT * FROM logfinancerepost WHERE day >='${post.startdate}' AND day <= '${post.endDate}' AND transaction = 'ถอน'  ORDER BY quantity DESC LIMIT 20`;
+            connection.query(sql, (err, results) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    if (results.length !== 0) {
+                        let data = [];
+                        results.forEach((row, index) => {
+                            //console.log(`${index + 1}. Account: ${row.usernameuser	}, Balance: ${row.lose}`);
+                            data.push(row)
+
+                        });
+                        resolve(data);
+                    } else {
+                        let jsArray = { "logfinancerepost": "วันนี้ยังไม่มีผู้เล่นถอน" };
+                        resolve(jsArray);
+                    }
+                }
+            });
+        });
+    }
+
+    static async topDeposit(post) {
+        return new Promise((resolve, reject) => {
+            const sql = `SELECT * FROM logfinancerepost WHERE day >='${post.startdate}' AND day <= '${post.endDate}' AND transaction = 'ฝาก'  ORDER BY quantity DESC LIMIT 20`;
+            connection.query(sql, (err, results) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    if (results.length !== 0) {
+                        let data = [];
+                        results.forEach((row, index) => {
+                            //console.log(`${index + 1}. Account: ${row.usernameuser	}, Balance: ${row.lose}`);
+                            data.push(row)
+
+                        });
+                        resolve(data);
+                    } else {
+                        let jsArray = { "logfinancerepost": "วันนี้ยังไม่มีผู้เล่นฝาก" };
+                        resolve(jsArray);
+                    }
+                }
+            });
+        });
+    }
+
     static async totalroundplayday(post) {
         return new Promise((resolve, reject) => {
             const sql = `SELECT roundplay FROM totalturnoverrepost WHERE day >='${post.startdate}' AND day <= '${post.endDate}'`;

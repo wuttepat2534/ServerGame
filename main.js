@@ -1217,7 +1217,7 @@ app.post('/depositToonta', async (req, res) => { //ทดลองอัพโ�
          console.error(error.data);
      });*/
     try {
-        const YOUR_FILE_LOCATION = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/368441991_669600238379027_8438505471397569485_n.jpg';
+        //const YOUR_FILE_LOCATION = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/396647224_301012646036841_6602704184365275387_n.jpg';
         //const SletTest = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/slip/377334005_1411687959690621_3265644401220670990_n.jpg';
         const Url = `https://relaxtimecafe.fun/images/${req.body.filename}`
         //const Url = `http://localhost:5000/images/${req.body.filename}`

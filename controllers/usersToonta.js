@@ -454,6 +454,7 @@ function formatNumber(num) {
 }
 //http://localhost:5000/post/financeUser financeUserMoney
 exports.financeUser = (req, res) => {
+    //console.log(req.body);
     const type = req.body.type;
     const quantity = req.body.quantity;
     const accountNumber = req.body.accountNumber;
@@ -475,6 +476,7 @@ exports.financeUser = (req, res) => {
     const formattedDate = year + month + day;
     const formattedDateBill = `${year}-${month}-${day}`;
     //console.log(statusFinance);
+    const io = socket.getIO();
     try {
         let sql_before = `SELECT * FROM member WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}' ORDER BY phonenumber ASC`;
         connection.query(sql_before, (error, resultUser) => {
@@ -508,7 +510,8 @@ exports.financeUser = (req, res) => {
                                     if (error) {
                                         console.log(error)
                                     } else {
-                                        if (typePromotion === '0') {
+                                           console.log(typePromotion);
+                                        if (typePromotion !== '0') {
                                             let postpromotionDeposit = promotiontoonta.promotionDeposit(quantity, resultUser[0], typePromotion, formattedNumber, totaltopup);
                                         } else {
                                             let rank = 'NewMember';
@@ -530,14 +533,15 @@ exports.financeUser = (req, res) => {
                                                 if (error) {
                                                     console.log(error);
                                                 }
-
+                                                let updateRepostFinance = Finance.UpdateLogRepostFinance(resultUser[0].username, 'ฝาก', quantity)
                                                 const post = [
-                                                    {username : resultUser[0].username, 
-                                                    deposit_member : quantity,
-                                                    message : "มีการแจ้งฝากเงินจำนวน"
-                                                }]
+                                                    {
+                                                        username: resultUser[0].username,
+                                                        deposit_member: quantity,
+                                                        message: "มีการแจ้งฝากเงินจำนวน"
+                                                    }]
 
-                                                io.emit('notify-management-deposit', { data: post});
+                                                io.emit('notify-management-deposit', { data: post });
                                                 res.send({
                                                     message: "เติมเงินสำเร็จ",
                                                 });
@@ -714,12 +718,13 @@ exports.WinhdrawUser = (req, res) => {
                                                     }
 
                                                     const post = [
-                                                        {username : resultUser[0].username, 
-                                                        withdraw_member : quantity,
-                                                        message : "มีการแจ้งถอนเงินจำนวน"
-                                                    }]
+                                                        {
+                                                            username: resultUser[0].username,
+                                                            withdraw_member: quantity,
+                                                            message: "มีการแจ้งถอนเงินจำนวน"
+                                                        }]
 
-                                                    io.emit('notify-management-withdraw', { data: post});
+                                                    io.emit('notify-management-withdraw', { data: post });
                                                     res.send({
                                                         message: "รอการอนุมัติการถอนเงิน",
                                                     });
@@ -2387,6 +2392,8 @@ exports.getRepostWebdaily = (require, response) => {
     let topuserwit;
     let topuserlose;
     let topuserturnover;
+    let topDeposit;
+    let topWithdraw;
     let roundplayvalueTotal = 0;
     let valususerplayDay = 0;
 
@@ -2466,6 +2473,22 @@ exports.getRepostWebdaily = (require, response) => {
             console.error(error);
         });
 
+    repostGame.topWithdraw(post)
+        .then(calculatedValues => {
+            topWithdraw = calculatedValues
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    repostGame.topDeposit(post)
+        .then(calculatedValues => {
+            topDeposit = calculatedValues
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
     repostGame.totalroundplayday(post)
         .then(calculatedValues => {
             roundplayvalueTotal = calculatedValues.roundplayvalueTotal;
@@ -2490,6 +2513,8 @@ exports.getRepostWebdaily = (require, response) => {
             topuserturnover: topuserturnover,
             topuserwit: topuserwit,
             topuserlose: topuserlose,
+            topDeposit: topDeposit,
+            topWithdraw : topWithdraw,
             roundplayvalueTotal: roundplayvalueTotal,
             valususerplayDay: valususerplayDay,
         });

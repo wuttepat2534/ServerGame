@@ -37,8 +37,11 @@ module.exports = class Post {
             const resFinance = restest;
             const dataUsers = dataUser;
 
-            let Bank;
+            let baseURL = 'https://relaxtimecafe.fun/';
+            //const baseURL = 'http://localhost:5000/';
 
+            //console.log(dataUsers , resFinance);
+            let Bank;
             switch (resFinance.data.sendingBank) {
                 case '002':
                     Bank = "ธนาคารกรุงเทพ";
@@ -128,7 +131,7 @@ module.exports = class Post {
                                                 } else {
                                                     const dataUserAccount = nameAccount;
                                                     if (dataUserAccount.length !== 0 || dataUserAccount.length > 0) {
-                                                        const response = await axios.post("https://relaxtimecafe.fun/post/financeUser", {
+                                                        const response = await axios.post(baseURL + "post/financeUser", {
                                                             resFinance: resFinance,
                                                             type: dataUsers.type,
                                                             quantity: resFinance.data.amount,
@@ -141,6 +144,7 @@ module.exports = class Post {
                                                             transRef: resFinance.data.transRef,
                                                             qrcodeData: resFinance.data.qrcodeData,
                                                             agent_id: dataUsers.agent_id,
+                                                            typePromotion: dataUsers.idPromotion
                                                         });
                                                         //console.log(response.data.message)
                                                         if (response.data.message === "เติมเงินสำเร็จ") {
@@ -149,7 +153,7 @@ module.exports = class Post {
                                                             resolve("ฝากเงินไม่สำเร็จกรุณาติดต่อ Admin")
                                                         }
                                                     } else {
-                                                        const response = await axios.post("https://relaxtimecafe.fun/post/financeUser", {
+                                                        const response = await axios.post(baseURL + "post/financeUser", {
                                                             resFinance: resFinance,
                                                             type: dataUsers.type,
                                                             quantity: resFinance.data.amount,
@@ -162,6 +166,7 @@ module.exports = class Post {
                                                             transRef: resFinance.data.transRef,
                                                             qrcodeData: resFinance.data.qrcodeData,
                                                             agent_id: dataUsers.agent_id,
+                                                            typePromotion: dataUsers.idPromotion
                                                         });
                                                         if (response.data.message === "บันทึกสำเร็จ") {
                                                             resolve("ชื่อบัญชีที่ได้ลงทะเบียนไม่ถูกต้อง กรุณาตรวจสอบ สลิปโอนเงิน ")
@@ -218,7 +223,7 @@ module.exports = class Post {
                                                 } else {
                                                     const dataUserAccount = nameAccount;
                                                     if (dataUserAccount.length !== 0 || dataUserAccount.length > 0) {
-                                                        const response = await axios.post("https://relaxtimecafe.fun/post/financeUser", {
+                                                        const response = await axios.post(baseURL + "/post/financeUser", {
                                                             resFinance: resFinance,
                                                             type: dataUsers.type,
                                                             quantity: resFinance.data.amount,
@@ -231,6 +236,7 @@ module.exports = class Post {
                                                             transRef: resFinance.data.transRef,
                                                             qrcodeData: resFinance.data.qrcodeData,
                                                             agent_id: dataUsers.agent_id,
+                                                            typePromotion: dataUsers.idPromotion
                                                         });
                                                         if (response.data.message === "เติมเงินสำเร็จ") {
                                                             resolve("ฝากเงินสำเสร็จ")
@@ -238,7 +244,7 @@ module.exports = class Post {
                                                             resolve("ฝากเงินไม่สำเร็จกรุณาติดต่อ Admin")
                                                         }
                                                     } else {
-                                                        const response = await axios.post("https://relaxtimecafe.fun/post/financeUser", {
+                                                        const response = await axios.post(baseURL + "post/financeUser", {
                                                             resFinance: resFinance,
                                                             type: dataUsers.type,
                                                             quantity: resFinance.data.amount,
@@ -251,6 +257,7 @@ module.exports = class Post {
                                                             transRef: resFinance.data.transRef,
                                                             qrcodeData: resFinance.data.qrcodeData,
                                                             agent_id: dataUsers.agent_id,
+                                                            typePromotion: dataUsers.idPromotion
                                                         });
                                                         if (response.data.message === "เติมเงินไม่สำเร็จ") {
                                                             resolve("ชื่อบัญชีที่ได้ลงทะเบียนไม่ถูกต้อง กรุณาตรวจสอบ สลิปโอนเงิน ")
@@ -314,5 +321,48 @@ module.exports = class Post {
                 }
             })
         });
+    }
+
+    static UpdateLogRepostFinance(resultUser, transaction, quantity) {
+
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // JavaScript months are 0-based, so we add 1
+        const year = today.getFullYear();
+        const formattedDateBill = `${year}-${month}-${day}`;
+
+        let sql_Repost = `SELECT * FROM logfinancerepost WHERE username ='${resultUser}' AND transaction_date = '${formattedDateBill}' AND transaction = '${transaction}'`;
+        connection.query(sql_Repost, (error, usernameAgent) => {
+            try {
+                if (error) {
+                    console.log(error)
+                } else {
+                    if (usernameAgent.length !== 0) {
+                        let sql = `UPDATE logfinancerepost set quantity = '${usernameAgent[0].quantity + quantity}' 
+                        WHERE username ='${resultUser}' AND transaction_date = '${formattedDateBill}' AND transaction = '${transaction}'`;
+                        connection.query(sql, (error, resultAfter) => {
+                            if (error) {
+                                console.log(error);
+                            }
+                            let jsArray = "บันทึกสำเร็จ";
+                        });
+                    } else {
+                        let sql_before = `INSERT INTO logfinancerepost (transaction, username, quantity, transaction_date) value 
+                        ('${transaction}','${resultUser}','${quantity}','${formattedDateBill}')`;
+                        connection.query(sql_before, (error, result) => {
+                            if (error) {
+                                console.log(error);
+                            }
+                            let jsArray = "บันทึกสำเร็จ";
+                        });
+                    }
+                }
+            } catch (err) {
+                if (!err.statusCode) {
+                    err.statusCode = 500;
+                }
+                next(err);
+            }
+        })
     }
 };

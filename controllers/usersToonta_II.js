@@ -149,6 +149,7 @@ exports.ConfirmationWithdraw = async (req, res, next) => {
                     } else {
                         let sql_Withdraw = `UPDATE logfinanceuser set status = 'สำเร็จ' WHERE bill_number ='${bill_number}'`;
                         connection.query(sql_Withdraw, (error, withdraw) => {
+                            let updateRepostFinance = Finance.UpdateLogRepostFinance(usernameUser, 'ถอน', convertedLatest_withdrawal)
                             res.send({
                                 message: "ถอนเงินสำเร็จ",
                             });

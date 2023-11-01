@@ -510,7 +510,7 @@ exports.financeUser = (req, res) => {
                                     if (error) {
                                         console.log(error)
                                     } else {
-                                           console.log(typePromotion);
+                                           //console.log(typePromotion);
                                         if (typePromotion !== '0') {
                                             let postpromotionDeposit = promotiontoonta.promotionDeposit(quantity, resultUser[0], typePromotion, formattedNumber, totaltopup);
                                         } else {

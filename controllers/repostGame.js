@@ -191,7 +191,7 @@ module.exports = class Post {
 
     static async valuedailyFinanceDeposit(post) {
         return new Promise((resolve, reject) => {
-            let sql = `SELECT * FROM logfinanceuser WHERE tpyefinance = 'ฝาก' AND transaction_date >='${post.startdate}' AND transaction_date <= '${post.endDate}'`;
+            let sql = `SELECT * FROM logfinanceuser WHERE tpyefinance = 'ฝาก' AND transaction_date >='${post.startdate}' AND transaction_date <= '${post.endDate}' AND status = 'สำเร็จ'`;
             connection.query(sql, (error, results) => {
                 if (error) {
                     console.log(error);
@@ -215,7 +215,7 @@ module.exports = class Post {
 
     static async valuedailyFinanceWithdraw(post) {
         return new Promise((resolve, reject) => {
-            let sql = `SELECT * FROM logfinanceuser WHERE tpyefinance = 'ถอน' AND transaction_date >='${post.startdate}' AND transaction_date <= '${post.endDate}'`;
+            let sql = `SELECT * FROM logfinanceuser WHERE tpyefinance = 'ถอน' AND transaction_date >='${post.startdate}' AND transaction_date <= '${post.endDate}' AND status = 'สำเร็จ'`;
             connection.query(sql, (error, results) => {
                 if (error) {
                     console.log(error);

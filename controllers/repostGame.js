@@ -7,6 +7,7 @@ const os = require('os');
 const md5 = require('md5');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const moment = require('moment-timezone')
 
 const app = express();
 app.use(express.static('public'));
@@ -27,6 +28,10 @@ module.exports = class Post {
     }
 
     static uploadLogRepostGame(post) {
+
+        const currentTimeInThailand = moment().tz('Asia/Bangkok');
+        const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
+        const formattedTime = currentTimeInThailand.format('HH:mm:ss');
 
         let browser;
         if (post.userAgent.includes('Chrome')) {
@@ -61,7 +66,7 @@ module.exports = class Post {
                     let turnoverrepostfun = turnoverrepost(post)
                     let datausername = result[0];
                     let sql_before = `INSERT INTO repostgame (iduser, username, gameid, bet, win, balance_credit, get_browser, platform, created_atdate, created_attime) value 
-              ('${datausername.id}','${post.username}','${post.gameid}','${post.bet}','${post.win}','${post.balance_credit}','${browser}','${platform}',now(), now())`;
+              ('${datausername.id}','${post.username}','${post.gameid}','${post.bet}','${post.win}','${post.balance_credit}','${browser}','${platform}','${formattedDate}','${formattedTime}')`;
                     connection.query(sql_before, (error, resultAfter) => {
                         if (error) { console.log(error); }
                         return 'OK';
@@ -77,6 +82,11 @@ module.exports = class Post {
     }
 
     static uploadLogRepostGameAsk(post) {
+
+        const currentTimeInThailand = moment().tz('Asia/Bangkok');
+        const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
+        const formattedTime = currentTimeInThailand.format('HH:mm:ss');
+
         let browser;
         if (post.userAgent.includes('Chrome')) {
             browser = 'Google Chrome';
@@ -123,7 +133,8 @@ module.exports = class Post {
                                 });
                             } else {
                                 let sql_before = `INSERT INTO repostgame (iduser, username, gameid, bet, win, balance_credit, get_browser, platform, trans_id, created_atdate, created_attime) value 
-                                ('${datausername.id}','${post.username}','${post.gameid}','${post.bet}','${0}','${post.balance_credit}','${browser}','${platform}','${post.trans_id}',now(), now())`;
+                                ('${datausername.id}','${post.username}','${post.gameid}','${post.bet}','${0}','${post.balance_credit}','${browser}','${platform}'
+                                ,'${post.trans_id}','${formattedDate}','${formattedTime}')`;
                                 connection.query(sql_before, (error, resultAfter) => {
                                     if (error) { console.log(error); }
                                     return 'OK';
@@ -479,12 +490,13 @@ function turnoverrepost(post) {
     const floatbet = parseFloat(post.bet);
     let total = totalTurnoverrepost(post);
     let totlgameCamp = gamecamptotal(post);
-    const today = new Date();
-    const date = today.toISOString().slice(0, 10);
+    const currentTimeInThailand = moment().tz('Asia/Bangkok');
+    const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
+    const formattedTime = currentTimeInThailand.format('HH:mm:ss');
     const lose = floatbet - floatwit;
     console.log(floatwit, floatbet);
     let turnoverUserGame = turnoverUser(post);
-    let sql = `SELECT * FROM turnoverrepost WHERE day = '${date}' AND usernameuser = '${post.username}' AND gamecamp = '${post.gameid}'`;
+    let sql = `SELECT * FROM turnoverrepost WHERE day = '${formattedDate}' AND usernameuser = '${post.username}' AND gamecamp = '${post.gameid}'`;
     connection.query(sql, (error, results) => {
         if (error) {
             console.log(error);
@@ -499,14 +511,14 @@ function turnoverrepost(post) {
                 const numberlose = turnover - numberWin;
 
                 let sql = `UPDATE turnoverrepost set roundplay = '${results[0].roundplay + 1}', turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}' 
-                WHERE day = '${date}' AND usernameuser = '${post.username}' AND gamecamp = '${post.gameid}'`;
+                WHERE day = '${formattedDate}' AND usernameuser = '${post.username}' AND gamecamp = '${post.gameid}'`;
                 connection.query(sql, (error, resultAfter) => {
                     if (error) { console.log(error); }
                     return 'OK';
                 });
             } else {
                 let sql_before = `INSERT INTO turnoverrepost (usernameuser, gamecamp, roundplay, turnover, win, lose, day) value 
-                ('${post.username}','${post.gameid}','${1}','${floatbet}','${floatwit}','${lose}', now())`;
+                ('${post.username}','${post.gameid}','${1}','${floatbet}','${floatwit}','${lose}','${formattedDate}')`;
                 connection.query(sql_before, (error, resultAfter) => {
                     if (error) { console.log(error); }
                     return 'OK';
@@ -519,11 +531,12 @@ function turnoverrepost(post) {
 function totalTurnoverrepost(post) {
     const floatwit = parseFloat(post.win);
     const floatbet = parseFloat(post.bet);
-    const today = new Date();
-    const date = today.toISOString().slice(0, 10);
+    const currentTimeInThailand = moment().tz('Asia/Bangkok');
+    const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
+    const formattedTime = currentTimeInThailand.format('HH:mm:ss');
     const lose = floatbet - floatwit;
     let sqlpercentagegame = `SELECT percentagegame FROM gameweb WHERE password_img = '${post.gameid}'`;
-    let sql = `SELECT * FROM totalturnoverrepost WHERE day = '${date}' AND usernameuser = '${post.username}'`;
+    let sql = `SELECT * FROM totalturnoverrepost WHERE day = '${formattedTime}' AND usernameuser = '${post.username}'`;
     connection.query(sql, (error, results) => {
         if (error) {
             console.log(error);
@@ -549,14 +562,14 @@ function totalTurnoverrepost(post) {
                     //const lose = floatbet - floatwit;
                     let sql = `UPDATE totalturnoverrepost set  turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}', roundplay = '${results[0].roundplay + 1}', 
                     ag_winlose = '${numberlose}', ag_comm = '${0.00}', ag_total = '${commy_agentTotalupdate}', comny_total = '${tatal_commnyupdate}'
-                    WHERE day = '${date}' AND usernameuser = '${post.username}'`;
+                    WHERE day = '${formattedTime}' AND usernameuser = '${post.username}'`;
                     connection.query(sql, (error, resultAfter) => {
                         if (error) { console.log(error); }
                         return 'OK';
                     });
                 } else {
                     let sql_before = `INSERT INTO totalturnoverrepost (	usernameuser, turnover, win, lose, roundplay, ag_winlose, ag_comm, ag_total, comny_total ,day) value 
-                    ('${post.username}','${floatbet}','${floatwit}','${lose}','${1}','${commnytotal}','${0.00}','${commy_agentTotal}','${tatal_commny}', now())`;
+                    ('${post.username}','${floatbet}','${floatwit}','${lose}','${1}','${commnytotal}','${0.00}','${commy_agentTotal}','${tatal_commny}','${formattedTime}')`;
                     connection.query(sql_before, (error, resultAfter) => {
                         if (error) { console.log(error); }
                         return 'OK';
@@ -572,10 +585,11 @@ function gamecamptotal(post) {
     const floatbet = parseFloat(post.bet);
     const lose = floatbet - floatwit;
     const total = floatwit - lose;
-    const today = new Date();
-    const date = today.toISOString().slice(0, 10);
+    const currentTimeInThailand = moment().tz('Asia/Bangkok');
+    const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
+    const formattedTime = currentTimeInThailand.format('HH:mm:ss');
     let sqlpercentagegame = `SELECT percentagegame FROM gameweb WHERE password_img = '${post.gameid}'`;
-    let sql = `SELECT * FROM gamecamptotal WHERE day = '${date}' AND namegamecamp = '${post.gameid}'`;
+    let sql = `SELECT * FROM gamecamptotal WHERE day = '${formattedDate}' AND namegamecamp = '${post.gameid}'`;
     connection.query(sql, (error, results) => {
         if (error) {
             console.log(error);
@@ -604,7 +618,7 @@ function gamecamptotal(post) {
                     let sql = `UPDATE gamecamptotal set grossComm = '${0.00}', turnover = '${turnover}', win = '${numberWin}', lose = '${numberlose}', commmember = '${0.00}', totalmamber = '${totalnumber}',
                     w_l_agent = '${numberlose}', comm_agent = '${0.00}', tatal_agent = '${commy_agentTotalupdate}', w_l_commny = '${numberlose}', comm_commny = '${0.00}',
                     tatal_commny = '${tatal_commnyupdate}', roundplay = '${results[0].roundplay + 1}'
-                    WHERE day = '${date}' AND namegamecamp = '${post.gameid}'`;
+                    WHERE day = '${formattedDate}' AND namegamecamp = '${post.gameid}'`;
                     connection.query(sql, (error, resultAfter) => {
                         if (error) { console.log(error); }
                         return 'OK';
@@ -613,7 +627,7 @@ function gamecamptotal(post) {
                     let sql_before = `INSERT INTO gamecamptotal (namegamecamp, grossComm, turnover, win, lose, commmember, totalmamber, w_l_agent, 
                     comm_agent, tatal_agent, w_l_commny, comm_commny, tatal_commny, roundplay, day) value 
                     ('${post.gameid}','${0.00}','${floatbet}','${floatwit}','${lose}','${0.00}','${total}','${commnytotal}','${0.00}','${commy_agentTotal}','${commnytotal}'
-                    ,'${0.00}','${tatal_commny}','${1}', now())`;
+                    ,'${0.00}','${tatal_commny}','${1}','${formattedDate}')`;
                     connection.query(sql_before, (error, resultAfter) => {
                         if (error) { console.log(error); }
                         return 'OK';

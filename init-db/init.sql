@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Nov 01, 2023 at 08:26 AM
+-- Generation Time: Nov 01, 2023 at 10:37 AM
 -- Server version: 8.0.34
 -- PHP Version: 8.2.8
 
@@ -333,7 +333,7 @@ CREATE TABLE `depositaccount` (
 --
 
 INSERT INTO `depositaccount` (`id`, `bankName`, `webname`, `agent_id`, `status`, `balance`, `billMatched`, `complated`, `accountNumber`, `algorithm`, `activestatus`, `accountRocked`, `autorocker`, `imgbank`, `accountName`, `nameAccount`) VALUES
-(2, 'ธนาคารไทยพาณิชย์', 'TOONTA', 2, 'แก้ไขไม่ได้ เนื่องจากผูก Api', 0, 0, 0, '1839900569939', 'Sms', 'ปิดใช้งาน', 'Test', 100, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'พีรวัส ขวัญแก้ว', 'นายพีรวัสขวัญแก้ว'),
+(2, 'ธนาคารออมสิน', 'TOONTA', 2, 'แก้ไขไม่ได้ เนื่องจากผูก Api', 15, 15, 15, '020042001691', 'Sms', 'เปิดใช้งาน', 'Test', 100, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-gsb.png', 'นาย พีรวัส ขวัญแก้ว', 'นายพีรวัสขวัญแก้ว'),
 (3, 'ธนาคารกสิกรไทย', 'TOONTA', 2, 'แก้ไขไม่ได้ เนื่องจากผูก Api', 0, 0, 0, '1653149774', 'Sms', 'เปิดใช้งาน', 'Test', 0, 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-kbank.png', 'MS. MY HAY MAY -', 'MS. MY HAY MAY -');
 
 -- --------------------------------------------------------
@@ -454,7 +454,8 @@ INSERT INTO `gamecamptotal` (`id`, `namegamecamp`, `grossComm`, `turnover`, `win
 (30, 'DOGZILLA', 0.00, 77.00, 32.55, 44.45, 0.00, -11.90, 44.45, 0.00, 44.00, 44.45, 0.00, 0.45, 31, '2023-10-28'),
 (31, 'SLOTXO', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 3, '2023-10-28'),
 (32, 'DOGZILLA', 0.00, 118.50, 164.83, -46.33, 0.00, 211.16, -46.33, 0.00, -45.88, -46.33, 0.00, -0.46, 23, '2023-10-31'),
-(33, 'DOGZILLA', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 2, '2023-11-01');
+(33, 'DOGZILLA', 0.00, 10.00, 0.00, 10.00, 0.00, -10.00, 10.00, 0.00, 9.90, 10.00, 0.00, 0.10, 4, '2023-11-01'),
+(34, 'PGSOFT2', 0.00, 163.00, 54.60, 108.40, 0.00, -53.80, 108.40, 0.00, 97.56, 108.40, 0.00, 10.84, 20, '2023-11-01');
 
 -- --------------------------------------------------------
 
@@ -873,6 +874,14 @@ CREATE TABLE `logfinancerepost` (
   `transaction_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `logfinancerepost`
+--
+
+INSERT INTO `logfinancerepost` (`id`, `transaction`, `username`, `quantity`, `transaction_date`) VALUES
+(1, 'ฝาก', '0990825942', 15, '2023-11-01'),
+(2, 'ถอน', '0990825942', 200, '2023-11-01');
+
 -- --------------------------------------------------------
 
 --
@@ -928,26 +937,23 @@ INSERT INTO `logfinanceuser` (`id`, `bill_number`, `numberbill`, `idUser`, `agen
 (16, 'T2023110100002', 2, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '03:47:59', 1108, 0, 1108.46, 1108.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
 (17, 'T2023110100003', 3, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '03:48:24', 300, 0, 17773.31, 300.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '18396488647', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
 (18, 'T2023110100004', 4, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:06:34', 300, 0, 17773.31, 300.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '18396488647', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
-(19, 'T2023110100005', 5, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:07:40', 3000, 0, 17473.31, 3000.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '18396488647', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
-(20, 'T2023110100006', 6, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:08:40', 200, 0, 14473.31, 200.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '18396488647', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
-(21, 'T2023110100007', 7, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:09:29', 200, 0, 14473.31, 200.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '18396488647', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
-(22, 'T2023110100008', 8, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:10:08', 200, 0, 14473.31, 200.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '18396488647', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
-(23, 'T2023110100009', 9, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:14:17', 200, 0, 14473.31, 200.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '18396488647', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
-(24, 'T2023110100010', 10, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:14:45', 200, 0, 14473.31, 200.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '18396488647', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
-(25, 'T2023110100011', 11, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '04:15:12', 1108, 0, 1108.46, 1108.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
-(26, 'T2023110100012', 12, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:15:21', 200, 0, 14473.31, 200.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '18396488647', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
-(27, 'T2023110100013', 13, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '04:15:53', 1108, 0, 1108.46, 1108.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
-(28, 'T2023110100014', 14, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:15:55', 200, 0, 14473.31, 200.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '18396488647', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
-(29, 'T2023110100015', 15, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:16:36', 200, 0, 14473.31, 200.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '18396488647', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(29, 'T2023110100015', 15, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:16:36', 200, 0, 14473.31, 200.00, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '18396488647', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
 (30, 'T2023110100016', 16, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '04:16:41', 1108, 0, 1108.46, 1108.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
-(31, '2023110100001', 1, 5, 2, 'ฝาก', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-01', '07:29:26', 5, 0, 14273.31, 14278.31, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย พีรวัส ขวัญแก้ว', '020042001691', '202311012ZBgIyGp12WLpbMKK', '0046000600000101030140225202311012ZBgIyGp12WLpbMKK5102TH9104F69F', 'file_dateVal_1698823765646_377236024_1023425442227654_2582362426249391222_n.jpg'),
-(32, '2023110100002', 2, 5, 2, 'ฝาก', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-01', '07:30:27', 5, 0, 14278.31, 14283.31, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย พีรวัส ขวัญแก้ว', '020042001691', '202311012ZBgIyGp12WLpbMKK', '0046000600000101030140225202311012ZBgIyGp12WLpbMKK5102TH9104F69F', 'file_dateVal_1698823825889_377236024_1023425442227654_2582362426249391222_n.jpg'),
-(33, '2023110100003', 3, 5, 2, 'ฝาก', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-01', '07:32:24', 5, 0, 14278.31, 14283.31, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย พีรวัส ขวัญแก้ว', '020042001691', '202311012ZBgIyGp12WLpbMKK', '0046000600000101030140225202311012ZBgIyGp12WLpbMKK5102TH9104F69F', 'file_dateVal_1698823943429_377236024_1023425442227654_2582362426249391222_n.jpg'),
-(34, '2023110100004', 4, 5, 2, 'ฝาก', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-01', '07:35:33', 5, 0, 14278.31, 14283.31, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย พีรวัส ขวัญแก้ว', '020042001691', '202311012ZBgIyGp12WLpbMKK', '0046000600000101030140225202311012ZBgIyGp12WLpbMKK5102TH9104F69F', 'file_dateVal_1698824132417_377236024_1023425442227654_2582362426249391222_n.jpg'),
-(35, '2023110100005', 5, 5, 2, 'ฝาก', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-01', '07:36:21', 5, 0, 14278.31, 14283.31, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย พีรวัส ขวัญแก้ว', '020042001691', '202311012ZBgIyGp12WLpbMKK', '0046000600000101030140225202311012ZBgIyGp12WLpbMKK5102TH9104F69F', 'file_dateVal_1698824180910_377236024_1023425442227654_2582362426249391222_n.jpg'),
-(36, '2023110100006', 6, 5, 2, 'ฝาก', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-01', '07:40:59', 5, 0, 14278.31, 14283.31, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย พีรวัส ขวัญแก้ว', '020042001691', '202311012ZBgIyGp12WLpbMKK', '0046000600000101030140225202311012ZBgIyGp12WLpbMKK5102TH9104F69F', 'file_dateVal_1698824458288_377236024_1023425442227654_2582362426249391222_n.jpg'),
-(37, '2023110100007', 7, 5, 2, 'ฝาก', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-01', '07:41:30', 5, 0, 14278.31, 14283.31, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย พีรวัส ขวัญแก้ว', '020042001691', '202311012ZBgIyGp12WLpbMKK', '0046000600000101030140225202311012ZBgIyGp12WLpbMKK5102TH9104F69F', 'file_dateVal_1698824489846_377236024_1023425442227654_2582362426249391222_n.jpg'),
-(38, '2023110100008', 8, 5, 2, 'ฝาก', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-01', '07:44:35', 5, 0, 14278.31, 14283.31, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'undefined', 'นาย พีรวัส ขวัญแก้ว', '020042001691', '202311012ZBgIyGp12WLpbMKK', '0046000600000101030140225202311012ZBgIyGp12WLpbMKK5102TH9104F69F', 'file_dateVal_1698824674337_377236024_1023425442227654_2582362426249391222_n.jpg');
+(41, '2023110100001', 1, 5, 2, 'ฝาก', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-01', '09:03:47', 5, 0, 14293.31, 14298.31, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '020042001691', '202311012ZBgIyGp12WLpbMKK', '0046000600000101030140225202311012ZBgIyGp12WLpbMKK5102TH9104F69F', 'file_dateVal_1698829426104_377236024_1023425442227654_2582362426249391222_n.jpg'),
+(42, '2023110100002', 2, 5, 2, 'ฝาก', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-01', '09:04:04', 10, 0, 14298.31, 14308.31, 'สำเร็จ', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '020042001691', '2023110116nkacHNvVFys74e8', '00460006000001010301402252023110116nkacHNvVFys74e85102TH910407DA', 'file_dateVal_1698829442903_396647224_301012646036841_6602704184365275387_n.jpg'),
+(43, 'T2023110100017', 17, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:02:01', 100, 0, 1108.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(44, 'T2023110100018', 18, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:03:47', 100, 0, 1108.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(45, 'T2023110100019', 19, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:13:16', 100, 0, 1082.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(46, 'T2023110100020', 20, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:14:00', 100, 0, 1082.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(47, 'T2023110100021', 21, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:15:08', 101, 0, 1082.46, 101.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(48, 'T2023110100022', 22, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:15:54', 102, 0, 1082.46, 102.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(49, 'T2023110100023', 23, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:16:37', 100, 0, 1082.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(50, 'T2023110100024', 24, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:17:47', 103, 0, 1082.46, 103.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(51, 'T2023110100025', 25, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:20:07', 100, 0, 1082.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(52, 'T2023110100026', 26, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:20:55', 100, 0, 1082.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(53, 'T2023110100027', 27, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:25:47', 100, 0, 1072.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(54, 'T2023110100028', 28, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:27:09', 100, 0, 1072.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(55, 'T2023110100029', 29, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:28:00', 100, 0, 1072.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent');
 
 -- --------------------------------------------------------
 
@@ -1053,10 +1059,10 @@ CREATE TABLE `member` (
 
 INSERT INTO `member` (`id`, `agent_id`, `username_agent`, `member_code`, `name`, `credit`, `bet_latest`, `username`, `password`, `status`, `status_delete`, `created_at`, `created_attime`, `updated_at`, `ip_address`, `browserlogin`, `customerGroup`, `userrank`, `lineid`, `note`, `currency`, `bank`, `accountName`, `accountNumber`, `phonenumber`, `lastName`, `recharge_times`, `bonususer`, `deposit`, `withdraw_member`, `latest_withdrawal`, `groupmember`, `turnover`, `total_top_up_amount`, `promotionuser`, `passwordpromotion`, `turnover_playuser`, `tokenplaygame`) VALUES
 (1, 2, 'agent01', '2', 'kit', 0.00, 0.00, '0879914004', '8a6f2805b4515ac12058e79e66539be9', 'Y', 'N', '2023-10-19', '2023-10-19 17:46:37', '2023-10-19 17:46:37', '172.22.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารกสิกรไทย', 'kit', '0102294078', '0879914004', 'kit', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 0.00, NULL),
-(2, 2, 'agent01', '2', 'victest', 0.46, 10.00, '0954789782', '52c69e3a57331081823331c4e69d3f2e', 'Y', 'N', '2023-10-19', '2023-10-19 18:40:31', '2023-10-19 18:40:31', '172.18.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'victest', '0123456789', '0954789782', 'victest', 0, 0, 0.00, 1108.00, 1108.00, 'NewMember', 0.00, 0.00, NULL, NULL, 124.50, '7793c673-3d40-5d67-adb6-93c6a360ca39'),
+(2, 2, 'agent01', '2', 'victest', 1072.46, 10.00, '0954789782', '52c69e3a57331081823331c4e69d3f2e', 'Y', 'N', '2023-10-19', '2023-10-19 18:40:31', '2023-10-19 18:40:31', '172.29.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'victest', '0123456789', '0954789782', 'victest', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 135.50, '7793c673-3d40-5d67-adb6-93c6a360ca39'),
 (3, 2, 'agent01', '2', 'ปฏิภาณ อุ่นในธรรม', 0.00, 0.00, '0925711362', '19ede66f218015fd9df85ac886488926', 'Y', 'N', '2023-10-20', '2023-10-20 10:50:40', '2023-10-20 10:50:40', '192.168.224.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารกสิกรไทย', 'ปฏิภาณ อุ่นในธรรม', '7442905791', '0925711362', 'ปฏิภาณ อุ่นในธรรม', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 0.00, NULL),
 (4, 2, 'agent01', '2', 'toon', 0.00, 0.00, '0835366936', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'N', '2023-10-23', '2023-10-23 03:45:26', '2023-10-23 03:45:26', '172.25.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'toon', '1234567890', '0835366936', 'toon', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 0.00, NULL),
-(5, 2, 'agent01', '2', 'นาย พีรวัส ขวัญแก้ว', 14278.31, 9.00, '0990825942', '1c8a0fb0f77321b2fea4124168f33eef', 'Y', 'N', '2023-10-23', '2023-10-23 08:34:56', '2023-10-23 08:34:56', '172.25.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', 'นาย พีรวัส ขวัญแก้ว', 1, 0, 0.00, 4500.00, 200.00, 'NewMember', 5.00, 5.00, NULL, NULL, 728.50, '7fc2bf2a-b455-58d5-a9a5-111a10560ce0'),
+(5, 2, 'agent01', '2', 'นาย พีรวัส ขวัญแก้ว', 14200.91, 9.00, '0990825942', '1c8a0fb0f77321b2fea4124168f33eef', 'Y', 'N', '2023-10-23', '2023-10-23 08:34:56', '2023-10-23 08:34:56', '172.25.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', 'นาย พีรวัส ขวัญแก้ว', 5, 0, 0.00, 4500.00, 200.00, 'NewMember', 0.00, 35.00, NULL, NULL, 890.50, '7fc2bf2a-b455-58d5-a9a5-111a10560ce0'),
 (6, 2, 'agent01', '2', 'นิธิธร', 10375.10, 10.00, '0951789155', 'cf8c105ec5b1554187508d61aa4a325d', 'Y', 'N', '2023-10-25', '2023-10-25 10:14:27', '2023-10-25 10:14:27', '172.18.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารกสิกรไทย', 'นิธิธร', '0373729485', '0951789155', 'นิธิธร', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 638.00, 'eeee7226-70bb-5042-9a74-0b244f6bfb90'),
 (7, 2, 'agent01', '2', 'แบม', 1002.85, 4.50, '0822936915', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'N', '2023-10-26', '2023-10-26 18:35:16', '2023-10-26 18:35:16', '192.168.208.5', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'แบม', '0123456789', '0822936915', 'แบม', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 134.00, NULL),
 (8, 2, 'agent01', '2', 'greenteaja', 1000.00, 0.00, '0819372939', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'N', '2023-10-27', '2023-10-27 03:58:17', '2023-10-27 03:58:17', '172.18.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารออมสิน', 'greenteaja', '1234567890', '0819372939', 'greenteaja', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 0.00, NULL),
@@ -1886,7 +1892,29 @@ INSERT INTO `repostgame` (`id`, `iduser`, `username`, `gameid`, `bet`, `win`, `b
 (736, 6, '0951789155', 'DOGZILLA', 10.00, 12.00, 10381.30, 'Google Chrome', 'PC', 'NO', '2023-10-31', '10:23:36'),
 (737, 6, '0951789155', 'DOGZILLA', 10.00, 21.80, 10353.30, 'Google Chrome', 'PC', 'NO', '2023-10-31', '10:46:48'),
 (738, 4, '0835366936', 'DOGZILLA', 0.00, 0.00, 0.00, 'Google Chrome', 'PC', 'NO', '2023-11-01', '05:30:30'),
-(739, 4, '0835366936', 'DOGZILLA', 0.00, 0.00, 0.00, 'Google Chrome', 'PC', 'NO', '2023-11-01', '05:30:34');
+(739, 4, '0835366936', 'DOGZILLA', 0.00, 0.00, 0.00, 'Google Chrome', 'PC', 'NO', '2023-11-01', '05:30:34'),
+(740, 5, '0990825942', 'PGSOFT2', 9.00, 0.00, 14299.31, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:25:57'),
+(741, 5, '0990825942', 'PGSOFT2', 9.00, 0.00, 14290.31, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:00'),
+(742, 5, '0990825942', 'PGSOFT2', 9.00, 1.80, 14283.11, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:02'),
+(743, 5, '0990825942', 'PGSOFT2', 9.00, 0.00, 14274.11, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:06'),
+(744, 5, '0990825942', 'PGSOFT2', 9.00, 32.70, 14297.81, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:09'),
+(745, 5, '0990825942', 'PGSOFT2', 9.00, 0.00, 14288.81, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:15'),
+(746, 5, '0990825942', 'PGSOFT2', 9.00, 0.00, 14279.81, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:18'),
+(747, 5, '0990825942', 'PGSOFT2', 0.00, 0.00, 14279.81, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:27'),
+(748, 5, '0990825942', 'PGSOFT2', 9.00, 6.00, 14276.81, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:31'),
+(749, 5, '0990825942', 'PGSOFT2', 9.00, 0.00, 14267.81, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:35'),
+(750, 5, '0990825942', 'PGSOFT2', 9.00, 0.00, 14258.81, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:38'),
+(751, 5, '0990825942', 'PGSOFT2', 9.00, 0.00, 14249.81, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:41'),
+(752, 5, '0990825942', 'PGSOFT2', 9.00, 0.00, 14240.81, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:43'),
+(753, 5, '0990825942', 'PGSOFT2', 9.00, 0.00, 14231.81, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:45'),
+(754, 5, '0990825942', 'PGSOFT2', 9.00, 0.00, 14222.81, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:47'),
+(755, 5, '0990825942', 'PGSOFT2', 9.00, 0.00, 14213.81, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:50'),
+(756, 5, '0990825942', 'PGSOFT2', 9.00, 2.40, 14207.21, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:52'),
+(757, 5, '0990825942', 'PGSOFT2', 9.00, 11.70, 14209.91, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:26:56'),
+(758, 5, '0990825942', 'PGSOFT2', 9.00, 0.00, 14200.91, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:27:01'),
+(759, 2, '0954789782', 'PGSOFT2', 1.00, 0.00, 1097.46, 'Google Chrome', 'PC', 'NO', '2023-11-01', '10:06:51'),
+(760, 2, '0954789782', 'DOGZILLA', 5.00, 0.00, 1087.46, 'Google Chrome', 'PC', 'NO', '2023-11-01', '10:10:45'),
+(761, 2, '0954789782', 'DOGZILLA', 5.00, 0.00, 1082.46, 'Google Chrome', 'PC', 'NO', '2023-11-01', '10:11:07');
 
 -- --------------------------------------------------------
 
@@ -1962,6 +1990,13 @@ CREATE TABLE `totalamountdaily` (
   `imgbank` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `totalamountdaily`
+--
+
+INSERT INTO `totalamountdaily` (`id`, `agentid`, `accountName`, `accountNumber`, `billmatched`, `complated`, `balance`, `bankname`, `date`, `time`, `typeaction`, `imgbank`) VALUES
+(1, 2, 'นาย พีรวัส ขวัญแก้ว', '020042001691', 15.00, 15.00, 15.00, 'ธนาคารออมสิน', '2023-11-01', '09:02:10', 'ฝาก', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-gsb.png');
+
 -- --------------------------------------------------------
 
 --
@@ -2003,7 +2038,9 @@ INSERT INTO `totalturnoverrepost` (`id`, `usernameuser`, `turnover`, `win`, `los
 (14, '0840811863', 77.00, 32.55, 44.45, 34, 44.45, 0.00, 44.00, 0.45, '2023-10-28'),
 (15, '0954789782', 28.50, 28.83, -0.33, 14, -0.33, 0.00, -0.34, 0.00, '2023-10-31'),
 (16, '0951789155', 90.00, 136.00, -46.00, 9, -46.00, 0.00, -45.54, -0.46, '2023-10-31'),
-(17, '0835366936', 0.00, 0.00, 0.00, 2, 0.00, 0.00, 0.00, 0.00, '2023-11-01');
+(17, '0835366936', 0.00, 0.00, 0.00, 2, 0.00, 0.00, 0.00, 0.00, '2023-11-01'),
+(18, '0990825942', 162.00, 54.60, 107.40, 19, 107.40, 0.00, 96.66, 10.74, '2023-11-01'),
+(19, '0954789782', 11.00, 0.00, 11.00, 3, 11.00, 0.00, 10.80, 0.20, '2023-11-01');
 
 -- --------------------------------------------------------
 
@@ -2069,7 +2106,10 @@ INSERT INTO `turnoverrepost` (`id`, `usernameuser`, `gamecamp`, `turnover`, `win
 (40, '0840811863', 'SLOTXO', 0.00, 0.00, 0.00, '2023-10-28', 3),
 (41, '0954789782', 'DOGZILLA', 28.50, 28.83, -0.33, '2023-10-31', 14),
 (42, '0951789155', 'DOGZILLA', 90.00, 136.00, -46.00, '2023-10-31', 9),
-(43, '0835366936', 'DOGZILLA', 0.00, 0.00, 0.00, '2023-11-01', 2);
+(43, '0835366936', 'DOGZILLA', 0.00, 0.00, 0.00, '2023-11-01', 2),
+(44, '0990825942', 'PGSOFT2', 162.00, 54.60, 107.40, '2023-11-01', 19),
+(45, '0954789782', 'PGSOFT2', 1.00, 0.00, 1.00, '2023-11-01', 1),
+(46, '0954789782', 'DOGZILLA', 10.00, 0.00, 10.00, '2023-11-01', 2);
 
 -- --------------------------------------------------------
 
@@ -2562,7 +2602,7 @@ INSERT INTO `user_play` (`id`, `member_id`, `game_id`, `bet`, `win`, `tiles`, `w
 (460, 2, 6, 10.00, 0.00, '1', '2,0,3', 'xfqtsSAg5pP3iji', '2', 1128.46, NULL, '2023-10-31 11:06:28', 'false', 'false'),
 (461, 2, 6, 10.00, 0.00, '2', '0,1,3', 'xy8QvlAFw80tZvk', '2', 1118.46, NULL, '2023-10-31 11:06:51', 'false', 'false'),
 (462, 2, 6, 10.00, 0.00, '0', '3,2,1', 'qnfhnXtRTMeglsx', '3', 1108.46, NULL, '2023-10-31 17:50:47', 'false', 'false'),
-(463, 2, 6, 10.00, 0.00, '0', '0', 'zxDwjGbVSVMHBNP', '0', 1108.46, NULL, '2023-10-31 18:20:53', 'false', 'true'),
+(463, 2, 6, 10.00, 0.00, '1', '2,3,0', 'zxDwjGbVSVMHBNP', '3', 1098.46, NULL, '2023-10-31 18:20:53', 'false', 'false'),
 (464, 4, 0, 0.00, 0.00, '0', '0', 'zRfoBfSHBKSdYf2', '0', 0.00, NULL, '2023-11-01 05:27:56', 'false', 'true'),
 (465, 4, 0, 0.00, 0.00, '0,1,3,4', '0', 'ws2I8CnPylL6c', '0', 0.00, NULL, '2023-11-01 05:29:28', 'false', 'false'),
 (466, 4, 3, 0.00, 0.00, '5,0,4,3,4,0,9,8,7,2,8,2,11,5,9', '', '', '0', 0.00, NULL, '2023-11-01 05:29:59', 'false', 'false'),
@@ -2576,7 +2616,13 @@ INSERT INTO `user_play` (`id`, `member_id`, `game_id`, `bet`, `win`, `tiles`, `w
 (474, 4, 3, 0.00, 0.00, '3,0,5,2,9,5,2,4,5,0,4,1,11,0,5', '', '', '0', 0.00, NULL, '2023-11-01 05:30:00', 'false', 'false'),
 (475, 4, 3, 0.00, 0.00, '5,8,7,12,1,2,2,1,6,6,2,5,2,7,5', '', '', '0', 0.00, NULL, '2023-11-01 05:30:00', 'false', 'false'),
 (476, 4, 1, 0.00, 0.00, '6,2,5,8,3,5,6,5,10,5,9,5,4,5,12', '', '', '0', 0.00, NULL, '2023-11-01 05:30:30', 'false', 'false'),
-(477, 4, 1, 0.00, 0.00, '4,3,10,5,9,0,2,12,5,2,3,1,8,10,4', '', '', '0', 0.00, NULL, '2023-11-01 05:30:34', 'false', 'false');
+(477, 4, 1, 0.00, 0.00, '4,3,10,5,9,0,2,12,5,2,3,1,8,10,4', '', '', '0', 0.00, NULL, '2023-11-01 05:30:34', 'false', 'false'),
+(478, 2, 6, 5.00, 0.00, '2', '3,1,0', '4UFP50Gj35qH46I', '3', 1092.46, NULL, '2023-11-01 10:06:56', 'false', 'false'),
+(479, 2, 6, 10.00, 0.00, '3', '1,2,0', 'FZDBwUo1izPjMxt', '3', 972.46, NULL, '2023-11-01 10:08:35', 'false', 'false'),
+(480, 2, 0, 5.00, 0.00, '0,1,2,3,4', '1', '5sO3PRQ9NuYNZ', '0', 1087.46, NULL, '2023-11-01 10:10:32', 'false', 'false'),
+(481, 2, 0, 5.00, 0.00, '3,4', '3', '6WbpqMGo3aOwb', '0', 1082.46, NULL, '2023-11-01 10:10:51', 'false', 'false'),
+(482, 2, 0, 0.00, 0.00, '0,1,2,3,4', '0', 'dSk4DMk3NJmQy', '0', 0.00, NULL, '2023-11-01 10:11:20', 'false', 'false'),
+(483, 2, 6, 10.00, 0.00, '0', '0', 'uB8Y8ZH9akrzgzN', '0', 972.46, NULL, '2023-11-01 10:24:07', 'false', 'true');
 
 -- --------------------------------------------------------
 
@@ -2635,8 +2681,21 @@ INSERT INTO `withdraw` (`id`, `agent_id`, `bill_number`, `numberbill`, `quantity
 (26, 2, 'T2023110100012', '12', 200, 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:15:21', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'fdfdfdfd'),
 (27, 2, 'T2023110100013', '13', 1108, 'victest', '0123456789', '0954789782', '2023-11-01', '04:15:53', '3', 'failed', 'Y', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'hfghfghf'),
 (28, 2, 'T2023110100014', '14', 200, 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:15:55', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'gfdgdd'),
-(29, 2, 'T2023110100015', '15', 200, 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:16:36', '3', 'in_progress', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'รอการอนุมัตื'),
-(30, 2, 'T2023110100016', '16', 1108, 'victest', '0123456789', '0954789782', '2023-11-01', '04:16:41', '3', 'in_progress', 'Y', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'รอการอนุมัตื');
+(29, 2, 'T2023110100015', '15', 200, 'นาย พีรวัส ขวัญแก้ว', '18396488647', '0990825942', '2023-11-01', '04:16:36', '3', 'success', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'ข้อมูลถูกต้อง'),
+(30, 2, 'T2023110100016', '16', 1108, 'victest', '0123456789', '0954789782', '2023-11-01', '04:16:41', '3', 'failed', 'Y', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'der'),
+(31, 2, 'T2023110100017', '17', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:02:01', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'test'),
+(32, 2, 'T2023110100018', '18', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:03:47', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'dd'),
+(33, 2, 'T2023110100019', '19', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:13:16', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', '11'),
+(34, 2, 'T2023110100020', '20', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:14:00', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'ddd'),
+(35, 2, 'T2023110100021', '21', 101, 'victest', '0123456789', '0954789782', '2023-11-01', '10:15:08', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', '101'),
+(36, 2, 'T2023110100022', '22', 102, 'victest', '0123456789', '0954789782', '2023-11-01', '10:15:54', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', '1010'),
+(37, 2, 'T2023110100023', '23', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:16:37', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'GG'),
+(38, 2, 'T2023110100024', '24', 103, 'victest', '0123456789', '0954789782', '2023-11-01', '10:17:47', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', '103'),
+(39, 2, 'T2023110100025', '25', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:20:07', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'dfdf'),
+(40, 2, 'T2023110100026', '26', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:20:55', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'ccc'),
+(41, 2, 'T2023110100027', '27', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:25:47', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'dfdfdf'),
+(42, 2, 'T2023110100028', '28', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:27:09', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'fff'),
+(43, 2, 'T2023110100029', '29', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:28:00', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'fdfdf');
 
 -- --------------------------------------------------------
 
@@ -2928,7 +2987,7 @@ ALTER TABLE `game`
 -- AUTO_INCREMENT for table `gamecamptotal`
 --
 ALTER TABLE `gamecamptotal`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `gameweb`
@@ -2970,13 +3029,13 @@ ALTER TABLE `logeditagent`
 -- AUTO_INCREMENT for table `logfinancerepost`
 --
 ALTER TABLE `logfinancerepost`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `logfinanceuser`
 --
 ALTER TABLE `logfinanceuser`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `loggame`
@@ -3006,7 +3065,7 @@ ALTER TABLE `percentgame`
 -- AUTO_INCREMENT for table `repostgame`
 --
 ALTER TABLE `repostgame`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=740;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=762;
 
 --
 -- AUTO_INCREMENT for table `subagent`
@@ -3018,31 +3077,31 @@ ALTER TABLE `subagent`
 -- AUTO_INCREMENT for table `totalamountdaily`
 --
 ALTER TABLE `totalamountdaily`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `totalturnoverrepost`
 --
 ALTER TABLE `totalturnoverrepost`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `turnoverrepost`
 --
 ALTER TABLE `turnoverrepost`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `user_play`
 --
 ALTER TABLE `user_play`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=478;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=484;
 
 --
 -- AUTO_INCREMENT for table `withdraw`
 --
 ALTER TABLE `withdraw`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `withdrawalaccount`

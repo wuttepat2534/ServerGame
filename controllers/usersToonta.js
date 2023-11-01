@@ -686,7 +686,7 @@ exports.WinhdrawUser = (req, res) => {
                                     let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
                                         balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value 
                                     ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${resultUser[0].accountNumber}','${phonenumber}','${'ถอน'}','${quantity}','${0}','${resultUser[0].credit}'
-                                    ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${'ยังไม่เรียบร้อย'}','${formattedDate},'${formattedTime}','${resultUser[0].bank}','${resultBank[0].images}'
+                                    ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${'ยังไม่เรียบร้อย'}','${formattedDate}','${formattedTime}','${resultUser[0].bank}','${resultBank[0].images}'
                                     ,'${resultUser[0].accountName}','${resultUser[0].accountNumber}')`;
 
                                     connection.query(sql_before, (error, result) => {

@@ -505,7 +505,7 @@ INSERT INTO `gameweb` (`id`, `imglogo`, `password_img`, `namegame`, `active`, `p
 (26, 'https://ninjaslot.co.in/wp-content/uploads/2022/11/imgninja.png', 'NINJA', 'Ninja slot', 'Y', 90.00),
 (27, 'https://i1.sndcdn.com/avatars-5zP0dUayEzDDtX3G-zTczhA-t500x500.jpg', '918KISS', '918 Kiss', 'N', 90.00),
 (28, 'https://cryptostec.com/wp-content/uploads/2022/05/pragmatic-play.jpeg', 'PRAGMATIC_SLOT', 'Pragmatic Play Slot', 'N', 90.00),
-(29, NULL, 'DOGZILLA', 'DOGZILLA', 'Y', 99.00);
+(29, NULL, 'DOGZILLA', 'DOGZILLA', 'Y', 100.00);
 
 -- --------------------------------------------------------
 

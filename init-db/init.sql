@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Nov 01, 2023 at 10:37 AM
+-- Generation Time: Nov 02, 2023 at 02:00 PM
 -- Server version: 8.0.34
 -- PHP Version: 8.2.8
 
@@ -131,12 +131,12 @@ CREATE TABLE `allgame` (
 --
 
 INSERT INTO `allgame` (`id`, `namegame`, `img`, `linkgame`) VALUES
-(1, 'Go Gold Planet', 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/size_tall/size_square/icon_3.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_GoGoldPlanet/index.html'),
-(2, 'Lucky Bunny Gold', 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/size_tall/size_square/icon_2.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_LuckyBunnyGold/index.html'),
-(3, 'CowBoys VS Aliens', 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/size_tall/size_square/icon_1.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_CowboyVSAlien/index.html'),
-(4, 'Buunty Balloon', 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/size_tall/size_square/icon_5.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_BountyBalloon/index.html'),
-(6, 'RoBo Farm', 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/size_tall/size_square/icon_4.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_RoboFarm/index.html'),
-(7, 'Tower Rush', 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/size_tall/size_square/icon_6.png', 'https://testconstruct3games.s3.ap-southeast-1.amazonaws.com/Test_TowerRush/index.html');
+(1, 'Go Gold Planet', 'https://dogzilla.live/images/icon_3', 'https://gogoldplanet.toonta.com'),
+(2, 'Lucky Bunny Gold', 'https://dogzilla.live/images/icon_2', 'https://luckybunnygold.toonta.com'),
+(3, 'CowBoys VS Aliens', 'https://dogzilla.live/images/icon_1', 'https://cowboyvsalien.toonta.com'),
+(4, 'Buunty Balloon', 'https://dogzilla.live/images/icon_5', 'https://bountyballoon.toonta.com'),
+(6, 'RoBo Farm', 'https://dogzilla.live/images/icon_4', 'https://robofarm.toonta.com'),
+(7, 'Tower Rush', 'https://dogzilla.live/images/icon_6', 'https://towerrush.toonta.com');
 
 -- --------------------------------------------------------
 
@@ -455,7 +455,8 @@ INSERT INTO `gamecamptotal` (`id`, `namegamecamp`, `grossComm`, `turnover`, `win
 (31, 'SLOTXO', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 3, '2023-10-28'),
 (32, 'DOGZILLA', 0.00, 118.50, 164.83, -46.33, 0.00, 211.16, -46.33, 0.00, -45.88, -46.33, 0.00, -0.46, 23, '2023-10-31'),
 (33, 'DOGZILLA', 0.00, 10.00, 0.00, 10.00, 0.00, -10.00, 10.00, 0.00, 9.90, 10.00, 0.00, 0.10, 4, '2023-11-01'),
-(34, 'PGSOFT2', 0.00, 163.00, 54.60, 108.40, 0.00, -53.80, 108.40, 0.00, 97.56, 108.40, 0.00, 10.84, 20, '2023-11-01');
+(34, 'PGSOFT2', 0.00, 163.00, 54.60, 108.40, 0.00, -53.80, 108.40, 0.00, 97.56, 108.40, 0.00, 10.84, 20, '2023-11-01'),
+(35, 'DOGZILLA', 0.00, 270.00, 261.53, 8.47, 0.00, 253.06, 8.47, 0.00, 8.47, 8.47, 0.00, 0.00, 27, '2023-11-02');
 
 -- --------------------------------------------------------
 
@@ -728,7 +729,21 @@ INSERT INTO `game_feespin` (`member_id`, `game_id`, `game_feespin`) VALUES
 (4, 3, 'false'),
 (4, 3, 'false'),
 (4, 1, 'false'),
-(4, 1, 'false');
+(4, 1, 'false'),
+(5, 1, 'false'),
+(5, 1, 'false'),
+(5, 1, 'false'),
+(5, 1, 'false'),
+(5, 1, 'false'),
+(5, 1, 'false'),
+(5, 1, 'false'),
+(5, 1, 'false'),
+(5, 1, 'false'),
+(5, 1, 'false'),
+(5, 1, 'false'),
+(5, 1, 'false'),
+(5, 1, 'false'),
+(5, 1, 'false');
 
 -- --------------------------------------------------------
 
@@ -953,7 +968,11 @@ INSERT INTO `logfinanceuser` (`id`, `bill_number`, `numberbill`, `idUser`, `agen
 (52, 'T2023110100026', 26, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:20:55', 100, 0, 1082.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
 (53, 'T2023110100027', 27, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:25:47', 100, 0, 1072.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
 (54, 'T2023110100028', 28, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:27:09', 100, 0, 1072.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
-(55, 'T2023110100029', 29, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:28:00', 100, 0, 1072.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent');
+(55, 'T2023110100029', 29, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-01', '10:28:00', 100, 0, 1072.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(56, 'T2023-11-0200001', 1, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-02', '01:27:11', 200, 0, 14200.91, 200.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '8852932451', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(57, 'T2023-11-0200002', 2, 2, 2, 'ถอน', 'victest', '0123456789', '0954789782', '2023-11-02', '01:27:47', 100, 0, 1072.46, 100.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'victest', '0123456789', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(58, 'T2023-11-0200003', 3, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-02', '10:32:36', 200, 0, 14200.91, 200.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '8852932451', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent'),
+(59, 'T2023-11-0200004', 4, 5, 2, 'ถอน', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-02', '10:41:52', 300, 0, 14200.91, 300.00, 'ยังไม่เรียบร้อย', 'ธนาคารไทยพาณิชย์', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'นาย พีรวัส ขวัญแก้ว', '8852932451', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent', 'เพิ่มจากเว็บAgent');
 
 -- --------------------------------------------------------
 
@@ -1059,13 +1078,13 @@ CREATE TABLE `member` (
 
 INSERT INTO `member` (`id`, `agent_id`, `username_agent`, `member_code`, `name`, `credit`, `bet_latest`, `username`, `password`, `status`, `status_delete`, `created_at`, `created_attime`, `updated_at`, `ip_address`, `browserlogin`, `customerGroup`, `userrank`, `lineid`, `note`, `currency`, `bank`, `accountName`, `accountNumber`, `phonenumber`, `lastName`, `recharge_times`, `bonususer`, `deposit`, `withdraw_member`, `latest_withdrawal`, `groupmember`, `turnover`, `total_top_up_amount`, `promotionuser`, `passwordpromotion`, `turnover_playuser`, `tokenplaygame`) VALUES
 (1, 2, 'agent01', '2', 'kit', 0.00, 0.00, '0879914004', '8a6f2805b4515ac12058e79e66539be9', 'Y', 'N', '2023-10-19', '2023-10-19 17:46:37', '2023-10-19 17:46:37', '172.22.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารกสิกรไทย', 'kit', '0102294078', '0879914004', 'kit', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 0.00, NULL),
-(2, 2, 'agent01', '2', 'victest', 1072.46, 10.00, '0954789782', '52c69e3a57331081823331c4e69d3f2e', 'Y', 'N', '2023-10-19', '2023-10-19 18:40:31', '2023-10-19 18:40:31', '172.29.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'victest', '0123456789', '0954789782', 'victest', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 135.50, '7793c673-3d40-5d67-adb6-93c6a360ca39'),
+(2, 2, 'agent01', '2', 'victest', 1072.46, 10.00, '0954789782', '52c69e3a57331081823331c4e69d3f2e', 'Y', 'N', '2023-10-19', '2023-10-19 18:40:31', '2023-10-19 18:40:31', '192.168.160.5', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'victest', '0123456789', '0954789782', 'victest', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 135.50, '7793c673-3d40-5d67-adb6-93c6a360ca39'),
 (3, 2, 'agent01', '2', 'ปฏิภาณ อุ่นในธรรม', 0.00, 0.00, '0925711362', '19ede66f218015fd9df85ac886488926', 'Y', 'N', '2023-10-20', '2023-10-20 10:50:40', '2023-10-20 10:50:40', '192.168.224.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารกสิกรไทย', 'ปฏิภาณ อุ่นในธรรม', '7442905791', '0925711362', 'ปฏิภาณ อุ่นในธรรม', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 0.00, NULL),
 (4, 2, 'agent01', '2', 'toon', 0.00, 0.00, '0835366936', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'N', '2023-10-23', '2023-10-23 03:45:26', '2023-10-23 03:45:26', '172.25.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'toon', '1234567890', '0835366936', 'toon', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 0.00, NULL),
-(5, 2, 'agent01', '2', 'นาย พีรวัส ขวัญแก้ว', 14200.91, 9.00, '0990825942', '1c8a0fb0f77321b2fea4124168f33eef', 'Y', 'N', '2023-10-23', '2023-10-23 08:34:56', '2023-10-23 08:34:56', '172.25.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', 'นาย พีรวัส ขวัญแก้ว', 5, 0, 0.00, 4500.00, 200.00, 'NewMember', 0.00, 35.00, NULL, NULL, 890.50, '7fc2bf2a-b455-58d5-a9a5-111a10560ce0'),
-(6, 2, 'agent01', '2', 'นิธิธร', 10375.10, 10.00, '0951789155', 'cf8c105ec5b1554187508d61aa4a325d', 'Y', 'N', '2023-10-25', '2023-10-25 10:14:27', '2023-10-25 10:14:27', '172.18.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารกสิกรไทย', 'นิธิธร', '0373729485', '0951789155', 'นิธิธร', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 638.00, 'eeee7226-70bb-5042-9a74-0b244f6bfb90'),
+(5, 2, 'agent01', '2', 'นาย พีรวัส ขวัญแก้ว', 14228.44, 10.00, '0990825942', '1c8a0fb0f77321b2fea4124168f33eef', 'Y', 'N', '2023-10-23', '2023-10-23 08:34:56', '2023-10-23 08:34:56', '192.168.208.5', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', 'นาย พีรวัส ขวัญแก้ว', 5, 0, 0.00, 4500.00, 0.00, 'NewMember', 0.00, 35.00, NULL, NULL, 1060.50, '916ca7df-2f2d-5855-9181-93b9944647e6'),
+(6, 2, 'agent01', '2', 'นิธิธร', 10319.10, 10.00, '0951789155', 'cf8c105ec5b1554187508d61aa4a325d', 'Y', 'N', '2023-10-25', '2023-10-25 10:14:27', '2023-10-25 10:14:27', '192.168.160.5', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารกสิกรไทย', 'นิธิธร', '0373729485', '0951789155', 'นิธิธร', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 738.00, 'eeee7226-70bb-5042-9a74-0b244f6bfb90'),
 (7, 2, 'agent01', '2', 'แบม', 1002.85, 4.50, '0822936915', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'N', '2023-10-26', '2023-10-26 18:35:16', '2023-10-26 18:35:16', '192.168.208.5', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารไทยพาณิชย์', 'แบม', '0123456789', '0822936915', 'แบม', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 134.00, NULL),
-(8, 2, 'agent01', '2', 'greenteaja', 1000.00, 0.00, '0819372939', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'N', '2023-10-27', '2023-10-27 03:58:17', '2023-10-27 03:58:17', '172.18.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารออมสิน', 'greenteaja', '1234567890', '0819372939', 'greenteaja', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 0.00, NULL),
+(8, 2, 'agent01', '2', 'greenteaja', 1000.00, 0.00, '0819372939', 'e10adc3949ba59abbe56e057f20f883e', 'Y', 'N', '2023-10-27', '2023-10-27 03:58:17', '2023-10-27 03:58:17', 'null', 'null', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารออมสิน', 'greenteaja', '1234567890', '0819372939', 'greenteaja', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 0.00, NULL),
 (9, 2, 'agent01', '2', 'จิราภรณ์ แหขุนทด', 966.70, 5.00, '0840811863', 'b2e7106eafbafdcd5b9a29bb6ff0600d', 'Y', 'N', '2023-10-28', '2023-10-28 06:50:39', '2023-10-28 06:50:39', '172.18.0.4', 'Google Chrome', NULL, 'NewMember', '', 'สมัครจากหน้าเว็บไซต์', 'บาท', 'ธนาคารกสิกรไทย', 'จิราภรณ์ แหขุนทด', '0568925165', '0840811863', 'จิราภรณ์ แหขุนทด', 0, 0, 0.00, 0.00, 0.00, 'NewMember', 0.00, 0.00, NULL, NULL, 77.00, '323cc805-896d-5520-a520-8f89f77b75ed');
 
 -- --------------------------------------------------------
@@ -1914,7 +1933,34 @@ INSERT INTO `repostgame` (`id`, `iduser`, `username`, `gameid`, `bet`, `win`, `b
 (758, 5, '0990825942', 'PGSOFT2', 9.00, 0.00, 14200.91, 'Google Chrome', 'PC', 'NO', '2023-11-01', '09:27:01'),
 (759, 2, '0954789782', 'PGSOFT2', 1.00, 0.00, 1097.46, 'Google Chrome', 'PC', 'NO', '2023-11-01', '10:06:51'),
 (760, 2, '0954789782', 'DOGZILLA', 5.00, 0.00, 1087.46, 'Google Chrome', 'PC', 'NO', '2023-11-01', '10:10:45'),
-(761, 2, '0954789782', 'DOGZILLA', 5.00, 0.00, 1082.46, 'Google Chrome', 'PC', 'NO', '2023-11-01', '10:11:07');
+(761, 2, '0954789782', 'DOGZILLA', 5.00, 0.00, 1082.46, 'Google Chrome', 'PC', 'NO', '2023-11-01', '10:11:07'),
+(762, 5, '0990825942', 'DOGZILLA', 10.00, 16.20, 14170.91, 'Google Chrome', 'PC', 'NO', '2023-11-02', '11:37:16'),
+(763, 6, '0951789155', 'DOGZILLA', 10.00, 0.00, 10365.10, 'Google Chrome', 'PC', 'NO', '2023-11-02', '13:45:32'),
+(764, 6, '0951789155', 'DOGZILLA', 10.00, 0.00, 10355.10, 'Google Chrome', 'PC', 'NO', '2023-11-02', '13:46:11'),
+(765, 6, '0951789155', 'DOGZILLA', 10.00, 0.00, 10345.10, 'Google Chrome', 'PC', 'NO', '2023-11-02', '14:24:05'),
+(766, 6, '0951789155', 'DOGZILLA', 10.00, 44.00, 10335.10, 'Google Chrome', 'PC', 'NO', '2023-11-02', '14:24:56'),
+(767, 5, '0990825942', 'DOGZILLA', 10.00, 0.00, 14177.11, 'Google Chrome', 'PC', 'NO', '2023-11-02', '15:09:59'),
+(768, 5, '0990825942', 'DOGZILLA', 10.00, 0.00, 14167.11, 'Google Chrome', 'PC', 'NO', '2023-11-02', '15:15:31'),
+(769, 6, '0951789155', 'DOGZILLA', 10.00, 0.00, 10369.10, 'Google Chrome', 'PC', 'NO', '2023-11-02', '18:43:44'),
+(770, 6, '0951789155', 'DOGZILLA', 10.00, 0.00, 10359.10, 'Google Chrome', 'PC', 'NO', '2023-11-02', '18:47:57'),
+(771, 6, '0951789155', 'DOGZILLA', 10.00, 0.00, 10349.10, 'Google Chrome', 'PC', 'NO', '2023-11-02', '18:55:00'),
+(772, 6, '0951789155', 'DOGZILLA', 10.00, 0.00, 10339.10, 'Google Chrome', 'PC', 'NO', '2023-11-02', '19:00:29'),
+(773, 6, '0951789155', 'DOGZILLA', 10.00, 0.00, 10329.10, 'Google Chrome', 'PC', 'NO', '2023-11-02', '19:07:49'),
+(774, 6, '0951789155', 'DOGZILLA', 10.00, 0.00, 10319.10, 'Google Chrome', 'PC', 'NO', '2023-11-02', '19:08:12'),
+(775, 5, '0990825942', 'DOGZILLA', 10.00, 66.67, 14223.78, 'Google Chrome', 'PC', 'NO', '2023-11-02', '20:19:13'),
+(776, 5, '0990825942', 'DOGZILLA', 10.00, 38.67, 14252.45, 'Google Chrome', 'PC', 'NO', '2023-11-02', '20:19:21'),
+(777, 5, '0990825942', 'DOGZILLA', 10.00, 25.00, 14267.45, 'Google Chrome', 'PC', 'NO', '2023-11-02', '20:19:28'),
+(778, 5, '0990825942', 'DOGZILLA', 10.00, 0.00, 14257.45, 'Google Chrome', 'PC', 'NO', '2023-11-02', '20:19:31'),
+(779, 5, '0990825942', 'DOGZILLA', 10.00, 9.33, 14256.78, 'Google Chrome', 'PC', 'NO', '2023-11-02', '20:19:31'),
+(780, 5, '0990825942', 'DOGZILLA', 10.00, 18.00, 14264.78, 'Google Chrome', 'PC', 'NO', '2023-11-02', '20:19:34'),
+(781, 5, '0990825942', 'DOGZILLA', 10.00, 0.00, 14254.78, 'Google Chrome', 'PC', 'NO', '2023-11-02', '20:19:37'),
+(782, 5, '0990825942', 'DOGZILLA', 10.00, 5.00, 14249.78, 'Google Chrome', 'PC', 'NO', '2023-11-02', '20:19:38'),
+(783, 5, '0990825942', 'DOGZILLA', 10.00, 5.00, 14244.78, 'Google Chrome', 'PC', 'NO', '2023-11-02', '20:19:41'),
+(784, 5, '0990825942', 'DOGZILLA', 10.00, 5.00, 14239.78, 'Google Chrome', 'PC', 'NO', '2023-11-02', '20:19:44'),
+(785, 5, '0990825942', 'DOGZILLA', 10.00, 0.00, 14229.78, 'Google Chrome', 'PC', 'NO', '2023-11-02', '20:19:47'),
+(786, 5, '0990825942', 'DOGZILLA', 10.00, 25.33, 14245.11, 'Google Chrome', 'PC', 'NO', '2023-11-02', '20:19:48'),
+(787, 5, '0990825942', 'DOGZILLA', 10.00, 3.33, 14238.44, 'Google Chrome', 'PC', 'NO', '2023-11-02', '20:19:51'),
+(788, 5, '0990825942', 'DOGZILLA', 10.00, 0.00, 14228.44, 'Google Chrome', 'PC', 'NO', '2023-11-02', '20:19:54');
 
 -- --------------------------------------------------------
 
@@ -2040,7 +2086,9 @@ INSERT INTO `totalturnoverrepost` (`id`, `usernameuser`, `turnover`, `win`, `los
 (16, '0951789155', 90.00, 136.00, -46.00, 9, -46.00, 0.00, -45.54, -0.46, '2023-10-31'),
 (17, '0835366936', 0.00, 0.00, 0.00, 2, 0.00, 0.00, 0.00, 0.00, '2023-11-01'),
 (18, '0990825942', 162.00, 54.60, 107.40, 19, 107.40, 0.00, 96.66, 10.74, '2023-11-01'),
-(19, '0954789782', 11.00, 0.00, 11.00, 3, 11.00, 0.00, 10.80, 0.20, '2023-11-01');
+(19, '0954789782', 11.00, 0.00, 11.00, 3, 11.00, 0.00, 10.80, 0.20, '2023-11-01'),
+(20, '0990825942', 170.00, 217.53, -47.53, 17, -47.53, 0.00, -47.53, 0.00, '2023-11-02'),
+(21, '0951789155', 100.00, 44.00, 56.00, 10, 56.00, 0.00, 56.00, 0.00, '2023-11-02');
 
 -- --------------------------------------------------------
 
@@ -2109,7 +2157,9 @@ INSERT INTO `turnoverrepost` (`id`, `usernameuser`, `gamecamp`, `turnover`, `win
 (43, '0835366936', 'DOGZILLA', 0.00, 0.00, 0.00, '2023-11-01', 2),
 (44, '0990825942', 'PGSOFT2', 162.00, 54.60, 107.40, '2023-11-01', 19),
 (45, '0954789782', 'PGSOFT2', 1.00, 0.00, 1.00, '2023-11-01', 1),
-(46, '0954789782', 'DOGZILLA', 10.00, 0.00, 10.00, '2023-11-01', 2);
+(46, '0954789782', 'DOGZILLA', 10.00, 0.00, 10.00, '2023-11-01', 2),
+(47, '0990825942', 'DOGZILLA', 170.00, 217.53, -47.53, '2023-11-02', 17),
+(48, '0951789155', 'DOGZILLA', 100.00, 44.00, 56.00, '2023-11-02', 10);
 
 -- --------------------------------------------------------
 
@@ -2506,8 +2556,8 @@ INSERT INTO `user_play` (`id`, `member_id`, `game_id`, `bet`, `win`, `tiles`, `w
 (365, 2, 6, 10.00, 0.00, '0', '1,2', 'tI3RlAXpeGOc7lI', '4', 1200.13, NULL, '2023-10-27 12:38:16', 'false', 'false'),
 (366, 2, 6, 10.00, 0.00, '1', '3,2,0', 'ySIUZrc65bYDq7c', '1', 1190.13, NULL, '2023-10-27 12:39:09', 'false', 'false'),
 (367, 5, 6, 10.00, 0.00, '1', '3,0,2', 'xq9naKKywZhDmgD', '3', 17779.91, NULL, '2023-10-27 15:50:22', 'false', 'false'),
-(368, 5, 6, 10.00, 0.00, '0', '0', 'QVoirEJ19T1xRrT', '0', 17789.91, NULL, '2023-10-27 15:55:59', 'false', 'true'),
-(369, 5, 6, 10.00, 0.00, '0', '0', 'l9kDlbrWaSEpznN', '0', 17779.91, NULL, '2023-10-27 15:57:29', 'false', 'true'),
+(368, 5, 6, 10.00, 0.00, '2', '3,1,0', 'QVoirEJ19T1xRrT', '1', 14190.91, NULL, '2023-10-27 15:55:59', 'false', 'false'),
+(369, 5, 6, 10.00, 16.20, '1', '1,0,2', 'l9kDlbrWaSEpznN', '2', 14170.91, NULL, '2023-10-27 15:57:29', 'false', 'false'),
 (370, 2, 6, 10.00, 0.00, '0', '2,3,1', '5P9EN2gpn6Mdefq', '1', 1180.13, NULL, '2023-10-27 15:58:36', 'false', 'false'),
 (371, 2, 6, 10.00, 0.00, '0', '3,1,2', 'o1xgY5ZePZyjDYN', '1', 1170.13, NULL, '2023-10-27 15:58:50', 'false', 'false'),
 (372, 2, 6, 10.00, 0.00, '0', '3,2', 'tfUDykaIe2CL6xj', '5', 1160.13, NULL, '2023-10-27 15:59:21', 'false', 'false'),
@@ -2598,7 +2648,7 @@ INSERT INTO `user_play` (`id`, `member_id`, `game_id`, `bet`, `win`, `tiles`, `w
 (456, 6, 6, 10.00, 0.00, '3', '2,0,1', 'MNJU28SQxhSiwBl', '1', 10373.30, NULL, '2023-10-31 10:24:14', 'false', 'false'),
 (457, 6, 6, 10.00, 0.00, '2', '1,0,3', 'aKgOYAP8kdGDmGv', '2', 10363.30, NULL, '2023-10-31 10:41:29', 'false', 'false'),
 (458, 6, 6, 10.00, 21.80, '3', '3,1,0', 'akpxdGA9BrY7OP3', '3', 10353.30, NULL, '2023-10-31 10:41:50', 'false', 'false'),
-(459, 6, 6, 10.00, 0.00, '0', '0', 'zMIeINgDnLuv3Dx', '0', 10375.10, NULL, '2023-10-31 10:46:48', 'false', 'true'),
+(459, 6, 6, 10.00, 0.00, '1', '0,2,3', 'zMIeINgDnLuv3Dx', '2', 10365.10, NULL, '2023-10-31 10:46:48', 'false', 'false'),
 (460, 2, 6, 10.00, 0.00, '1', '2,0,3', 'xfqtsSAg5pP3iji', '2', 1128.46, NULL, '2023-10-31 11:06:28', 'false', 'false'),
 (461, 2, 6, 10.00, 0.00, '2', '0,1,3', 'xy8QvlAFw80tZvk', '2', 1118.46, NULL, '2023-10-31 11:06:51', 'false', 'false'),
 (462, 2, 6, 10.00, 0.00, '0', '3,2,1', 'qnfhnXtRTMeglsx', '3', 1108.46, NULL, '2023-10-31 17:50:47', 'false', 'false'),
@@ -2622,7 +2672,36 @@ INSERT INTO `user_play` (`id`, `member_id`, `game_id`, `bet`, `win`, `tiles`, `w
 (480, 2, 0, 5.00, 0.00, '0,1,2,3,4', '1', '5sO3PRQ9NuYNZ', '0', 1087.46, NULL, '2023-11-01 10:10:32', 'false', 'false'),
 (481, 2, 0, 5.00, 0.00, '3,4', '3', '6WbpqMGo3aOwb', '0', 1082.46, NULL, '2023-11-01 10:10:51', 'false', 'false'),
 (482, 2, 0, 0.00, 0.00, '0,1,2,3,4', '0', 'dSk4DMk3NJmQy', '0', 0.00, NULL, '2023-11-01 10:11:20', 'false', 'false'),
-(483, 2, 6, 10.00, 0.00, '0', '0', 'uB8Y8ZH9akrzgzN', '0', 972.46, NULL, '2023-11-01 10:24:07', 'false', 'true');
+(483, 2, 6, 10.00, 0.00, '0', '0', 'uB8Y8ZH9akrzgzN', '0', 972.46, NULL, '2023-11-01 10:24:07', 'false', 'true'),
+(484, 5, 6, 10.00, 0.00, '3', '0,2,1', 'Mf27QZoCDAnMCT4', '1', 14180.91, NULL, '2023-11-02 03:43:49', 'false', 'false'),
+(485, 5, 6, 10.00, 0.00, '2', '1,3,0', 'NcKk7l22Rp6h0GG', '1', 14177.11, NULL, '2023-11-02 04:09:35', 'false', 'false'),
+(486, 5, 6, 10.00, 0.00, '0', '1,3,2', 'FCJV8yBrynsgg4M', '3', 14167.11, NULL, '2023-11-02 04:37:16', 'false', 'false'),
+(487, 6, 6, 10.00, 0.00, '2', '3,1,0', 'wnuVJLtapRPRXve', '1', 10355.10, NULL, '2023-11-02 06:45:32', 'false', 'false'),
+(488, 6, 6, 10.00, 0.00, '3', '1,2,0', 'zMWsgbenTjpgC6a', '1', 10345.10, NULL, '2023-11-02 06:46:11', 'false', 'false'),
+(489, 6, 6, 10.00, 44.00, '2', '0,2', 'TUEZKV8ddsSBUaz', '4', 10335.10, NULL, '2023-11-02 07:24:05', 'false', 'false'),
+(490, 6, 6, 10.00, 0.00, '3', '0,1', 'XrEOJyIQsvRZbD9', '4', 10369.10, NULL, '2023-11-02 07:24:56', 'false', 'false'),
+(491, 5, 6, 10.00, 0.00, '0', '0', 'VlMiYzPLWKfsleE', '0', 14177.11, NULL, '2023-11-02 08:09:59', 'false', 'true'),
+(492, 5, 6, 10.00, 0.00, '0', '0', 'VRafSD9HOnzxCoI', '0', 14167.11, NULL, '2023-11-02 08:15:31', 'false', 'true'),
+(493, 6, 6, 10.00, 0.00, '0', '2,3', 'qBaeMKfCGUWjJIP', '4', 10359.10, NULL, '2023-11-02 11:43:44', 'false', 'false'),
+(494, 6, 6, 10.00, 0.00, '2', '1,3', 'aspYGyPnOMyAAu2', '4', 10349.10, NULL, '2023-11-02 11:47:57', 'false', 'false'),
+(495, 6, 6, 10.00, 0.00, '1', '3,0', 'W0ISfr1Z4iOQJVB', '5', 10339.10, NULL, '2023-11-02 11:55:00', 'false', 'false'),
+(496, 6, 6, 10.00, 0.00, '3', '0,2', 'fYUnfL9hFmZxtVE', '4', 10329.10, NULL, '2023-11-02 12:00:29', 'false', 'false'),
+(497, 6, 6, 10.00, 0.00, '2', '1,3,0', 'ECHnQpnB0tXw5r0', '2', 10319.10, NULL, '2023-11-02 12:07:49', 'false', 'false'),
+(498, 6, 6, 10.00, 0.00, '0', '0', 'ePdSoWrs1uZzHvf', '0', 10319.10, NULL, '2023-11-02 12:08:12', 'false', 'true'),
+(499, 5, 1, 10.00, 66.67, '3,10,0,8,4,0,12,8,2,11,0,6,10,5,8', '5,15,22', 'middle3,middle3,right4', '3', 14223.78, NULL, '2023-11-02 13:19:13', 'false', 'false'),
+(500, 5, 1, 10.00, 38.67, '5,1,9,5,11,6,3,10,5,4,5,9,0,10,5', '3,12,20,25', 'left4,middle3,right4,left3', '4', 14252.45, NULL, '2023-11-02 13:19:21', 'false', 'false'),
+(501, 5, 1, 10.00, 25.00, '0,1,5,9,10,5,9,4,8,3,9,0,8,0,9', '4', 'right3', '1', 14267.45, NULL, '2023-11-02 13:19:28', 'false', 'false'),
+(502, 5, 1, 10.00, 0.00, '0,9,5,8,4,3,6,5,3,7,1,8,0,9,4', '', '', '0', 14257.45, NULL, '2023-11-02 13:19:31', 'false', 'false'),
+(503, 5, 1, 10.00, 9.33, '0,5,3,12,5,8,11,3,1,10,7,2,2,5,3', '11,17', 'left3,right3', '2', 14256.78, NULL, '2023-11-02 13:19:32', 'false', 'false'),
+(504, 5, 1, 10.00, 18.00, '4,8,2,5,12,9,1,5,4,5,1,4,6,2,7', '5,15,22', 'middle3,middle3,middle3', '3', 14264.78, NULL, '2023-11-02 13:19:35', 'false', 'false'),
+(505, 5, 1, 10.00, 0.00, '4,3,5,2,6,9,5,0,9,9,4,6,1,4,7', '', '', '0', 14254.78, NULL, '2023-11-02 13:19:37', 'false', 'false'),
+(506, 5, 1, 10.00, 5.00, '6,8,4,8,3,5,5,4,9,4,2,1,9,5,11', '22', 'right3', '1', 14249.78, NULL, '2023-11-02 13:19:38', 'false', 'false'),
+(507, 5, 1, 10.00, 5.00, '0,10,4,0,6,5,4,8,1,5,4,0,5,11,6', '11', 'right3', '1', 14244.78, NULL, '2023-11-02 13:19:41', 'false', 'false'),
+(508, 5, 1, 10.00, 5.00, '5,7,4,4,5,2,1,4,7,3,7,10,6,8,5', '22', 'left3', '1', 14239.78, NULL, '2023-11-02 13:19:44', 'false', 'false'),
+(509, 5, 1, 10.00, 0.00, '5,12,4,0,10,5,2,7,3,2,1,5,5,8,3', '', '', '0', 14229.78, NULL, '2023-11-02 13:19:47', 'false', 'false'),
+(510, 5, 1, 10.00, 25.33, '0,12,1,12,5,8,5,3,8,1,5,10,7,3,5', '4,11,19', 'right4,middle3,middle3', '3', 14245.11, NULL, '2023-11-02 13:19:48', 'false', 'false'),
+(511, 5, 1, 10.00, 3.33, '5,12,4,10,5,11,10,2,0,2,8,1,6,11,7', '15', 'right3', '1', 14238.44, NULL, '2023-11-02 13:19:51', 'false', 'false'),
+(512, 5, 1, 10.00, 0.00, '6,2,5,2,4,5,1,7,0,8,1,11,9,4,10', '', '', '0', 14228.44, NULL, '2023-11-02 13:19:54', 'false', 'false');
 
 -- --------------------------------------------------------
 
@@ -2695,7 +2774,11 @@ INSERT INTO `withdraw` (`id`, `agent_id`, `bill_number`, `numberbill`, `quantity
 (40, 2, 'T2023110100026', '26', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:20:55', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'ccc'),
 (41, 2, 'T2023110100027', '27', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:25:47', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'dfdfdf'),
 (42, 2, 'T2023110100028', '28', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:27:09', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'fff'),
-(43, 2, 'T2023110100029', '29', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:28:00', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'fdfdf');
+(43, 2, 'T2023110100029', '29', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '10:28:00', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'fdfdf'),
+(44, 2, 'T2023-11-0200001', '1', 200, 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-01', '18:27:11', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'TestTest'),
+(45, 2, 'T2023-11-0200002', '2', 100, 'victest', '0123456789', '0954789782', '2023-11-01', '18:27:47', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'ss'),
+(46, 2, 'T2023-11-0200003', '3', 200, 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-02', '03:32:36', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'ทดสอบ'),
+(47, 2, 'T2023-11-0200004', '4', 300, 'นาย พีรวัส ขวัญแก้ว', '8852932451', '0990825942', '2023-11-02', '03:41:52', '3', 'failed', 'N', 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-scb.png', 'ทดสอบ');
 
 -- --------------------------------------------------------
 
@@ -2987,7 +3070,7 @@ ALTER TABLE `game`
 -- AUTO_INCREMENT for table `gamecamptotal`
 --
 ALTER TABLE `gamecamptotal`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `gameweb`
@@ -3035,7 +3118,7 @@ ALTER TABLE `logfinancerepost`
 -- AUTO_INCREMENT for table `logfinanceuser`
 --
 ALTER TABLE `logfinanceuser`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `loggame`
@@ -3065,7 +3148,7 @@ ALTER TABLE `percentgame`
 -- AUTO_INCREMENT for table `repostgame`
 --
 ALTER TABLE `repostgame`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=762;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=789;
 
 --
 -- AUTO_INCREMENT for table `subagent`
@@ -3083,25 +3166,25 @@ ALTER TABLE `totalamountdaily`
 -- AUTO_INCREMENT for table `totalturnoverrepost`
 --
 ALTER TABLE `totalturnoverrepost`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `turnoverrepost`
 --
 ALTER TABLE `turnoverrepost`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `user_play`
 --
 ALTER TABLE `user_play`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=484;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=513;
 
 --
 -- AUTO_INCREMENT for table `withdraw`
 --
 ALTER TABLE `withdraw`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `withdrawalaccount`

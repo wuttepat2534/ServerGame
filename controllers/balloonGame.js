@@ -400,7 +400,8 @@ exports.GameArcade = async (require, response) => {
                             });
                             response.end();
                         } else {
-                            let state_End = EndGame(passwordRound, data.win, data.winStreak, user_id, bet, data.isChooseFloor, game_id, data.postTurnover, userAgent)
+                            console.log('on')
+                            let state_End = EndGame(passwordRound, data.win, data.winStreak, user_id, bet, data.isChooseFloor, game_id, data.postTurnover, userAgent, userAgentt)
                                 .then(dataEnd => {
                                     response.json({
                                         isWin: data.isChooseFloor,
@@ -415,18 +416,38 @@ exports.GameArcade = async (require, response) => {
                                 });
                         }
                     } else {
-                        let state_reset = resetGame(user_id, game_id, bet, data.credit)
-                            .then(dataReset => {
+                        // let state_reset = resetGame(user_id, game_id, bet, data.credit)
+                        //     .then(dataReset => {
+                        //         response.json({
+                        //             passwordRound: dataReset.passwordRound,
+                        //             balance: data.credit,
+                        //             winStreak: data.winStreak,
+                        //             allWinFloorId: data.isWin.allWinFloorId,
+                        //             isWin: data.isChooseFloor,
+                        //         });
+                        //         response.end();
+                        //     })
+                        //     .catch(error => {
+                        //         console.error("Error:", error);
+                        //     });
+
+                        let state_End = EndGame(passwordRound, 0, data.winStreak, user_id, bet, data.isChooseFloor, game_id, data.postTurnover, userAgent, userAgentt)
+                            .then(dataEnd => {
+                                console.log(data.isWin.allWinFloorId);
                                 response.json({
-                                    passwordRound: dataReset.passwordRound,
+                                    // isWin: data.isChooseFloor,
+                                    // passwordRound: dataEnd.passwordRound,
+                                    // win: data.win,
+                                    // balance: dataEnd.credit,
+                                    // winStreak: data.winStreak,
+                                    // allWinFloorId: data.isWin.allWinFloorId,
+                                    passwordRound: dataEnd.passwordRound,
                                     balance: data.credit,
                                     winStreak: data.winStreak,
                                     allWinFloorId: data.isWin.allWinFloorId,
                                     isWin: data.isChooseFloor,
                                 });
-                                response.end();
-                            })
-                            .catch(error => {
+                            }).catch(error => {
                                 console.error("Error:", error);
                             });
                     }
@@ -439,7 +460,7 @@ exports.GameArcade = async (require, response) => {
             let sql_check = `SELECT * FROM user_play WHERE winstyle='${passwordRound}' AND game_feespin ='${true}'`;
             connection.query(sql_check, (error, results_check) => {
                 console.log(results_check[0].win);
-                let state_End = EndGame(passwordRound, results_check[0].win, results_check[0].winCount, user_id, bet, results_check[0].tiles, game_id, 0, userAgent)
+                let state_End = EndGame(passwordRound, results_check[0].win, results_check[0].winCount, user_id, bet, results_check[0].tiles, game_id, 0, userAgent, userAgentt)
                     .then(data => {
                         console.log(data, 'run');
                         response.json({
@@ -494,7 +515,7 @@ function State_Choose(userId, bet, chooseFloorId, paaswordRound, multipliers) {
                                                 WHERE winstyle='${paaswordRound}' AND game_feespin = '${true}'`;
                                                 connection.query(sql_update, (error, resultsGame) => {
                                                     const jsArray = {
-                                                        streak: 'WinGame',
+                                                        streak: dataChoose.streak,
                                                         isWin: dataRandom,
                                                         isChooseFloor: dataChoose.isWin,
                                                         win: dataChoose.win,
@@ -528,7 +549,7 @@ function State_Choose(userId, bet, chooseFloorId, paaswordRound, multipliers) {
                                                 //console.log(dataChoose.isWin);
                                                 //console.log(dataChoose, 'Random');
                                                 const jsArray = {
-                                                    streak: 'WinGame',
+                                                    streak: dataChoose.streak,
                                                     isWin: dataRandom,
                                                     isChooseFloor: dataChoose.isWin,
                                                     win: dataChoose.win,
@@ -619,6 +640,7 @@ function ChooseFloor(choose, winStreak, paaswordRound, gameBet, multipliers, all
                             isWin: isWin,
                             win: win,
                             winStreak: wine,
+                            streak: 'WinGame'
                         };
                         resolve(jsArray);
                     }
@@ -637,6 +659,7 @@ function ChooseFloor(choose, winStreak, paaswordRound, gameBet, multipliers, all
                         isWin: isWin,
                         win: 0,
                         winStreak: wineArr,
+                        streak: 'EndGame'
                     };
                     resolve(jsArray);
                 }
@@ -671,18 +694,19 @@ function UpdateLevelData(winStreak) {
     })
 }
 
-function EndGame(passwordRound, winGame, winStreak, user_id, bet, isWin, game_id, postTurnover, userAgent) {
+function EndGame(passwordRound, winGame, winStreak, user_id, bet, isWin, game_id, postTurnover, userAgent, userAgentt) {
     return new Promise(async (resolve, reject) => {
         const win = winGame;
-        //console.log(win, bet);
+
+        //console.log(bet, winGame)
         let spl = `SELECT * FROM member WHERE id ='${user_id}' AND status_delete='N'`;
         try {
             connection.query(spl, (error, results) => {
                 const post = {
-                    username: results[0].username, gameid: 'DOGZILLA', bet: bet, win: win, balance_credit: results[0].credit, userAgent: userAgent, platform: userAgent
+                    username: results[0].username, gameid: 'DOGZILLA', bet: bet, win: win, balance_credit: results[0].credit, userAgent: userAgent, platform: userAgentt
                 }
-                console.log(post);
-                
+                //console.log(post);
+
                 let repost = repostGame.uploadLogRepostGame(post)
                 let credit = results[0].credit + win;
 

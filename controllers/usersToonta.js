@@ -513,7 +513,7 @@ exports.financeUser = (req, res) => {
                                     if (error) {
                                         console.log(error)
                                     } else {
-                                           //console.log(typePromotion);
+                                        //console.log(typePromotion);
                                         if (typePromotion !== '0') {
                                             let postpromotionDeposit = promotiontoonta.promotionDeposit(quantity, resultUser[0], typePromotion, formattedNumber, totaltopup);
                                         } else {
@@ -2508,7 +2508,7 @@ exports.getRepostWebdaily = (require, response) => {
             topuserwit: topuserwit,
             topuserlose: topuserlose,
             topDeposit: topDeposit,
-            topWithdraw : topWithdraw,
+            topWithdraw: topWithdraw,
             roundplayvalueTotal: roundplayvalueTotal,
             valususerplayDay: valususerplayDay,
         });
@@ -2528,17 +2528,33 @@ exports.getRepostTurnover = (require, response) => {
 
     //console.log(searchPhones, pageSize, offset, date, endDate)
     if (searchPhones === '') {
-        let sql = `SELECT * FROM totalturnoverrepost WHERE day >='${date}' AND day <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
+        let sql = `
+        SELECT 
+          usernameuser, 
+          SUM(turnover) AS turnover, 
+          SUM(win) AS win, 
+          SUM(lose) AS lose, 
+          SUM(roundplay) AS roundplay, 
+          SUM(ag_winlose) AS ag_winlose, 
+          SUM(ag_comm) AS ag_comm, 
+          SUM(ag_total) AS ag_total, 
+          SUM(comny_total) AS comny_total
+        FROM totalturnoverrepost 
+        WHERE day >= '${date}' AND day <= '${endDate}' 
+        GROUP BY usernameuser 
+        LIMIT ${pageSize} OFFSET ${offset}
+      `;
         connection.query(sql, async (error, results) => {
             if (error) { console.log(error); }
             const totalCount = `SELECT COUNT(*) as count FROM totalturnoverrepost WHERE day >='${date}' AND day <= '${endDate}'`
             connection.query(totalCount, (error, res) => {
                 if (error) { console.log(error); }
                 else {
+                    console.log(results)
                     response.send({
                         data: results,
                         valusData: results.length,
-                        total: res[0].count
+                        total: results.length,
                     });
                     response.end();
                 }

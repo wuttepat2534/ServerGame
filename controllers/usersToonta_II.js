@@ -131,7 +131,7 @@ exports.ConfirmationWithdraw = async (req, res, next) => {
                     console.log(error)
                 } else {
                     if (statusWithdraw === 'failed') {
-                        let sql_Withdraw = `UPDATE logfinanceuser set status = 'ยังไม่เรียบร้อย' WHERE bill_number ='${bill_number}'`;
+                        let sql_Withdraw = `UPDATE logfinanceuser set status = 'ไม่สำเส็จ' WHERE bill_number ='${bill_number}'`;
                         connection.query(sql_Withdraw, (error, withdraw) => {
                             let sql = `UPDATE member set credit = '${convertedCredit + convertedLatest_withdrawal}', latest_withdrawal = '${0.00}',
                             withdraw_member = '${convertedWithdraw_member - convertedLatest_withdrawal}'  WHERE username ='${usernameUser}' AND agent_id ='${agent_id}'`;

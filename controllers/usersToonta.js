@@ -2550,7 +2550,7 @@ exports.getRepostTurnover = (require, response) => {
             connection.query(totalCount, (error, res) => {
                 if (error) { console.log(error); }
                 else {
-                    console.log(results)
+                   // console.log(results)
                     response.send({
                         data: results,
                         valusData: results.length,

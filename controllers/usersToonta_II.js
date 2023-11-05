@@ -114,6 +114,8 @@ exports.ConfirmationWithdraw = async (req, res, next) => {
     const statusWithdraw = req.body.statusWithdraw;
     const noteConfirmation = req.body.noteConfirmation;
     const usernameUser = req.body.username;
+    const approval_person = req.body.approval_person
+    const tpyeApproval_person = req.body.tpye_Approval_person
     const agent_id = req.body.agent_id;
     //statusWithdraw = success, failed
 
@@ -131,7 +133,8 @@ exports.ConfirmationWithdraw = async (req, res, next) => {
                     console.log(error)
                 } else {
                     if (statusWithdraw === 'failed') {
-                        let sql_Withdraw = `UPDATE logfinanceuser set status = 'ไม่สำเส็จ' WHERE bill_number ='${bill_number}'`;
+                        let sql_Withdraw = `UPDATE logfinanceuser set status = 'ไม่สำเร็จ',trans_ref = '${approval_person}',qrcodeData = '${tpyeApproval_person}'
+                        WHERE bill_number ='${bill_number}'`;
                         connection.query(sql_Withdraw, (error, withdraw) => {
                             let sql = `UPDATE member set credit = '${convertedCredit + convertedLatest_withdrawal}', latest_withdrawal = '${0.00}',
                             withdraw_member = '${convertedWithdraw_member - convertedLatest_withdrawal}'  WHERE username ='${usernameUser}' AND agent_id ='${agent_id}'`;
@@ -147,7 +150,8 @@ exports.ConfirmationWithdraw = async (req, res, next) => {
                         })
 
                     } else {
-                        let sql_Withdraw = `UPDATE logfinanceuser set status = 'สำเร็จ' WHERE bill_number ='${bill_number}'`;
+                        let sql_Withdraw = `UPDATE logfinanceuser set status = 'สำเร็จ',trans_ref = '${approval_person}',qrcodeData = '${tpyeApproval_person}' 
+                        WHERE bill_number ='${bill_number}'`;
                         connection.query(sql_Withdraw, (error, withdraw) => {
                             let updateRepostFinance = Finance.UpdateLogRepostFinance(usernameUser, 'ถอน', convertedLatest_withdrawal)
                             res.send({

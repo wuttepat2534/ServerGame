@@ -650,11 +650,12 @@ app.post('/signupMember', async (req, res, next) => {
         statuScheck = 'N'
     }
     const hashedPassword = md5(password);
-    let sql_check = `SELECT * FROM member WHERE username='${username}' AND accountNumber ='${accountNumber}' ORDER BY username ASC`;
+    let sql_check = `SELECT * FROM member WHERE username='${username}' AND accountNumber ='${accountNumber}'`;
     connection.query(sql_check, async (error, results) => {
         try {
             const data = results;
-            if (data.length !== 1 || data.length < 1) {
+            console.log(data.length)
+            if (data.length !== 1 && data.length < 1) {
                 let sql_agent = `SELECT username FROM agent WHERE id='${agent_id}'`;
                 connection.query(sql_agent, (error, usernameAgent) => {
                     if (error) { console.log(error) }

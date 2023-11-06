@@ -45,33 +45,46 @@ exports.signupMember = async (req, res, next) => {
     const bank = req.body.bank;
     const accountName = req.body.accountName;
     const accountNumber = req.body.accountNumber;
-
-    //const checkboxListv2 = req.body.checkboxListv2;
     let statuScheck = 'Y';
 
     const currentTimeInThailand = moment().tz('Asia/Bangkok');
     const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
     const formattedTime = currentTimeInThailand.format('HH:mm:ss');
 
-
     const hashedPassword = md5(password);
-    let sql_agent = `SELECT username FROM agent WHERE id='${agent_id}'`;
-    connection.query(sql_agent, (error, usernameAgent) => {
+    let sql_agent = `SELECT * FROM member WHERE username='${username}' AND accountNumber ='${accountNumber}' AND agent = '${agent_id}'`;
+    connection.query(sql_agent, (error, results) => {
         try {
             if (error) {
                 console.log(error)
             } else {
-                let sql = `INSERT INTO member (agent_id, username_agent, member_code, name, username, password, credit, created_attime, created_at, updated_at, groupmember, userrank, lineid, status,
-                        note, currency, bank, accountName, accountNumber, phonenumber, lastName) 
-                value ('${agent_id}','${usernameAgent[0].username}','${agent_id}','${firstName}','${username}','${hashedPassword}','${credit}','${formattedDate}','${formattedDate}','${formattedDate}',
-                '${customerGroup}', '${Rank}','${IDLIne}','${statuScheck}', '${note}', '${currency}','${bank}', '${accountName}', '${accountNumber}', '${contact_number}', '${lastName}')`;
-                connection.query(sql, (error, result) => {
-                    if (error) { console.log(error) }
+                const data = results;
+                if (data.length !== 1 || data.length < 1) {
+
+                    let sql_agent = `SELECT username FROM agent WHERE id='${agent_id}'`;
+                    connection.query(sql_agent, (error, usernameAgent) => {
+                        if (error) { console.log(error) }
+                        else {
+                            let sql = `INSERT INTO member (agent_id, username_agent, member_code, name, username, password, credit, created_attime, created_at, updated_at, groupmember, userrank, lineid, status,
+                                note, currency, bank, accountName, accountNumber, phonenumber, lastName) 
+                        value ('${agent_id}','${usernameAgent[0].username}','${agent_id}','${firstName}','${username}','${hashedPassword}','${credit}','${formattedDate}','${formattedDate}','${formattedDate}',
+                        '${customerGroup}', '${Rank}','${IDLIne}','${statuScheck}', '${note}', '${currency}','${bank}', '${accountName}', '${accountNumber}', '${contact_number}', '${lastName}')`;
+                            connection.query(sql, (error, result) => {
+                                if (error) { console.log(error) }
+                                res.send({
+                                    message: "Data created Success"
+                                });
+                                res.end();
+                            });
+                        }
+                    })
+
+                } else {
                     res.send({
-                        message: "Data created Success"
+                        message: "Data Creates False"
                     });
                     res.end();
-                });
+                }
             }
         } catch (err) {
             if (!err.statusCode) {
@@ -1115,7 +1128,7 @@ exports.getDataDepositStatementBank = (req, res) => {
                         if (error) {
                             console.log(error)
                         } else {
-                            let sql_statusFalse = `SELECT * FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND status ='ไม่สำเส็จ' AND transaction_date ='${date}' LIMIT ${pageSize} OFFSET ${offset}`;
+                            let sql_statusFalse = `SELECT * FROM logfinanceuser WHERE tpyefinance = '${depositwithdrawal}' AND status ='ไม่สำเร็จ' AND transaction_date ='${date}' LIMIT ${pageSize} OFFSET ${offset}`;
                             connection.query(sql_statusFalse, (error, resultstatusFalse) => {
                                 if (error) {
                                     console.log(error)
@@ -2550,7 +2563,7 @@ exports.getRepostTurnover = (require, response) => {
             connection.query(totalCount, (error, res) => {
                 if (error) { console.log(error); }
                 else {
-                   // console.log(results)
+                    // console.log(results)
                     response.send({
                         data: results,
                         valusData: results.length,

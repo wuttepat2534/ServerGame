@@ -654,8 +654,8 @@ app.post('/signupMember', async (req, res, next) => {
     connection.query(sql_check, async (error, results) => {
         try {
             const data = results;
-            console.log(data.length)
-            if (data.length !== 1 && data.length < 1) {
+            //console.log(data.length)
+            if (data.length === 0 && data.length < 1) {
                 let sql_agent = `SELECT username FROM agent WHERE id='${agent_id}'`;
                 connection.query(sql_agent, (error, usernameAgent) => {
                     if (error) { console.log(error) }

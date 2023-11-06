@@ -426,12 +426,12 @@ exports.GetStatementUser = (require, response) => {
     connection.query(sql, async (error, results) => {
         if (error) { console.log(error); }
         else {
-            const totalCount = `SELECT COUNT(*) as count FROM agent WHERE phonenumber = "${phonenumber}"`
-            connection.query(totalCount, (error, res) => {
+            const totalCount = `SELECT COUNT(*) as count FROM logfinanceuser WHERE phonenumber = "${phonenumber}"`
+            connection.query(totalCount, (error, restotal) => {
                 if (error) { console.log(error); }
                 response.send({
                     data: results,
-                    total: res[0].count
+                    total: restotal[0].count
                 });
 
                 response.end();

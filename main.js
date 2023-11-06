@@ -652,7 +652,7 @@ app.post('/signupMember', async (req, res, next) => {
         statuScheck = 'N'
     }
     const hashedPassword = md5(password);
-    let sql_check = `SELECT * FROM member WHERE username='${username}' AND accountNumber ='${accountNumber}' AND agent_id = '${agent_id}'`;
+    const sql_check = `SELECT * FROM member WHERE username = '${username}' AND accountNumber = '${accountNumber}' AND agent_id = '${agent_id}' GROUP BY username, accountNumber, agent_id HAVING COUNT(*) > 1`;
     connection.query(sql_check, async (error, results) => {
         try {
             const data = results;

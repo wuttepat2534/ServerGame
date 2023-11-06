@@ -652,11 +652,10 @@ app.post('/signupMember', async (req, res, next) => {
         statuScheck = 'N'
     }
     const hashedPassword = md5(password);
-    const sql_check = `SELECT * FROM member WHERE username = '${username}' AND accountNumber = '${accountNumber}' AND agent_id = '${agent_id}' GROUP BY username, accountNumber, agent_id HAVING COUNT(*) > 1`;
+    let sql_check = `SELECT * FROM member WHERE username='${username}' OR accountNumber='${accountNumber}' AND agent_id='${agent_id}'`;
     connection.query(sql_check, async (error, results) => {
         try {
             const data = results;
-            console.log(data.length, data)
             if (data.length === 0 && data.length < 1) {
 
                 let sql = `INSERT INTO member (agent_id, username_agent, member_code, name, username, password, credit, created_at, updated_at, customerGroup, userrank, lineid, status,

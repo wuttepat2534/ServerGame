@@ -90,6 +90,7 @@ router.post('/apiGetAgentWeb', userstoonTaII.apiGetAgentWeb)
 router.post('/signupEmployeeAgent', userstoonTaII.signupEmployeeAgent)
 router.post('/GetOneBank', userstoonTaII.GetOneBank)
 router.post('/loginEnployee', userstoonTaII.LoginAgentWeb)
+router.post('/GetStatementUser', userstoonTaII.GetStatementUser)
 
 router.get('/getDepositaccount/:agent_id', userToonta.getDepositaccount)
 router.get('/getWithdrawalaccount', userToonta.getWithdrawalaccount)

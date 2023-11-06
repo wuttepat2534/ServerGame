@@ -133,7 +133,7 @@ exports.ConfirmationWithdraw = async (req, res, next) => {
                     console.log(error)
                 } else {
                     if (statusWithdraw === 'failed') {
-                        let sql_Withdraw = `UPDATE logfinanceuser set status = 'ไม่สำเร็จ',trans_ref = '${approval_person}',qrcodeData = '${tpyeApproval_person}'
+                        let sql_Withdraw = `UPDATE logfinanceuser set status = 'ไม่สำเร็จ',trans_ref = '${approval_person}', qrcodeData = '${tpyeApproval_person}'
                         WHERE bill_number ='${bill_number}'`;
                         connection.query(sql_Withdraw, (error, withdraw) => {
                             let sql = `UPDATE member set credit = '${convertedCredit + convertedLatest_withdrawal}', latest_withdrawal = '${0.00}',
@@ -159,7 +159,7 @@ exports.ConfirmationWithdraw = async (req, res, next) => {
                             });
                             res.end();
                         })
-                      
+
                     }
                 }
             } catch (err) {
@@ -350,7 +350,7 @@ exports.LoginAgentWeb = (require, response) => {
         }
         return acc;
     }, '');
-  
+
     let sql = `SELECT * FROM employee WHERE username='${username}' AND status='true' AND agent_id = '${agent_id}'`;
     connection.query(sql, async (error, results) => {
         try {
@@ -382,9 +382,9 @@ exports.LoginAgentWeb = (require, response) => {
                     'secretfortoken',
                     { expiresIn: '24h' }
                 );
-                response.status(201).json({message: 'OkLogin' ,token: token, data: storedUser});
+                response.status(201).json({ message: 'OkLogin', token: token, data: storedUser });
             }
-           
+
         } catch (err) {
             if (!err.statusCode) {
                 err.statusCode = 500;
@@ -414,3 +414,29 @@ exports.DeleteAccessDeposit = async (req, res, next) => {
         }
     });
 };
+
+//http://localhost:5000/post/GetStatementUser GetStatementUser
+exports.GetStatementUser = (require, response) => {
+    const phonenumber = require.body.phonenumber;
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+
+    let sql = `SELECT * FROM logfinanceuser WHERE phonenumber = "${phonenumber}" LIMIT ${pageSize} OFFSET ${offset}`;
+    connection.query(sql, async (error, results) => {
+        if (error) { console.log(error); }
+        else {
+            const totalCount = `SELECT COUNT(*) as count FROM agent WHERE phonenumber = "${phonenumber}"`
+            connection.query(totalCount, (error, res) => {
+                if (error) { console.log(error); }
+                response.send({
+                    data: results,
+                    total: res[0].count
+                });
+
+                response.end();
+            });
+        }
+    });
+}
+

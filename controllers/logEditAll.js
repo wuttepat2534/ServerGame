@@ -95,7 +95,7 @@ module.exports = class Post {
               ('${post.edittype}','${post.idedit}','${post.id}','${nametpyeEdit}',
               '${'ชื่อจริง' + ' ' + dataMenber.accountName + ' ' + 'นามสกุล' + ' ' + dataMenber.lastName + ' ' + 'กลุ่มลูกค้า' + ' ' + dataMenber.groupmember + ' ' + 'Renk' +
                         ' ' + dataMenber.userrank + ' ' + 'username' + ' ' + dataMenber.username + ' ' + 'ไลน์' + ' ' + dataMenber.lineid}',
-              '${'ชื่อจริง' + ' ' + post.accountName + ' ' + 'นามสกุล' + ' ' + post.lastName + ' ' + 'กลุ่มลูกค้า' + ' ' + post.customerGroup + ' ' + 'Renk' +
+              '${'ชื่อจริง' + ' ' + post.accountName + ' ' + 'นามสกุล' + ' ' + post.lastName + ' ' + 'กลุ่มลูกค้า' + ' ' + post.customerGroup + ' ' + 'Rank' +
                         ' ' + post.Rank + ' ' + 'username' + ' ' + post.contact_number + ' ' + 'ไลน์' + ' ' + post.IDLIne + 'แก้ไขโดย' + ' ' + nametpyeEdit}'
               ,now(), now())`;
                     connection.query(sql_before, (error, resultAfter) => {

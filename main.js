@@ -650,7 +650,7 @@ app.post('/signupMember', async (req, res, next) => {
         statuScheck = 'N'
     }
     const hashedPassword = md5(password);
-    let sql_check = `SELECT * FROM member WHERE username='${username}' ORDER BY username ASC`;
+    let sql_check = `SELECT * FROM member WHERE username='${username}' AND accountNumber ='${accountNumber}' ORDER BY username ASC`;
     connection.query(sql_check, async (error, results) => {
         try {
             const data = results;

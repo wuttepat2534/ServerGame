@@ -641,6 +641,8 @@ app.post('/signupMember', async (req, res, next) => {
     const accountName = req.body.accountName;
     const accountNumber = req.body.accountNumber;
     const listCheckBox = req.body.listCheckBox.checkbox;
+    const nametpyecreate = req.body.nametpyecreate;
+    const tpyeCreate = req.body.tpyeCreate;
     //const checkboxListv2 = req.body.checkboxListv2;
 
     let statuScheck = 'Y';
@@ -650,29 +652,23 @@ app.post('/signupMember', async (req, res, next) => {
         statuScheck = 'N'
     }
     const hashedPassword = md5(password);
-    let sql_check = `SELECT * FROM member WHERE username='${username}' AND accountNumber ='${accountNumber}'`;
+    let sql_check = `SELECT * FROM member WHERE username='${username}' AND accountNumber ='${accountNumber}' AND agent_id = '${agent_id}'`;
     connection.query(sql_check, async (error, results) => {
         try {
             const data = results;
             console.log(data.length, data)
             if (data.length === 0 && data.length < 1) {
-                let sql_agent = `SELECT username FROM agent WHERE id='${agent_id}'`;
-                connection.query(sql_agent, (error, usernameAgent) => {
+
+                let sql = `INSERT INTO member (agent_id, username_agent, member_code, name, username, password, credit, created_at, updated_at, customerGroup, userrank, lineid, status,
+                    note, currency, bank, accountName, accountNumber, phonenumber, lastName, nametpyecreate) 
+            value ('${agent_id}','${nametpyecreate}','${agent_id}','${firstName}','${username}','${hashedPassword}','${credit}',now(), now(), '${customerGroup}','${Rank}',
+            '${IDLIne}','${statuScheck}', '${note}', '${currency}','${bank}', '${accountName}', '${accountNumber}', '${contact_number}','${lastName}','${tpyeCreate}')`;
+                connection.query(sql, (error, result) => {
                     if (error) { console.log(error) }
-                    else {
-                        //const hashedPassword = await bcrypt.hash(password, 12);
-                        let sql = `INSERT INTO member (agent_id, username_agent, member_code, name, username, password, credit, created_at, updated_at, customerGroup, userrank, lineid, status,
-                            note, currency, bank, accountName, accountNumber, phonenumber, lastName) 
-                    value ('${agent_id}','${usernameAgent[0].username}','${agent_id}','${firstName}','${username}','${hashedPassword}','${credit}',now(), now(), '${customerGroup}', '${Rank}',
-                    '${IDLIne}','${statuScheck}', '${note}', '${currency}','${bank}', '${accountName}', '${accountNumber}', '${contact_number}', '${lastName}')`;
-                        connection.query(sql, (error, result) => {
-                            if (error) { console.log(error) }
-                            res.send({
-                                message: "Data created Success"
-                            });
-                            res.end();
-                        });
-                    }
+                    res.send({
+                        message: "Data created Success"
+                    });
+                    res.end();
                 });
             }
             else {
@@ -1408,8 +1404,8 @@ app.post('/testToken', async (req, res) => {
 //                                 if (error) {
 //                                     console.log(error)
 //                                 } else {
-//                                     let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
-//                                         balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value 
+//                                     let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus,
+//                                         balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value
 //                                     ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${resultUser[0].accountNumber}','${phonenumber}','${'ถอน'}','${quantity}','${0}','${resultUser[0].credit}'
 //                                     ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${'ยังไม่เรียบร้อย'}',now(),now(),'${resultUser[0].bank}','${resultBank[0].images}'
 //                                     ,'${resultUser[0].accountName}','${resultUser[0].accountNumber}')`;
@@ -1440,7 +1436,7 @@ app.post('/testToken', async (req, res) => {
 //                                                         console.log(error);
 //                                                     }
 //                                                     const post = [
-//                                                         {username : resultUser[0].username, 
+//                                                         {username : resultUser[0].username,
 //                                                         withdraw_member : quantity,
 //                                                         message : "มีการแจ้งถอนเงินจำนวน"
 //                                                     }

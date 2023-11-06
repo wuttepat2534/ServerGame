@@ -52,7 +52,7 @@ exports.signupMember = async (req, res, next) => {
     const formattedTime = currentTimeInThailand.format('HH:mm:ss');
 
     const hashedPassword = md5(password);
-    let sql_agent = `SELECT * FROM member WHERE username='${username}' AND accountNumber ='${accountNumber}' AND agent = '${agent_id}'`;
+    let sql_agent = `SELECT * FROM member WHERE username='${username}' AND accountNumber ='${accountNumber}' AND agent_id = '${agent_id}'`;
     connection.query(sql_agent, (error, results) => {
         try {
             if (error) {

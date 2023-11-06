@@ -45,6 +45,10 @@ exports.signupMember = async (req, res, next) => {
     const bank = req.body.bank;
     const accountName = req.body.accountName;
     const accountNumber = req.body.accountNumber;
+
+    const nametpyecreate = "สมัครจากหน้าเว็บไซต์";
+    const tpyeCreate = "หน้าเว็บ";
+
     let statuScheck = 'Y';
 
     const currentTimeInThailand = moment().tz('Asia/Bangkok');
@@ -52,32 +56,25 @@ exports.signupMember = async (req, res, next) => {
     const formattedTime = currentTimeInThailand.format('HH:mm:ss');
 
     const hashedPassword = md5(password);
-    let sql_agent = `SELECT * FROM member WHERE username='${username}' AND accountNumber ='${accountNumber}' AND agent_id = '${agent_id}'`;
-    connection.query(sql_agent, (error, results) => {
+    let sql_check = `SELECT * FROM member WHERE username='${username}' OR accountNumber='${accountNumber}' AND agent_id='${agent_id}'`;
+    connection.query(sql_check, (error, results) => {
         try {
             if (error) {
                 console.log(error)
             } else {
                 const data = results;
-                if (data.length !== 1 || data.length < 1) {
-
-                    let sql_agent = `SELECT username FROM agent WHERE id='${agent_id}'`;
-                    connection.query(sql_agent, (error, usernameAgent) => {
+                if (data.length === 0 || data.length < 1) {
+                    let sql = `INSERT INTO member (agent_id, username_agent, member_code, name, username, password, credit, created_at, updated_at, customerGroup, userrank, lineid, status,
+                        note, currency, bank, accountName, accountNumber, phonenumber, lastName, nametpyecreate) 
+                value ('${agent_id}','${nametpyecreate}','${agent_id}','${firstName}','${username}','${hashedPassword}','${credit}','${formattedDate}','${formattedDate}', '${customerGroup}','${Rank}',
+                '${IDLIne}','${statuScheck}', '${note}', '${currency}','${bank}', '${accountName}', '${accountNumber}', '${contact_number}','${lastName}','${tpyeCreate}')`;
+                    connection.query(sql, (error, result) => {
                         if (error) { console.log(error) }
-                        else {
-                            let sql = `INSERT INTO member (agent_id, username_agent, member_code, name, username, password, credit, created_attime, created_at, updated_at, groupmember, userrank, lineid, status,
-                                note, currency, bank, accountName, accountNumber, phonenumber, lastName) 
-                        value ('${agent_id}','${usernameAgent[0].username}','${agent_id}','${firstName}','${username}','${hashedPassword}','${credit}','${formattedDate}','${formattedDate}','${formattedDate}',
-                        '${customerGroup}', '${Rank}','${IDLIne}','${statuScheck}', '${note}', '${currency}','${bank}', '${accountName}', '${accountNumber}', '${contact_number}', '${lastName}')`;
-                            connection.query(sql, (error, result) => {
-                                if (error) { console.log(error) }
-                                res.send({
-                                    message: "Data created Success"
-                                });
-                                res.end();
-                            });
-                        }
-                    })
+                        res.send({
+                            message: "Data created Success"
+                        });
+                        res.end();
+                    });
 
                 } else {
                     res.send({

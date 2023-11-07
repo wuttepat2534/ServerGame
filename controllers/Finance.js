@@ -151,7 +151,7 @@ module.exports = class Post {
                                                         if (response.data.message === "เติมเงินสำเร็จ") {
                                                             resolve("ฝากเงินสำเสร็จ")
                                                         } else {
-                                                            resolve("ฝากเงินไม่สำเร็จกรุณาติดต่อ Admin")
+                                                            resolve(response.data.message)
                                                         }
                                                     } else {
                                                         const response = await axios.post(baseURL + "post/financeUser", {
@@ -245,7 +245,7 @@ module.exports = class Post {
                                                         if (response.data.message === "เติมเงินสำเร็จ") {
                                                             resolve("ฝากเงินสำเสร็จ")
                                                         } else {
-                                                            resolve("ฝากเงินไม่สำเร็จกรุณาติดต่อ Admin")
+                                                            resolve(response.data.message)
                                                         }
                                                     } else {
                                                         console.log('on4')

@@ -509,6 +509,7 @@ exports.financeUser = (req, res) => {
                             } else {
                                 billnum += 1;
                             }
+                            //console.log(resultUser[0].credit);
                             const formattedNumber = formatNumber(billnum);
                             const balance = quantity + resultUser[0].credit;
                             let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
@@ -762,7 +763,7 @@ exports.WinhdrawUser = (req, res) => {
 
 
 function logTotalAmount(resultUser, formattedDateBill, type, destinationAccount, destinationAccountNumber, quantity, statusFinance) {
-    let sql_deposit = `SELECT billmatched, complated, bankName, balance, imgbank FROM depositaccount WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
+    let sql_deposit = `SELECT billmatched, complated, bankName, balance, imgbank FROM depositaccount WHERE accountName ='${destinationAccount}' OR accountNumber = '${destinationAccountNumber}' ORDER BY accountNumber ASC`;
     let sql_before = `SELECT * FROM totalamountdaily WHERE date ='${formattedDateBill}' AND typeaction = '${type}' ORDER BY date ASC`;
     connection.query(sql_before, (error, resulttotal) => {
         if (error) {

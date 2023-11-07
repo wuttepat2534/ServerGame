@@ -105,8 +105,8 @@ module.exports = class Post {
             const last4DigitsUser = inputStringUser.replace(/\D/g, '').slice(-4);
 
             if (Bank !== "ธนาคารกสิกรไทย" && Bank !== "ธนาคารกรุงศรีอยุธยา") {
-                let sql_deposit = `SELECT * FROM depositaccount WHERE activestatus = "เปิดใช้งาน" AND RIGHT(accountNumber, 4) LIKE ?`;
-                connection.query(sql_deposit, ['%' + last4DigitsUser], (error, depositData) => {
+                let sql_deposit = `SELECT * FROM depositaccount WHERE activestatus = "เปิดใช้งาน" AND accountNumber = "${resFinance.data.receiver.account.value}"`;
+                connection.query(sql_deposit, (error, depositData) => {
                     try {
                         if (error) {
                             console.log(error);
@@ -130,6 +130,7 @@ module.exports = class Post {
                                                     reject(error);
                                                 } else {
                                                     const dataUserAccount = nameAccount;
+                                                    //console.log(dataUserAccount[0], last4Digits, Bank, dataUsers.phonenumber)
                                                     if (dataUserAccount.length !== 0 || dataUserAccount.length > 0) {
                                                         const response = await axios.post(baseURL + "post/financeUser", {
                                                             resFinance: resFinance,
@@ -193,10 +194,9 @@ module.exports = class Post {
                     }
                 })
             } else {
-                console.log(last4DigitsUser)
-                let sql_deposit = `SELECT * FROM depositaccount WHERE activestatus = "เปิดใช้งาน" AND SUBSTRING(accountNumber, LENGTH(accountNumber) - 4, 4) = ?`;
-                //const searchPattern = searchText + '%';
-                connection.query(sql_deposit, [last4DigitsUser], (error, depositData) => {
+                //console.log(last4DigitsUser)
+                let sql_deposit = `SELECT * FROM depositaccount WHERE activestatus = "เปิดใช้งาน" AND accountNumber = "${resFinance.data.receiver.account.value}"`;
+                connection.query(sql_deposit, (error, depositData) => {
                     try {
                         if (error) {
                             console.log(error);

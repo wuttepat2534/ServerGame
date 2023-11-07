@@ -1213,7 +1213,7 @@ app.post('/depositToonta', async (req, res) => { //ทดลองอัพโ�
          console.error(error.data);
      });*/
     try {
-        //const YOUR_FILE_LOCATION = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/396647224_301012646036841_6602704184365275387_n.jpg';
+        const YOUR_FILE_LOCATION = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/399701021_392539046434485_5890790613760989583_n.jpg';
         //const SletTest = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/slip/377334005_1411687959690621_3265644401220670990_n.jpg';
         const Url = `https://dogzilla.live/images/${req.body.filename}`
         //const Url = `http://localhost:5000/images/${req.body.filename}`
@@ -1227,19 +1227,18 @@ app.post('/depositToonta', async (req, res) => { //ทดลองอัพโ�
                     'Content-Type': 'multipart/form-data',
                 },
             }
-        )
-        console.log(restest.data, req.body);
+        ) 
+       //console.log(restest.data.data.receiver.account);
         const financeToonta = FInance.CheckInformation(restest.data, req.body)
             .then(calculatedValues => {
-                //console.log(calculatedValues);
                 res.send({ message: calculatedValues });
             })
             .catch(error => {
                 console.error(error.data);
             });
     } catch (err) {
-        console.log(err.response.data)
-        res.json({ message: "QR Code หมดอายุ หรือ ไม่มีรายการอยู่จริง", status: err.response.data.data.success });
+        console.log(err)
+        res.json({ message: "QR Code หมดอายุ หรือ ไม่มีรายการอยู่จริง"});
     }
 });
 

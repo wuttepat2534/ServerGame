@@ -1220,7 +1220,7 @@ app.post('/depositToonta', async (req, res) => { //ทดลองอัพโ�
         //console.log(Url);
         const restest = await axios.post(
             'https://api.slipok.com/api/line/apikey/9496',
-            { url: YOUR_FILE_LOCATION },
+            { url: Url },
             {
                 headers: {
                     'x-authorization': 'SLIPOKCJ8CI5X',

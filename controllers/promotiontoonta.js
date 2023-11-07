@@ -38,7 +38,8 @@ module.exports = class Post {
         statusFinance, qrcodeData, transRef, destinationAccount, destinationAccountNumber, formattedDate, formattedNumber) {
         return new Promise((resolve, reject) => {
 
-            let rank = 'NewMember';
+            if (dataUser.passwordpromotion !== NULL){
+                let rank = 'NewMember';
             const totaltopup = dataUser.total_top_up_amount + quantity;
 
             if (totaltopup >= 200000) {
@@ -59,7 +60,7 @@ module.exports = class Post {
                     if (error) {
                         console.log(error)
                     } else {
-                        if (resultPromotion[0].receiving_data_type === "เติมเงินครั้งแรก") {
+                        if (resultPromotion[0].receiving_data_type === "ฝากเงินครั้งแรก") {
                             if (dataUser.recharge_times === 0) {
                                 if (resultPromotion[0].typebonus === "Percent") {
                                     if (quantity > resultPromotion[0].valusbunus) {
@@ -223,6 +224,9 @@ module.exports = class Post {
                     err.statusCode = 500;
                 }
                 next(err);
+            }} else {
+                let jsArray = { status: "ไม่สามารถรับโปรโมชั่นได้" };
+                resolve(jsArray);
             }
         })
     }

@@ -205,6 +205,7 @@ module.exports = class Post {
                         else {
                             const data = depositData;
                             if (data.length !== 0 || data.length > 0) {
+                                console.log('on1')
                                 let sql_LogDeposit = `SELECT * FROM logfinanceuser WHERE trans_ref ='${resFinance.data.transRef}'`;
                                 connection.query(sql_LogDeposit, async (error, logDeposit_transRef) => {
                                     if (error) {
@@ -213,7 +214,7 @@ module.exports = class Post {
                                     } else {
                                         const dataLog = logDeposit_transRef;
                                         if (dataLog.length < 1) {
-
+                                            console.log('on2')
                                             let sql_NameAccount = `SELECT * FROM member WHERE SUBSTRING(accountNumber, LENGTH(accountNumber) - 4, 4) = ? 
                                             AND bank = '${Bank}' AND phonenumber = '${dataUsers.phonenumber}'`;
 
@@ -224,6 +225,7 @@ module.exports = class Post {
                                                 } else {
                                                     const dataUserAccount = nameAccount;
                                                     if (dataUserAccount.length !== 0 || dataUserAccount.length > 0) {
+                                                        console.log('on3')
                                                         const response = await axios.post(baseURL + "/post/financeUser", {
                                                             resFinance: resFinance,
                                                             type: dataUsers.type,
@@ -246,6 +248,7 @@ module.exports = class Post {
                                                             resolve("ฝากเงินไม่สำเร็จกรุณาติดต่อ Admin")
                                                         }
                                                     } else {
+                                                        console.log('on4')
                                                         const response = await axios.post(baseURL + "post/financeUser", {
                                                             resFinance: resFinance,
                                                             type: dataUsers.type,

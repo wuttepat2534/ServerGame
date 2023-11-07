@@ -1228,6 +1228,7 @@ app.post('/depositToonta', async (req, res) => { //ทดลองอัพโ�
                 },
             }
         )
+        console.log(restest.data, req.body);
         const financeToonta = FInance.CheckInformation(restest.data, req.body)
             .then(calculatedValues => {
                 //console.log(calculatedValues);

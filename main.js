@@ -414,7 +414,7 @@ app.post('/login/agent', async (require, response, next) => {
         try {
             const data = results;
             if (data.length !== 1) {
-                const responseEnployee = await axios.post("https://relaxtimecafe.fun/post/loginEnployee", {
+                const responseEnployee = await axios.post("https://dogzilla.live/post/loginEnployee", {
                     username: username,
                     password: password,
                     agent_id: agent_id,
@@ -1215,7 +1215,7 @@ app.post('/depositToonta', async (req, res) => { //ทดลองอัพโ�
     try {
         //const YOUR_FILE_LOCATION = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/new_size/396647224_301012646036841_6602704184365275387_n.jpg';
         //const SletTest = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/slip/377334005_1411687959690621_3265644401220670990_n.jpg';
-        const Url = `https://relaxtimecafe.fun/images/${req.body.filename}`
+        const Url = `https://dogzilla.live/images/${req.body.filename}`
         //const Url = `http://localhost:5000/images/${req.body.filename}`
         //console.log(Url);
         const restest = await axios.post(

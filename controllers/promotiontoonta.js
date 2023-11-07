@@ -37,194 +37,184 @@ module.exports = class Post {
     static promotionDeposit(quantity, dataUser, idPromotion, bill_number, totaltopup, nameimg,
         statusFinance, qrcodeData, transRef, destinationAccount, destinationAccountNumber, formattedDate, formattedNumber) {
         return new Promise((resolve, reject) => {
-            console.log(dataUser.passwordpromotion );
-            if (dataUser.passwordpromotion === null){
+          
+            if (dataUser.promotionuser.includes("ไม่ได้รับโปรโมชั่น")) {
                 let rank = 'NewMember';
-            const totaltopup = dataUser.total_top_up_amount + quantity;
+                const totaltopup = dataUser.total_top_up_amount + quantity;
 
-            if (totaltopup >= 200000) {
-                rank = "Bronze";
-            } else if (totaltopup >= 1000000) {
-                rank = "Silver";
-            } else if (totaltopup >= 3000000) {
-                rank = "Gold";
-            } else if (totaltopup >= 10000000) {
-                rank = "Diamond";
-            } else {
-                rank = "NewMember";
-            }
+                if (totaltopup >= 200000) {
+                    rank = "Bronze";
+                } else if (totaltopup >= 1000000) {
+                    rank = "Silver";
+                } else if (totaltopup >= 3000000) {
+                    rank = "Gold";
+                } else if (totaltopup >= 10000000) {
+                    rank = "Diamond";
+                } else {
+                    rank = "NewMember";
+                }
+                try {
+                    let sql_Promotion = `SELECT * FROM creditpromotion WHERE id ='${idPromotion}'`;
+                    connection.query(sql_Promotion, (error, resultPromotion) => {
+                        if (error) {
+                            console.log(error)
+                        } else {
+                            if (resultPromotion[0].receiving_data_type === "ฝากเงินครั้งแรก") {
+                                if (dataUser.recharge_times === 0) {
+                                    if (resultPromotion[0].typebonus === "Percent") {
+                                        if (quantity >= resultPromotion[0].valusbunus) {
+                                            console.log(statusFinance);
+                                            const balancebunus = quantity * resultPromotion[0].bunus / 100;
+                                            if (balancebunus > resultPromotion[0].maxbunus) {
+                                                balancebunus = resultPromotion[0].maxbunus
+                                            }
+                                            const balance = quantity + balancebunus
+                                            const turnover = balancebunus * resultPromotion[0].multiplier;
+                                           
+                                            if (statusFinance === "สำเร็จ") {
+                                                let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
+                                            balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber, trans_ref, qrcodeData, nameimg) value 
+                                            ('${dataUser.id}','${dataUser.agent_id}','${dataUser.accountName}','${dataUser.accountNumber}','${dataUser.phonenumber}','${'ฝาก'}','${quantity}','${0}','${dataUser.credit}'
+                                            ,'${balance}','${formattedDate}${formattedNumber}','${bill_number}','${statusFinance}',now(),now(),'${dataUser.bank}','${dataUser.imgBank}'
+                                            ,'${destinationAccount}','${destinationAccountNumber}','${transRef}', '${qrcodeData}', '${nameimg}')`;
 
-            try {
-                let sql_Promotion = `SELECT * FROM creditpromotion WHERE id ='${idPromotion}'`;
-                connection.query(sql_Promotion, (error, resultPromotion) => {
-                    if (error) {
-                        console.log(error)
-                    } else {
-                        if (resultPromotion[0].receiving_data_type === "ฝากเงินครั้งแรก") {
-                            if (dataUser.recharge_times === 0) {
-                                if (resultPromotion[0].typebonus === "Percent") {
-                                    if (quantity > resultPromotion[0].valusbunus) {
-                                        const balancebunus = quantity * resultPromotion[0].bunus / 100;
-                                        if (balancebunus > resultPromotion[0].maxbunus) {
-                                            balancebunus = resultPromotion[0].maxbunus
+                                                let totalamountdaily = logTotalAmount(dataUser, formattedDate, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
+                                                connection.query(sql_before, (error, result) => {
+                                                    if (error) {
+                                                        console.log(error)
+                                                    } else {
+
+                                                        let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${dataUser.recharge_times + 1}', turnover = '${turnover}',
+                                                    total_top_up_amount = '${totaltopup}', groupmember = '${rank}', promotionuser = '${resultPromotion[0].namepromotion}', passwordpromotion = '${resultPromotion[0].passwordpromotion}'
+                                                    WHERE id='${dataUser.id}'`;
+                                                        connection.query(sql, (error, resultAfter) => {
+                                                            if (error) {
+                                                                console.log(error);
+                                                            }
+                                                            let updateRepostFinance = Finance.UpdateLogRepostFinance(dataUser.username, 'ฝาก', quantity)
+
+                                                            let jsArray = { status: "รับโปรโมชั่นเรียบร้อย" };
+                                                            resolve(jsArray);
+                                                        });
+
+                                                    }
+                                                });
+                                            } else {
+                                                let jsArray = { status: "ไม่สามารถรับโปรโมชั่นได้" };
+                                                resolve(jsArray);
+                                            }
                                         }
-                                        const balance = quantity + balancebunus
-                                        const turnover = balancebunus * resultPromotion[0].multiplier;
-
-                                        let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
+                                    } else {
+                                        if (quantity > resultPromotion[0].valusbunus) {
+                                            let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
                                             balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber, trans_ref, qrcodeData, nameimg) value 
                                             ('${dataUser.id}','${dataUser.agent_id}','${dataUser.accountName}','${accountNumber}','${phonenumber}','${'ฝาก'}','${quantity}','${0}','${dataUser.credit}'
                                             ,'${balance}','${formattedDate}${formattedNumber}','${billnum}','${statusFinance}',now(),now(),'${dataUser.bank}','${dataUser.imgBank}'
                                             ,'${destinationAccount}','${destinationAccountNumber}','${transRef}', '${qrcodeData}', '${nameimg}')`;
-                                        if (statusFinance === "สำเร็จ") {
-                                            let totalamountdaily = logTotalAmount(resultUser, formattedDate, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
-                                            connection.query(sql_before, (error, result) => {
-                                                if (error) {
-                                                    console.log(error)
-                                                } else {
+                                            if (statusFinance === "สำเร็จ") {
+                                                let totalamountdaily = logTotalAmount(resultUser, formattedDate, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
 
-                                                    let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}', turnover = '${turnover}',
-                                                    total_top_up_amount = '${totaltopup}', groupmember = '${rank}', promotionuser = '${resultPromotion[0].namepromotion}', passwordpromotion = '${resultPromotion[0].passwordpromotion}'
+                                                connection.query(sql_before, (error, result) => {
+                                                    if (error) {
+                                                        console.log(error)
+                                                    } else {
+
+                                                        let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}', turnover = '${turnover}',
+                                                    total_top_up_amount = '${totaltopup}' groupmember = '${rank}', promotionuser = '${resultPromotion[0].namepromotion}'  
                                                     WHERE id='${dataUser.id}'`;
-                                                    connection.query(sql, (error, resultAfter) => {
-                                                        if (error) {
-                                                            console.log(error);
-                                                        }
-                                                        let updateRepostFinance = Finance.UpdateLogRepostFinance(dataUser.username, 'ฝาก', quantity)
-                                                        const post = [
-                                                            {
-                                                                username: resultUser[0].username,
-                                                                deposit_member: quantity,
-                                                                message: "มีการแจ้งฝากเงินจำนวน"
-                                                            }]
+                                                        connection.query(sql, (error, resultAfter) => {
+                                                            if (error) {
+                                                                console.log(error);
+                                                            }
+                                                            let updateRepostFinance = Finance.UpdateLogRepostFinance(dataUser.username, 'ฝาก', quantity)
 
-                                                        let jsArray = { status: "รับโปรโมชั่นเรียบร้อย" };
-                                                        resolve(jsArray);
-                                                    });
+                                                            let jsArray = { status: "รับโปรโมชั่นเรียบร้อย" };
+                                                            resolve(jsArray);
+                                                        });
 
-                                                }
-                                            });
-                                        } else {
-                                            let jsArray = { status: "ไม่สามารถรับโปรโมชั่นได้" };
-                                            resolve(jsArray);
+                                                    }
+                                                });
+                                            } else {
+                                                let jsArray = { status: "ไม่สามารถรับโปรโมชั่นได้" };
+                                                resolve(jsArray);
+                                            }
                                         }
                                     }
                                 } else {
-                                    if (quantity > resultPromotion[0].valusbunus) {
-                                        let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
-                                            balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber, trans_ref, qrcodeData, nameimg) value 
-                                            ('${dataUser.id}','${dataUser.agent_id}','${dataUser.accountName}','${accountNumber}','${phonenumber}','${'ฝาก'}','${quantity}','${0}','${dataUser.credit}'
-                                            ,'${balance}','${formattedDate}${formattedNumber}','${billnum}','${statusFinance}',now(),now(),'${dataUser.bank}','${dataUser.imgBank}'
-                                            ,'${destinationAccount}','${destinationAccountNumber}','${transRef}', '${qrcodeData}', '${nameimg}')`;
-                                        if (statusFinance === "สำเร็จ") {
-                                            let totalamountdaily = logTotalAmount(resultUser, formattedDate, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
-
-                                            connection.query(sql_before, (error, result) => {
-                                                if (error) {
-                                                    console.log(error)
-                                                } else {
-
-                                                    let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}', turnover = '${turnover}',
-                                                    total_top_up_amount = '${totaltopup}' groupmember = '${rank}', promotionuser = '${resultPromotion[0].namepromotion}'  
-                                                    WHERE id='${dataUser.id}'`;
-                                                    connection.query(sql, (error, resultAfter) => {
+                                    let jsArray = { status: "ไม่สามารถรับโปรโมชั่นได้" };
+                                    resolve(jsArray);
+                                }
+                            } else if (resultPromotion[0].receiving_data_type === "รายวัน") {
+                                let sql_DipositDay = `SELECT * FROM logfinanceuser WHERE idUser ='${dataUser.id}' AND transaction_date = now()`;
+                                connection.query(sql_DipositDay, (error, result) => {
+                                    if (error) {
+                                        console.log(error)
+                                    } else {
+                                        if (result.length === 0 && result.length < 1) {
+                                            if (resultPromotion[0].typebonus === "Percent") {
+                                                if (quantity > resultPromotion[0].valusbunus) {
+                                                    const balancebunus = quantity * resultPromotion[0].bunus / 100;
+                                                    if (balancebunus > resultPromotion[0].maxbunus) {
+                                                        balancebunus = resultPromotion[0].maxbunus
+                                                    }
+                                                    const balance = quantity + balancebunus
+                                                    let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}' WHERE id='${dataUser.id}'`;
+                                                    connection.query(sql, (error, result) => {
                                                         if (error) {
-                                                            console.log(error);
+                                                            console.log(error)
+                                                        } else {
+                                                            let sqlBound = `UPDATE logfinanceuser set credit = '${balance}', creditbonus = '${balancebunus}' WHERE bill_number='${bill_number}'`;
+                                                            connection.query(sql_before, (error, sqlBound) => {
+                                                                if (error) {
+                                                                    console.log(error);
+                                                                }
+                                                                let jsArray = { status: "รับโปรโมชั่นเรียบร้อย" };
+                                                                resolve(jsArray);
+                                                            });
                                                         }
-                                                        let updateRepostFinance = Finance.UpdateLogRepostFinance(dataUser.username, 'ฝาก', quantity)
-                                                        const post = [
-                                                            {
-                                                                username: resultUser[0].username,
-                                                                deposit_member: quantity,
-                                                                message: "มีการแจ้งฝากเงินจำนวน"
-                                                            }]
-
-                                                        let jsArray = { status: "รับโปรโมชั่นเรียบร้อย" };
-                                                        resolve(jsArray);
                                                     });
-
                                                 }
-                                            });
+                                            } else {
+                                                if (quantity > resultPromotion[0].valusbunus) {
+                                                    const balancebunus = quantity * resultPromotion[0].bunus;
+                                                    const balance = quantity + balancebunus
+                                                    let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}',  
+                                                WHERE id='${dataUser.id}'`;
+                                                    connection.query(sql, (error, result) => {
+                                                        if (error) {
+                                                            console.log(error)
+                                                        } else {
+                                                            let sqlBound = `UPDATE logfinanceuser set credit = '${balance}', creditbonus = '${balancebunus}' WHERE bill_number='${bill_number}'`;
+                                                            connection.query(sql_before, (error, sqlBound) => {
+                                                                if (error) {
+                                                                    console.log(error);
+                                                                }
+                                                                let jsArray = { status: "รับโปรโมชั่นเรียบร้อย" };
+                                                                resolve(jsArray);
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            }
                                         } else {
                                             let jsArray = { status: "ไม่สามารถรับโปรโมชั่นได้" };
                                             resolve(jsArray);
                                         }
                                     }
-                                }
+                                })
                             } else {
                                 let jsArray = { status: "ไม่สามารถรับโปรโมชั่นได้" };
                                 resolve(jsArray);
                             }
-                        } else if (resultPromotion[0].receiving_data_type === "รายวัน") {
-                            let sql_DipositDay = `SELECT * FROM logfinanceuser WHERE idUser ='${dataUser.id}' AND transaction_date = now()`;
-                            connection.query(sql_DipositDay, (error, result) => {
-                                if (error) {
-                                    console.log(error)
-                                } else {
-                                    if (result.length === 0 && result.length < 1) {
-                                        if (resultPromotion[0].typebonus === "Percent") {
-                                            if (quantity > resultPromotion[0].valusbunus) {
-                                                const balancebunus = quantity * resultPromotion[0].bunus / 100;
-                                                if (balancebunus > resultPromotion[0].maxbunus) {
-                                                    balancebunus = resultPromotion[0].maxbunus
-                                                }
-                                                const balance = quantity + balancebunus
-                                                let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}' WHERE id='${dataUser.id}'`;
-                                                connection.query(sql, (error, result) => {
-                                                    if (error) {
-                                                        console.log(error)
-                                                    } else {
-                                                        let sqlBound = `UPDATE logfinanceuser set credit = '${balance}', creditbonus = '${balancebunus}' WHERE bill_number='${bill_number}'`;
-                                                        connection.query(sql_before, (error, sqlBound) => {
-                                                            if (error) {
-                                                                console.log(error);
-                                                            }
-                                                            let jsArray = { status: "รับโปรโมชั่นเรียบร้อย" };
-                                                            resolve(jsArray);
-                                                        });
-                                                    }
-                                                });
-                                            }
-                                        } else {
-                                            if (quantity > resultPromotion[0].valusbunus) {
-                                                const balancebunus = quantity * resultPromotion[0].bunus;
-                                                const balance = quantity + balancebunus
-                                                let sql = `UPDATE member set credit = '${balance}', bonususer = '${balancebunus}', recharge_times = '${resultvalusUserDeposit[0].recharge_times + 1}',  
-                                                WHERE id='${dataUser.id}'`;
-                                                connection.query(sql, (error, result) => {
-                                                    if (error) {
-                                                        console.log(error)
-                                                    } else {
-                                                        let sqlBound = `UPDATE logfinanceuser set credit = '${balance}', creditbonus = '${balancebunus}' WHERE bill_number='${bill_number}'`;
-                                                        connection.query(sql_before, (error, sqlBound) => {
-                                                            if (error) {
-                                                                console.log(error);
-                                                            }
-                                                            let jsArray = { status: "รับโปรโมชั่นเรียบร้อย" };
-                                                            resolve(jsArray);
-                                                        });
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    } else {
-                                        let jsArray = { status: "ไม่สามารถรับโปรโมชั่นได้" };
-                                        resolve(jsArray);
-                                    }
-                                }
-                            })
-                        } else {
-                            let jsArray = { status: "ไม่สามารถรับโปรโมชั่นได้" };
-                            resolve(jsArray);
                         }
+                    })
+                } catch (err) {
+                    if (!err.statusCode) {
+                        err.statusCode = 500;
                     }
-                })
-            } catch (err) {
-                if (!err.statusCode) {
-                    err.statusCode = 500;
+                    next(err);
                 }
-                next(err);
-            }} else {
+            } else {
                 let jsArray = { status: "ไม่สามารถรับโปรโมชั่นได้" };
                 resolve(jsArray);
             }
@@ -259,7 +249,7 @@ function logTotalAmount(resultUser, formattedDateBill, type, destinationAccount,
                                 console.log(error)
                             } else {
                                 let sql_before = `INSERT INTO totalamountdaily (agentid, accountName, accountNumber, billmatched, complated, balance, bankname, date, time, typeaction, imgbank) value 
-                                ('${resultUser[0].agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${quantity}','${resulttotaldeposit[0].balance}','${resulttotaldeposit[0].bankName}',now() ,now(),'${type}','${resulttotaldeposit[0].imgbank}')`;
+                                ('${resultUser.agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${quantity}','${resulttotaldeposit[0].balance}','${resulttotaldeposit[0].bankName}',now() ,now(),'${type}','${resulttotaldeposit[0].imgbank}')`;
 
                                 connection.query(sql_before, (error, resultDeposit) => {
                                     if (error) {
@@ -280,7 +270,7 @@ function logTotalAmount(resultUser, formattedDateBill, type, destinationAccount,
                                 console.log(error)
                             } else {
                                 let sql_before = `INSERT INTO totalamountdaily (agentid, accountName, accountNumber, billmatched, complated, balance, bankname, date, time, typeaction, imgbank) value 
-                                    ('${resultUser[0].agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${0}','${resulttotaldeposit[0].balance}','${resulttotaldeposit[0].bankName}',now() ,now(),'${type}','${resulttotaldeposit[0].imgbank}')`;
+                                    ('${resultUser.agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${0}','${resulttotaldeposit[0].balance}','${resulttotaldeposit[0].bankName}',now() ,now(),'${type}','${resulttotaldeposit[0].imgbank}')`;
 
                                 connection.query(sql_before, (error, resultDeposit) => {
                                     if (error) {
@@ -371,7 +361,7 @@ function logTotalAmountWithdraw(resultUser, formattedDateBill, type, destination
                                 console.log(error)
                             } else {
                                 let sql_before = `INSERT INTO totalamountdaily (agentid, accountName, accountNumber, billmatched, complated, bankname, balance, date, time, typeaction, imgbank) value 
-                                ('${resultUser[0].agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${quantity}','${resulttotaldeposit[0].bankName}','${resulttotaldeposit[0].balance}',now() ,now(),'${type}','${resulttotaldeposit[0].imgbank}')`;
+                                ('${resultUser.agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${quantity}','${resulttotaldeposit[0].bankName}','${resulttotaldeposit[0].balance}',now() ,now(),'${type}','${resulttotaldeposit[0].imgbank}')`;
 
                                 connection.query(sql_before, (error, resultDeposit) => {
                                     if (error) {
@@ -392,7 +382,7 @@ function logTotalAmountWithdraw(resultUser, formattedDateBill, type, destination
                                 console.log(error)
                             } else {
                                 let sql_before = `INSERT INTO totalamountdaily (agentid, accountName, accountNumber, billmatched, complated, bankname, balance, date, time, typeaction, imgbank) value 
-                                    ('${resultUser[0].agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${0}','${resulttotaldeposit[0].bankName}','${resulttotaldeposit[0].balance}',now() ,now(),'${type}','${resulttotaldeposit[0].imgbank}')`;
+                                    ('${resultUser.agent_id}','${destinationAccount}','${destinationAccountNumber}','${quantity}','${0}','${resulttotaldeposit[0].bankName}','${resulttotaldeposit[0].balance}',now() ,now(),'${type}','${resulttotaldeposit[0].imgbank}')`;
 
                                 connection.query(sql_before, (error, resultDeposit) => {
                                     if (error) {

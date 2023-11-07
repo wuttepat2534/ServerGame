@@ -544,7 +544,6 @@ exports.financeUser = (req, res) => {
                                             res.end();
 
                                         } else {
-                                            let updateRepostFinance = Finance.UpdateLogRepostFinance(resultUser[0].username, 'ฝาก', quantity)
                                             const post = [
                                                 {
                                                     username: resultUser[0].username,

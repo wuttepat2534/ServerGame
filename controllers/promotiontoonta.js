@@ -37,8 +37,8 @@ module.exports = class Post {
     static promotionDeposit(quantity, dataUser, idPromotion, bill_number, totaltopup, nameimg,
         statusFinance, qrcodeData, transRef, destinationAccount, destinationAccountNumber, formattedDate, formattedNumber) {
         return new Promise((resolve, reject) => {
-
-            if (dataUser.passwordpromotion !== NULL){
+            console.log(dataUser.passwordpromotion );
+            if (dataUser.passwordpromotion === NULL){
                 let rank = 'NewMember';
             const totaltopup = dataUser.total_top_up_amount + quantity;
 

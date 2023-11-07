@@ -38,7 +38,7 @@ module.exports = class Post {
         statusFinance, qrcodeData, transRef, destinationAccount, destinationAccountNumber, formattedDate, formattedNumber) {
         return new Promise((resolve, reject) => {
             console.log(dataUser.passwordpromotion );
-            if (dataUser.passwordpromotion === NULL){
+            if (dataUser.passwordpromotion === null){
                 let rank = 'NewMember';
             const totaltopup = dataUser.total_top_up_amount + quantity;
 

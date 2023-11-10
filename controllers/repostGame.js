@@ -8,7 +8,7 @@ const md5 = require('md5');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const moment = require('moment-timezone')
-
+const promotiontoonta = require('./promotiontoonta')
 const app = express();
 app.use(express.static('public'));
 require('dotenv').config()
@@ -64,15 +64,17 @@ module.exports = class Post {
                 if (error) { console.log(error) }
                 else {
                     let turnoverrepostfun = turnoverrepost(post)
+                    promotiontoonta.user_Leaked_promotion(post)
                     let datausername = result[0];
                     let sql_before = `INSERT INTO repostgame (iduser, username, gameid, bet, win, balance_credit, get_browser, platform, created_atdate, created_attime) value 
               ('${datausername.id}','${post.username}','${post.gameid}','${post.bet}','${post.win}','${post.balance_credit}','${browser}','${platform}','${formattedDate}','${formattedTime}')`;
                     connection.query(sql_before, (error, resultAfter) => {
                         if (error) { console.log(error); }
-                        return 'OK';
+                        else {
+                            return 'OK';
+                        }
                     });
                 }
-
             } catch (err) {
                 if (!err.statusCode) {
                     err.statusCode = 500;
@@ -126,12 +128,14 @@ module.exports = class Post {
                             console.log(resulttransID.length);
                             if (resulttransID.length !== 0) {
                                 let turnoverrepostfun = turnoverrepost(post)
+                                promotiontoonta.user_Leaked_promotion(post)
                                 let sql = `UPDATE repostgame set  win = '${post.win}', balance_credit = '${post.balance_credit}' WHERE trans_id = "${post.trans_id}"`;
                                 connection.query(sql, (error, resultAfter) => {
                                     if (error) { console.log(error); }
                                     return 'OK';
                                 });
                             } else {
+                                promotiontoonta.user_Leaked_promotion(post)
                                 let sql_before = `INSERT INTO repostgame (iduser, username, gameid, bet, win, balance_credit, get_browser, platform, trans_id, created_atdate, created_attime) value 
                                 ('${datausername.id}','${post.username}','${post.gameid}','${post.bet}','${0}','${post.balance_credit}','${browser}','${platform}'
                                 ,'${post.trans_id}','${formattedDate}','${formattedTime}')`;

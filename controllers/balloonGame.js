@@ -26,6 +26,34 @@ function generateRandomPassword(length) {
 
     return password;
 }
+
+function hasSimilarData(gameplayturn, input, turnover, betPlay) {
+    if (gameplayturn !== "PlayAllGame") {
+        const dataString = gameplayturn;
+        const dataArray = dataString.split(',');
+        let dataArrayGame = dataArray.some(item => input.includes(item));
+        if (dataArrayGame) {
+            let postTurnover = turnover - betPlay;
+            if (postTurnover < 0) {
+                postTurnover = 0;
+                return postTurnover
+            } else {
+                return postTurnover
+            }
+        } else {
+            return turnover;
+        }
+    } else {
+        let postTurnover = turnover - betPlay;
+        if (postTurnover < 0) {
+            postTurnover = 0;
+            return postTurnover
+        } else {
+            return postTurnover
+        }
+    }
+}
+
 exports.saveTestGame = async (require, response) => {
     const stateGame = require.params.state;
     const user_id = require.params.user_id;
@@ -238,6 +266,7 @@ function ShootBalloon(userId, bet, choose, paaswordRound) {
                             const tilesString = tilesArray.join(',');
                             const num = parseInt(choose, 10);
                             //console.log(winBalloonId , num)
+                            let balanceturnover = hasSimilarData(results_check[0].gameplayturn, 'DOGZILLA', results_check[0].turnover, bet)
                             if (winBalloonId === num) {
                                 win = bet * multipliers[tilesArray.length - 2];//win = bet*ตัวคูณตามจำนวนลูกโป่งที่เหลืออยู่
                                 isWin = true;
@@ -248,7 +277,7 @@ function ShootBalloon(userId, bet, choose, paaswordRound) {
                                 connection.query(sql_update, (error, resultsGame) => {
                                     if (error) { console.log(error) }
                                     else {
-                                        const sql_update = `UPDATE member set credit ='${user_credit}', bet_latest ='${bet}', turnover ='${postTurnover}'
+                                        const sql_update = `UPDATE member set credit ='${user_credit}', bet_latest ='${bet}', turnover ='${balanceturnover}'
                                         WHERE id ='${userId}'`;
                                         connection.query(sql_update, (error, resultsGame) => {
                                             if (error) { console.log(error) }
@@ -282,7 +311,7 @@ function ShootBalloon(userId, bet, choose, paaswordRound) {
                                 connection.query(sql_update, (error, resultsGame) => {
                                     if (error) { console.log(error) }
                                     else {
-                                        const sql_update = `UPDATE member set credit ='${user_credit}', bet_latest ='${bet}', turnover ='${postTurnover}'
+                                        const sql_update = `UPDATE member set credit ='${user_credit}', bet_latest ='${bet}', turnover ='${balanceturnover}'
                                         WHERE id ='${userId}'`;
                                         connection.query(sql_update, (error, resultsGame) => {
                                             if (error) { console.log(error) }
@@ -496,15 +525,12 @@ function State_Choose(userId, bet, chooseFloorId, paaswordRound, multipliers) {
                         let winStreak = sql_gameRes[0].winCount;
                         let isWin//ชนะมั้ย
 
-                        //console.log(winStreak);
                         if (winStreak == 0) {
                             let credit = user_credit - betGame//หักเงิน
-                            let postTurnover = turnover -= betGame;
-                            if (postTurnover < 0) {
-                                postTurnover = 0;
-                            }
-                            //console.log(credit, user_credit, betGame);
-                            const sql_update = `UPDATE member set credit ='${credit}', bet_latest ='${bet}', turnover ='${postTurnover}'
+
+                            let balanceturnover = hasSimilarData(results_check[0].gameplayturn, 'DOGZILLA', results_check[0].turnover, betGame)
+
+                            const sql_update = `UPDATE member set credit ='${credit}', bet_latest ='${bet}', turnover ='${balanceturnover}'
                             WHERE id ='${userId}'`;
                             connection.query(sql_update, (error, resultsGame) => {
                                 isWin = RandomWin(allWinFloorId, paaswordRound, winStreak, betGame)
@@ -535,7 +561,6 @@ function State_Choose(userId, bet, chooseFloorId, paaswordRound, multipliers) {
                                         console.error("Error:", error);
                                     });
                             })
-
                         }
                         if (winStreak > 0) {
                             let postTurnover = turnover -= 0;
@@ -546,8 +571,6 @@ function State_Choose(userId, bet, chooseFloorId, paaswordRound, multipliers) {
                                             const sql_update = `UPDATE user_play set game_feespin = '${dataChoose.isWin}' 
                                             WHERE winstyle='${paaswordRound}' AND game_feespin = '${true}'`;
                                             connection.query(sql_update, (error, resultsGame) => {
-                                                //console.log(dataChoose.isWin);
-                                                //console.log(dataChoose, 'Random');
                                                 const jsArray = {
                                                     streak: dataChoose.streak,
                                                     isWin: dataRandom,
@@ -557,7 +580,6 @@ function State_Choose(userId, bet, chooseFloorId, paaswordRound, multipliers) {
                                                     credit: user_credit,
                                                     winStreak: dataChoose.winStreak
                                                 };
-                                                //console.log(dataChoose, 'RandomWin');
                                                 resolve(jsArray)
                                             })
                                         })
@@ -575,7 +597,6 @@ function State_Choose(userId, bet, chooseFloorId, paaswordRound, multipliers) {
                             };
                             resolve(jsArray)
                         }
-
                     })
                 } else {
                     resolve('ยอดเงินไม่เพียงพอ')

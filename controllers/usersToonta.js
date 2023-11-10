@@ -500,7 +500,7 @@ exports.financeUser = (req, res) => {
                 console.log(error)
             } else {
                 //console.log(resultUser[0].accountNumber, accountNumberInt)
-                if (type === 'deposit') {
+                if (statusFinance === "สำเร็จ") {
                     let bill = `SELECT numberbill FROM logfinanceuser WHERE transaction_date = ?  AND tpyefinance = 'ฝาก' ORDER BY numberbill DESC LIMIT 1`;
                     connection.query(bill, [formattedDate], (error, resultBill) => {
                         if (error) {
@@ -577,7 +577,7 @@ exports.financeUser = (req, res) => {
                                         } else {
                                             //console.log(typePromotion);
 
-                                            let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}',
+                                            let sql = `UPDATE member set credit = '${balance}', recharge_times = '${resultUser[0].recharge_times + 1}', deposit ='${quantity}',
                                                 total_top_up_amount = '${totaltopup}', groupmember = '${rank}', turnover = '${resultUser[0].turnover + quantity}' 
                                                 WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'`;
                                             connection.query(sql, (error, resultAfter) => {
@@ -609,6 +609,10 @@ exports.financeUser = (req, res) => {
                             }
                         }
                     })
+                } else {
+                    res.send({
+                        message: "เติมเงินไม่สำเร็จ",
+                    });
                 }
             }
         });

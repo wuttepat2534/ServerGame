@@ -12,6 +12,33 @@ const connection = mysql.createPool({
     password: process.env.DB_PASSWORD
 });
 
+function hasSimilarData(gameplayturn, input, turnover, betPlay) {
+    if (gameplayturn !== "PlayAllGame") {
+        const dataString = gameplayturn;
+        const dataArray = dataString.split(',');
+        let dataArrayGame = dataArray.some(item => input.includes(item));
+        if (dataArrayGame) {
+            let postTurnover = turnover - betPlay;
+            if (postTurnover < 0) {
+                postTurnover = 0;
+                return postTurnover
+            } else {
+                return postTurnover
+            }
+        } else {
+            return turnover;
+        }
+    } else {
+        let postTurnover = turnover - betPlay;
+        if (postTurnover < 0) {
+            postTurnover = 0;
+            return postTurnover
+        } else {
+            return postTurnover
+        }
+    }
+}
+
 exports.saveTestGame = async (require, response) => {
     let user_id = require.params.user_id;
     let bet = require.params.bet;
@@ -23,7 +50,7 @@ exports.saveTestGame = async (require, response) => {
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
 
-    let sql_check = `SELECT id, member_code, name, username, credit, status FROM member WHERE id='${user_id}' AND status_delete='N' 
+    let sql_check = `SELECT id, member_code, name, username, credit, status, gameplayturn, turnover FROM member WHERE id='${user_id}' AND status_delete='N' 
     ORDER BY member_code ASC`;
     let sql_logGame = `SELECT play, bet, win FROM loggame WHERE id='${game_id}'`;
     let selectSpl_commissionDay = `SELECT * FROM comgogoldplanet WHERE monthly = '${date}'`;
@@ -54,7 +81,7 @@ exports.saveTestGame = async (require, response) => {
                 username: results_check[0].username, gameid: 'DOGZILLA', bet: bet, win: win, balance_credit: credit, userAgent: userAgent, platform: userAgentt
             }
             let repost = repostGame.uploadLogRepostGame(post)
-
+            let balanceturnover = hasSimilarData(results[0].gameplayturn, "DOGZILLA", results[0].turnover, bet)
             if (isWinFreeSpin === 'true') {
                 let totalWin = 0  //--ส่งไป client
                 let arrayTiles = [];
@@ -107,7 +134,7 @@ exports.saveTestGame = async (require, response) => {
                                         response.sendStatus(500);
                                         return;
                                     } else {
-                                        const sql_update = `UPDATE member set credit='${user_credit}',bet_latest='${bet}' WHERE id='${user_id}'`;
+                                        const sql_update = `UPDATE member set credit='${user_credit}',bet_latest='${bet}', turnover='${balanceturnover}' WHERE id='${user_id}'`;
                                         connection.query(sql_update, (error, result_update_user) => {
                                             if (error) {
                                                 response.sendStatus(500);
@@ -172,7 +199,7 @@ exports.saveTestGame = async (require, response) => {
                                 response.sendStatus(500);
                                 return;
                             } else {
-                                let sql_update = `UPDATE member set credit='${credit}',bet_latest='${bet}' WHERE id='${user_id}'`;
+                                let sql_update = `UPDATE member set credit='${credit}',bet_latest='${bet}', turnover='${balanceturnover}' WHERE id='${user_id}'`;
                                 connection.query(sql_update, (error, result_update_user) => {
                                     if (error) {
                                         response.sendStatus(500);

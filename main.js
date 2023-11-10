@@ -21,6 +21,7 @@ const FInance = require('./controllers/Finance');
 //const promotion = require('./controllers/promotiontoonta')
 var cors = require('cors');
 const cron = require('node-cron');
+const moment = require('moment-timezone');
 // const fs = require('fs');
 // const path = require('path');
 // const FormData = require('form-data');
@@ -1213,32 +1214,32 @@ app.post('/depositToonta', async (req, res) => { //ทดลองอัพโ�
          console.error(error.data);
      });*/
     try {
-        const YOUR_FILE_LOCATION = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/399701021_392539046434485_5890790613760989583_n.jpg';
+        const YOUR_FILE_LOCATION = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/384551119_309257108550761_7537514072333429888_n.jpg';
         //const SletTest = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/slip/377334005_1411687959690621_3265644401220670990_n.jpg';
         const Url = `https://dogzilla.live/images/${req.body.filename}`
         //const Url = `http://localhost:5000/images/${req.body.filename}`
         //console.log(Url);
         const restest = await axios.post(
             'https://api.slipok.com/api/line/apikey/9496',
-            { url: Url },
+            { url: YOUR_FILE_LOCATION },
             {
                 headers: {
                     'x-authorization': 'SLIPOKCJ8CI5X',
                     'Content-Type': 'multipart/form-data',
                 },
             }
-        ) 
-       //console.log(restest.data.data.receiver.account);
+        )
+        //console.log(restest.data.data.receiver.account);
         const financeToonta = FInance.CheckInformation(restest.data, req.body)
             .then(calculatedValues => {
                 res.send({ message: calculatedValues });
             })
             .catch(error => {
-                console.error(error.data);
+                console.error(error.data.data);
             });
     } catch (err) {
         console.log(err)
-        res.json({ message: "QR Code หมดอายุ หรือ ไม่มีรายการอยู่จริง"});
+        res.json({ message: "QR Code หมดอายุ หรือ ไม่มีรายการอยู่จริง" });
     }
 });
 
@@ -1338,20 +1339,14 @@ function getItem(key) {
 }
 
 app.post('/testToken', async (req, res) => {
-    const crypto = require('crypto');
-    const { v5: uuidv5 } = require('uuid');
 
-    const data = { username: "0990825942" };
-    const dataString = JSON.stringify(data);
+    let x = 2 * 
 
-    // สร้าง hash จากข้อมูล
-    const hash = crypto.createHash('sha256').update(dataString).digest('hex');
-
-    // ใช้ Namespace URL (ตามที่ UUID กำหนด) เพื่อใช้ในการแปลง hash เป็น UUID v5
-    const MY_NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
-    const uuidToken = uuidv5(hash, MY_NAMESPACE);
-
-    console.log(uuidToken);
+    res.send({
+        wingame: formattedDateStart,
+        betGame: formattedDateEnd,
+    });
+    res.end();
 
 })
 

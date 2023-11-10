@@ -13,6 +13,33 @@ const connection = mysql.createPool({
     password: process.env.DB_PASSWORD
 });
 
+function hasSimilarData(gameplayturn, input, turnover, betPlay) {
+    if (gameplayturn !== "PlayAllGame") {
+        const dataString = gameplayturn;
+        const dataArray = dataString.split(',');
+        let dataArrayGame = dataArray.some(item => input.includes(item));
+        if (dataArrayGame) {
+            let postTurnover = turnover - betPlay;
+            if (postTurnover < 0) {
+                postTurnover = 0;
+                return postTurnover
+            } else {
+                return postTurnover
+            }
+        } else {
+            return turnover;
+        }
+    } else {
+        let postTurnover = turnover - betPlay;
+        if (postTurnover < 0) {
+            postTurnover = 0;
+            return postTurnover
+        } else {
+            return postTurnover
+        }
+    }
+}
+
 //Spade_Gaming-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 http://localhost:5000/post/Spade_Gaming  
 exports.AuthorizationSpade_Gaming = async (req, res) => {
@@ -26,7 +53,7 @@ exports.AuthorizationSpade_Gaming = async (req, res) => {
     const type = req.body.type;
     const userAgent = req.headers['user-agent'];
 
-    let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${acctId}' AND status_delete='N'`;
+    let spl = `SELECT credit, turnover, gameplayturn FROM member WHERE phonenumber ='${acctId}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -46,30 +73,28 @@ exports.AuthorizationSpade_Gaming = async (req, res) => {
                     });
                 } else {
                     let balanceNow;
-                    let postTurnover = results[0].turnover - amount;
+                    let balanceturnover = results[0].turnover;
                     if (type === 1) {
                         balanceNow = balanceUser - amount;
                         const post = {
                             username: acctId, gameid: "SPADE", bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transferId
                         }
                         let repost = repostGame.uploadLogRepostGameAsk(post)
-                        if (postTurnover < 0) postTurnover = 0;
+                        balanceturnover = hasSimilarData(results[0].gameplayturn, "SPADE", results[0].turnover, amount)
                     } else if (type === 2) {
                         balanceNow = balanceUser + amount;
                         const post = {
                             username: acctId, gameid: "SPADE", bet: 0, win: amount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transferId
                         }
                         let repost = repostGame.uploadLogRepostGameAsk(post)
-                        if (postTurnover < 0) postTurnover = 0;
+
                     } else if (type === 4) {
                         balanceNow = balanceUser - amount;
-                        if (postTurnover < 0) postTurnover = 0;
                     } else {
                         balanceNow = balanceUser + amount;
-                        if (postTurnover < 0) postTurnover = 0;
                     }
 
-                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${postTurnover}' 
+                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${balanceturnover}' 
                     WHERE phonenumber ='${acctId}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         if (error) { console.log(error) }
@@ -114,7 +139,7 @@ exports.HabaneroGame = async (req, res) => {
         const gameTokenV = req.body.playerdetailresponse.token;
         console.log(gameToken);
         const playerdetailrequest = req.body.playerdetailrequest;
-        let spl = `SELECT credit, turnover, username FROM member WHERE tokenplaygame ='${gameToken}' AND status_delete='N'`;
+        let spl = `SELECT credit, turnover, username, gameplayturn FROM member WHERE tokenplaygame ='${gameToken}' AND status_delete='N'`;
         try {
             connection.query(spl, (error, results) => {
                 if (error) { console.log(error) }
@@ -147,7 +172,7 @@ exports.HabaneroGame = async (req, res) => {
 
     } else if (type === 'fundtransferrequest') {
         const fundtransferrequest = req.body.fundtransferrequest;
-        let spl = `SELECT credit, turnover, username FROM member WHERE tokenplaygame ='${fundtransferrequest.token}' AND status_delete='N'`;
+        let spl = `SELECT credit, turnover, username, gameplayturn FROM member WHERE tokenplaygame ='${fundtransferrequest.token}' AND status_delete='N'`;
         try {
             connection.query(spl, (error, results) => {
                 if (error) { console.log(error) }
@@ -160,10 +185,7 @@ exports.HabaneroGame = async (req, res) => {
                     const balanceString = balanceNum.toString();
                     const wingame = 0;
                     //console.log(balanceUser, amount0, amount1)
-                    let postTurnover = results[0].turnover - amount0;
-                    if (postTurnover < 0) {
-                        postTurnover = 0;
-                    }
+
                     if (amount0 > 0) {
                         wingame = amount0;
                     }
@@ -171,8 +193,9 @@ exports.HabaneroGame = async (req, res) => {
                         username: results[0].username, gameid: "HABANERO", bet: amount0, win: amount1, balance_credit: balanceNum, userAgent: userAgent, platform: userAgentt
                     }
                     let repost = repostGame.uploadLogRepostGame(post)
+                    let balanceturnover = hasSimilarData(results[0].gameplayturn, "HABANERO", results[0].turnover, amount0)
 
-                    const sql_update = `UPDATE member set credit='${balanceNum}',bet_latest='${amount0}', turnover='${postTurnover}' 
+                    const sql_update = `UPDATE member set credit='${balanceNum}',bet_latest='${amount0}', turnover='${balanceturnover}' 
         WHERE tokenplaygame ='${fundtransferrequest.token}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         res.status(201).json({
@@ -246,7 +269,7 @@ exports.UpdateBalanceGaming = async (req, res) => {
     const txnId = req.body.txnId;
     const txnEventType = req.body.txnEventType
     const userAgent = req.headers['user-agent'];
-    let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
+    let spl = `SELECT credit, turnover, gameplayturn FROM member WHERE phonenumber ='${username}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -254,27 +277,23 @@ exports.UpdateBalanceGaming = async (req, res) => {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceamount = parseFloat(amount);
                 let balanceNow = 0;
-                let postTurnover = results[0].turnover - balanceamount;
+                let balanceturnover = results[0].turnover;
                 if (txnType === 'DEBIT') {
                     balanceNow = balanceUser - balanceamount;
                     const post = {
                         username: username, gameid: txnEventType, bet: 0, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: txnId
                     }
                     let repost = repostGame.uploadLogRepostGameAsk(post)
-                    if (postTurnover < 0) {
-                        postTurnover = 0;
-                    }
+                    balanceturnover = hasSimilarData(results[0].gameplayturn, txnEventType, results[0].turnover, 0)
                 } else {
                     balanceNow = balanceUser + balanceamount;
                     const post = {
                         username: username, gameid: txnEventType, bet: balanceamount, win: balanceamount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: txnId
                     }
                     let repost = repostGame.uploadLogRepostGameAsk(post)
-                    if (postTurnover < 0) {
-                        postTurnover = 0;
-                    }
+                    balanceturnover = hasSimilarData(results[0].gameplayturn, txnEventType, results[0].turnover, balanceamount)
                 }
-                const sql_update = `UPDATE member set credit='${balanceNow}', bet_latest='${0}', turnover='${postTurnover}'
+                const sql_update = `UPDATE member set credit='${balanceNow}', bet_latest='${0}', turnover='${balanceturnover}'
                 WHERE phonenumber ='${username}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
@@ -342,7 +361,7 @@ exports.EVOPLAYSeamless = async (req, res) => {
     const userAgent = req.headers['user-agent'];
     //console.log(token);
 
-    let spl = `SELECT credit, turnover, username FROM member WHERE tokenplaygame ='${token}' AND status_delete='N'`;
+    let spl = `SELECT credit, turnover, username, gameplayturn FROM member WHERE tokenplaygame ='${token}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -365,16 +384,15 @@ exports.EVOPLAYSeamless = async (req, res) => {
                     const balanceNum = parseFloat(balanceUser);
                     const balanceNow = balanceNum - amount
                     const balanceString = balanceNow.toString();
-                    let postTurnover = results[0].turnover - amount;
-                    if (postTurnover < 0) {
-                        postTurnover = 0;
-                    }
+
                     const post = {
                         username: results[0].username, gameid: 'EVOPLAY', bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: data.action_id
                     }
                     let repost = repostGame.uploadLogRepostGameAsk(post)
 
-                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${postTurnover}'
+                    let balanceturnover = hasSimilarData(results[0].gameplayturn, 'EVOPLAY', results[0].turnover, amount)
+
+                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${balanceturnover}'
                     WHERE phonenumber ='${results[0].username}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         res.status(201).json({
@@ -466,9 +484,8 @@ exports.PlaceBetFunky = async (req, res) => {
     const sessionId = req.body.sessionId;
     const playerIp = req.body.playerIp;
     const userAgent = req.headers['user-agent'];
-    console.log(playerIp);
-    console.log(sessionId)
-    let spl = `SELECT credit, turnover, username FROM member WHERE  tokenplaygame ='${sessionId}' AND status_delete='N'`;
+
+    let spl = `SELECT credit, turnover, username, gameplayturn FROM member WHERE  tokenplaygame ='${sessionId}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -476,16 +493,13 @@ exports.PlaceBetFunky = async (req, res) => {
                 const amount = bet.stake
                 const balanceNum = parseFloat(results[0].credit);
                 const balanceNow = balanceNum - amount
-                let postTurnover = results[0].turnover - amount;
-                if (postTurnover < 0) {
-                    postTurnover = 0;
-                }
+                let balanceturnover = hasSimilarData(results[0].gameplayturn, 'FUNKY', results[0].turnover, amount)
                 const post = {
                     username: results[0].username, gameid: 'FUNKY', bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: bet.refNo
                 }
                 let repost = repostGame.uploadLogRepostGameAsk(post)
 
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${postTurnover}'
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${balanceturnover}'
                 WHERE phonenumber ='${results[0].username}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     res.status(201).json({
@@ -641,7 +655,7 @@ exports.PlaceBetYggdrasil = async (req, res) => {
     const betId = req.body.betId;
     const roundId = req.body.roundId;
     const userAgent = req.headers['user-agent'];
-    let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${usernames}' AND status_delete='N'`;
+    let spl = `SELECT credit, turnover, gameplayturn FROM member WHERE phonenumber ='${usernames}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -649,16 +663,13 @@ exports.PlaceBetYggdrasil = async (req, res) => {
                 const balanceUser = parseFloat(results[0].credit);
                 const balanceNow = balanceUser - amount;
 
-                let postTurnover = results[0].turnover - amount;
-                if (postTurnover < 0) {
-                    postTurnover = 0;
-                }
+                let balanceturnover = hasSimilarData(results[0].gameplayturn, 'YGGDRASIL', results[0].turnover, amount)
                 const post = {
                     username: usernames, gameid: "YGGDRASIL", bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: betId
                 }
                 let repost = repostGame.uploadLogRepostGameAsk(post)
 
-                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${postTurnover}'
+                const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${balanceturnover}'
                 WHERE phonenumber ='${usernames}'`;
                 connection.query(sql_update, (error, resultsGame) => {
                     if (error) { console.log(error) }
@@ -769,7 +780,7 @@ exports.AmebaGame = async (req, res) => {
     const time = req.body.time;
     const userAgent = req.headers['user-agent'];
 
-    let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${account_name}' AND status_delete='N'`;
+    let spl = `SELECT credit, turnover, gameplayturn FROM member WHERE phonenumber ='${account_name}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -793,15 +804,12 @@ exports.AmebaGame = async (req, res) => {
                     const balanceNow = balanceNum - amount
                     const balanceString = balanceNow.toString();
 
-                    let postTurnover = results[0].turnover - amount;
-                    if (postTurnover < 0) {
-                        postTurnover = 0;
-                    }
+                    let balanceturnover = hasSimilarData(results[0].gameplayturn, 'AMEBA', results[0].turnover, amount)
                     const post = {
                         username: account_name, gameid: "AMEBA", bet: amount, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: sessionid
                     }
                     let repost = repostGame.uploadLogRepostGameAsk(post)
-                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${postTurnover}'
+                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amount}', turnover='${balanceturnover}'
                     WHERE phonenumber ='${account_name}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         res.status(201).json({
@@ -1109,7 +1117,7 @@ exports.SpadeGaming = async (req, res) => {
     const serialNo = req.body.serialNo;
     const userAgent = req.headers['user-agent'];
 
-    let spl = `SELECT credit FROM member WHERE phonenumber ='${acctId}' AND status_delete='N'`;
+    let spl = `SELECT credit, gameplayturn, turnover FROM member WHERE phonenumber ='${acctId}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -1153,29 +1161,29 @@ exports.SpadeGaming = async (req, res) => {
                     const specialGame = req.body.channel;
                     const refTicketIds = req.body.refTicketIds;
                     let balanceNow;
-                    let postTurnover = results[0].turnover - amounts;
+                    let balanceturnover = results[0].turnover;
                     if (type === 1) {
                         balanceNow = balanceUser - amounts;
                         const post = {
                             username: acctId, gameid: "SPADE", bet: amounts, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transferId
                         }
                         let repost = repostGame.uploadLogRepostGameAsk(post)
-                        if (postTurnover < 0) postTurnover = 0;
+                        balanceturnover = hasSimilarData(results[0].gameplayturn, 'SPADE', results[0].turnover, amounts)
                     } else if (type === 2) {
                         balanceNow = balanceUser + amounts;
                         const post = {
                             username: acctId, gameid: "SPADE", bet: 0, win: amounts, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: transferId
                         }
                         let repost = repostGame.uploadLogRepostGameAsk(post)
-                        if (postTurnover < 0) postTurnover = 0;
+                        balanceturnover = hasSimilarData(results[0].gameplayturn, 'SPADE', results[0].turnover, 0)
                     } else if (type === 4) {
                         balanceNow = balanceUser - amounts;
-                        if (postTurnover < 0) postTurnover = 0;
+                        balanceturnover = hasSimilarData(results[0].gameplayturn, 'SPADE', results[0].turnover, amounts)
                     } else {
                         balanceNow = balanceUser + amounts;
-                        if (postTurnover < 0) postTurnover = 0;
+                        balanceturnover = hasSimilarData(results[0].gameplayturn, 'SPADE', results[0].turnover, 0)
                     }
-                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amounts}', turnover='${postTurnover}'
+                    const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${amounts}', turnover='${balanceturnover}'
                     WHERE phonenumber ='${acctId}'`;
                     connection.query(sql_update, (error, resultsGame) => {
                         res.status(201).json({

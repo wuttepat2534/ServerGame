@@ -545,7 +545,7 @@ function State_Choose(userId, bet, chooseFloorId, paaswordRound, multipliers) {
                                                         isWin: dataRandom,
                                                         isChooseFloor: dataChoose.isWin,
                                                         win: dataChoose.win,
-                                                        postTurnover: postTurnover,
+                                                        postTurnover: balanceturnover,
                                                         credit: credit,
                                                         winStreak: dataChoose.winStreak
                                                     };
@@ -563,7 +563,7 @@ function State_Choose(userId, bet, chooseFloorId, paaswordRound, multipliers) {
                             })
                         }
                         if (winStreak > 0) {
-                            let postTurnover = turnover -= 0;
+                            let balanceturnover = hasSimilarData(results_check[0].gameplayturn, 'DOGZILLA', results_check[0].turnover, 0)
                             let isWin = RandomWin(allWinFloorId, paaswordRound, winStreak)
                                 .then(dataRandom => {
                                     let isChooseFloor = ChooseFloor(chooseFloorId, winStreak, paaswordRound, betGame, multipliers, dataRandom.allWinFloorId, sql_gameRes[0].win)
@@ -576,7 +576,7 @@ function State_Choose(userId, bet, chooseFloorId, paaswordRound, multipliers) {
                                                     isWin: dataRandom,
                                                     isChooseFloor: dataChoose.isWin,
                                                     win: dataChoose.win,
-                                                    postTurnover: postTurnover,
+                                                    postTurnover: balanceturnover,
                                                     credit: user_credit,
                                                     winStreak: dataChoose.winStreak
                                                 };

@@ -236,35 +236,46 @@ module.exports = class Post {
                 if (error) {
                     console.log(error)
                 } else {
+                    let balanceNow = resultuserPromotion[0].credit - post.bet
                     if (resultuserPromotion[0].passwordpromotion !== "ไม่ได้รับโปรโมชั่น") {
-                        let sql_ePromotion = `SELECT * FROM creditpromotion WHERE passwordpromotion ='${resultuserPromotion[0].passwordpromotion}' AND statuspromotion = 'Y'`;
-                        connection.query(sql_ePromotion, (error, resultPromotion) => {
-                            if (resultPromotion[0].leakedPro === "ค่าคงที่") {
-                                if (resultuserPromotion[0].credit <= resultPromotion[0].valusbunus) {
-                                    let sql = `UPDATE member set promotionuser = 'ไม่ได้รับโปรโมชั่น', passwordpromotion = 'ไม่ได้รับโปรโมชั่น', gameplayturn = 'PlayAllGame' WHERE username ='${post.username}'`;
-                                    connection.query(sql, (error, resultAfter) => {
-                                        if (error) {
-                                            console.log(error);
-                                        }
-                                    });
-                                }
-                            } else {
-                                let sql_ePromotionRepost = `SELECT * FROM repostpromotion WHERE passwordpromotion ='${resultuserPromotion[0].passwordpromotion}' AND statuspromotion = 'Y'`;
-                                connection.query(sql_ePromotionRepost, (error, resultPromotionrepost) => {
-                                    let creditUserPromotion = resultPromotionrepost[0].credit;
-                                    let creditbonusPromotion = resultPromotion[0].valusbunus;
-                                    let creditLeaked_promotion = (creditUserPromotion * creditbonusPromotion) /100
-                                    if (resultuserPromotion[0].credit <= creditLeaked_promotion) {
-                                        let sql = `UPDATE member set promotionuser = 'ไม่ได้รับโปรโมชั่น', passwordpromotion = 'ไม่ได้รับโปรโมชั่น', gameplayturn = 'PlayAllGame' WHERE username ='${post.username}'`;
+                        if (resultuserPromotion[0].turnover !== 0) {
+                            let sql_ePromotion = `SELECT * FROM creditpromotion WHERE passwordpromotion ='${resultuserPromotion[0].passwordpromotion}' AND statuspromotion = 'Y'`;
+                            connection.query(sql_ePromotion, (error, resultPromotion) => {
+                                if (resultPromotion[0].leakedPro === "ค่าคงที่") {
+
+                                    if (balanceNow <= resultPromotion[0].valusbunus) {
+                                        let sql = `UPDATE member set promotionuser = 'ไม่ได้รับโปรโมชั่น', passwordpromotion = 'ไม่ได้รับโปรโมชั่น', gameplayturn = 'PlayAllGame', turnover = '${0}' WHERE username ='${post.username}'`;
                                         connection.query(sql, (error, resultAfter) => {
                                             if (error) {
                                                 console.log(error);
                                             }
                                         });
                                     }
-                                })
-                            }
-                        })
+                                } else {
+                                    let sql_ePromotionRepost = `SELECT * FROM repostpromotion WHERE passwordpromotion ='${resultuserPromotion[0].passwordpromotion}' AND statuspromotion = 'Y'`;
+                                    connection.query(sql_ePromotionRepost, (error, resultPromotionrepost) => {
+                                        let creditUserPromotion = resultPromotionrepost[0].credit;
+                                        let creditbonusPromotion = resultPromotion[0].valusbunus;
+                                        let creditLeaked_promotion = (creditUserPromotion * creditbonusPromotion) / 100
+                                        if (balanceNow <= creditLeaked_promotion) {
+                                            let sql = `UPDATE member set promotionuser = 'ไม่ได้รับโปรโมชั่น', passwordpromotion = 'ไม่ได้รับโปรโมชั่น', gameplayturn = 'PlayAllGame', turnover = '${0}' WHERE username ='${post.username}'`;
+                                            connection.query(sql, (error, resultAfter) => {
+                                                if (error) {
+                                                    console.log(error);
+                                                }
+                                            });
+                                        }
+                                    })
+                                }
+                            })
+                        } else {
+                            let sql = `UPDATE member set promotionuser = 'ไม่ได้รับโปรโมชั่น', passwordpromotion = 'ไม่ได้รับโปรโมชั่น', gameplayturn = 'PlayAllGame', turnover = '${0}' WHERE username ='${post.username}'`;
+                            connection.query(sql, (error, resultAfter) => {
+                                if (error) {
+                                    console.log(error);
+                                }
+                            });
+                        }
                     }
                 }
             })

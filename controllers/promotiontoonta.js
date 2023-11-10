@@ -312,7 +312,7 @@ function receive_Promotions(resultPromotion, dataUser, bill_number, quantity, fo
 
         const balance = dataUser.credit + quantity + balancebunus;
         const creditBunus = quantity + balancebunus;
-        const turnover = balancebunus * resultPromotion[0].multiplier;
+        const turnover = creditBunus * resultPromotion[0].multiplier;
 
         let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
             balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber, trans_ref, qrcodeData, nameimg) value 

@@ -372,6 +372,7 @@ exports.GameArcade = async (require, response) => {
                                 userId: idUser,
                                 multipliers: multipliers,
                                 winStreak: results_check[0].winCount,
+                                gamebet: results_check[0].bet
                             });
                             response.end();
                         } else {

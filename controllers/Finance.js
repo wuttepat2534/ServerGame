@@ -226,7 +226,7 @@ module.exports = class Post {
                                                     const dataUserAccount = nameAccount;
                                                     if (dataUserAccount.length !== 0 || dataUserAccount.length > 0) {
                                                         console.log('on3')
-                                                        const response = await axios.post(baseURL + "/post/financeUser", {
+                                                        const response = await axios.post(baseURL + "post/financeUser", {
                                                             resFinance: resFinance,
                                                             type: dataUsers.type,
                                                             quantity: resFinance.data.amount,

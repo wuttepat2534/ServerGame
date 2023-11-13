@@ -1911,6 +1911,34 @@ exports.PutCreditUserToonta = async (require, response, next) => {
     });
 };
 
+http://localhost:5000/post/PutUserTurnOver put PutUserTurnOver
+exports.PutUserTurnOver = async (require, response, next) => {
+    const useranme = require.body.username;
+    const idUser = require.body.idUser;
+    const idedit = require.body.idedit;
+    const typeedit = require.body.typeedit;
+    const turnovernew = require.body.turnover;
+    const turnoverBefore = require.body.turnoverBefore;
+    const agent_id = require.body.agent_id;
+
+    const logFuntion = logEdit.uploadLogEditTurnOver(idUser, idedit, typeedit, turnovernew, turnoverBefore);
+    let sql = `UPDATE member set  turnover = '${turnovernew}' WHERE username = "${useranme}" AND agent_id = "${agent_id}"`;
+    connection.query(sql, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            response.send({
+                message: "User Member editTurnOver Success"
+            });
+            response.end();
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+    });
+};
+
 http://localhost:5000/post/banUserToonta put banUserToonta
 exports.banUserToonta = async (require, response) => {
     const useranme = require.params.username;

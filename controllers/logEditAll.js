@@ -112,4 +112,33 @@ module.exports = class Post {
             }
         });
     }
+
+    static uploadLogEditTurnOver(idUser, idedit, typeedit, turnovernew, turnoverBefore) {
+        const iduser = idUser;
+        const ideditAcc = idedit;
+        //console.log(idUser, idedit, typeedit, creditnew, creditBefore)
+        const sql = `SELECT * FROM ${typeedit} WHERE id = ?`;
+        connection.query(sql, [ideditAcc], (error, resultBefore) => {
+            try {
+                if (error) { console.log(error) }
+                else {
+                    let nametpyeEdit = resultBefore[0].username
+                    let sql_before = `INSERT INTO logedit (edittype, idedit, idmember, name, editbefore, editafter, created_atdate, created_attime) value 
+              ('${typeedit}','${ideditAcc}','${iduser}','${nametpyeEdit}','${'turnover ก่อนหน้า   ' + turnoverBefore}
+              ','${'turnover ปัจจุบัน = ' + turnovernew + 'มีการเปลี่ยนโดย' + " " + typeedit + " " + 'ชื่อ' + " " + nametpyeEdit}',now(), now())`;
+
+                    connection.query(sql_before, (error, resultAfter) => {
+                        if (error) { console.log(error); }
+                        return 'OK';
+                    });
+                }
+
+            } catch (err) {
+                if (!err.statusCode) {
+                    err.statusCode = 500;
+                }
+            }
+        });
+    }
+
 };

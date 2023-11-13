@@ -1214,14 +1214,14 @@ app.post('/depositToonta', async (req, res) => { //ทดลองอัพโ�
          console.error(error.data);
      });*/
     try {
-        const YOUR_FILE_LOCATION = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/384551119_309257108550761_7537514072333429888_n.jpg';
+        const YOUR_FILE_LOCATION = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/imageK.png';
         //const SletTest = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/slip/377334005_1411687959690621_3265644401220670990_n.jpg';
         const Url = `https://dogzilla.live/images/${req.body.filename}`
         //const Url = `http://localhost:5000/images/${req.body.filename}`
         //console.log(Url);
         const restest = await axios.post(
             'https://api.slipok.com/api/line/apikey/9496',
-            { url: Url },
+            { url: YOUR_FILE_LOCATION },
             {
                 headers: {
                     'x-authorization': 'SLIPOKCJ8CI5X',

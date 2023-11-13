@@ -322,7 +322,7 @@ exports.DeleteAgentWeb = (require, response) => {
 //http://localhost:5000/post/GetOneBank getOneBank
 exports.GetOneBank = (require, response) => {
     const nameBank = require.body.nameBank;
-    console.log(nameBank)
+    //console.log(nameBank)
     let sql = `SELECT * FROM banknames WHERE bankname_name = "${nameBank}" AND status = "Y"`;
     connection.query(sql, async (error, results) => {
         if (error) { console.log(error); }
@@ -438,5 +438,116 @@ exports.GetStatementUser = (require, response) => {
             });
         }
     });
+}
+
+//http://localhost:5000/post/getRepostGameCamp getRepostGameCamp
+exports.getRepostPromotion = (require, response) => {
+    const searcPromotion = require.body.searcPromotion;
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+    const date = require.body.dataDate;
+    const endDate = require.body.dataEndDate;
+
+    if (searcPromotion === '') {
+        let sql = `SELECT * FROM repostpromotion WHERE 	created_at >='${date}' AND 	created_at <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
+        connection.query(sql, async (error, results) => {
+            if (error) { console.log(error); }
+            const totalCount = `SELECT COUNT(*) as count FROM repostpromotion WHERE created_at >='${date}' AND 	created_at <= '${endDate}'`
+            connection.query(totalCount, (error, res) => {
+                if (error) { console.log(error); }
+                else {
+                    response.send({
+                        data: results,
+                        valusData: results.length,
+                        total: res[0].count,
+                        startdate: date,
+                        enddate: endDate
+                    });
+                    response.end();
+                }
+            });
+        });
+    } else if (searcPromotion !== '') {
+        let sql_ = `SELECT * FROM repostpromotion WHERE created_at >= ? AND created_at <= ? AND namepromotion LIKE ? LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searcPromotion}%`;
+        const values = [date, endDate, searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM repostpromotion WHERE created_at >='${date}' AND created_at <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else if (searcPromotion === undefined) {
+        let sql = `SELECT * FROM repostpromotion WHERE created_at >='${date}' AND created_at <= '${endDate}' LIMIT ${pageSize} OFFSET ${offset}`;
+        connection.query(sql, async (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM repostpromotion WHERE created_at >='${date}' AND created_at <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else if (searcPromotion !== undefined) {
+        let sql_ = `SELECT * FROM repostpromotion WHERE created_at >='${date}' AND created_at <= '${endDate}' AND namepromotion LIKE ? LIMIT ? OFFSET ?`;
+        const values = [searcPromotion, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM repostpromotion WHERE created_at >='${date}' AND created_at <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else {
+        let sql_ = `SELECT * FROM repostpromotion WHERE created_at >='${date}' AND created_at <= '${endDate}' AND namepromotion LIKE '%${searcPromotion}%' LIKE ? LIMIT ? OFFSET ?`;
+        const values = [pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM repostpromotion WHERE created_at >='${date}' AND created_at <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    }
 }
 

@@ -37,8 +37,8 @@ module.exports = class Post {
             const resFinance = restest;
             const dataUsers = dataUser;
 
-            let baseURL = 'https://dogzilla.live/';
-            //const baseURL = 'http://localhost:5000/';
+            //let baseURL = 'https://dogzilla.live/';
+            const baseURL = 'http://localhost:5000/';
 
             //console.log(dataUsers , resFinance);
             let Bank;
@@ -194,15 +194,16 @@ module.exports = class Post {
                     }
                 })
             } else {
-                //console.log(last4DigitsUser)
-                let sql_deposit = `SELECT * FROM depositaccount WHERE activestatus = "เปิดใช้งาน" AND accountNumber = "${resFinance.data.receiver.account.value}"`;
-                connection.query(sql_deposit, (error, depositData) => {
+                //let dataaccountNumber = resFinance.data.receiver.account.value;
+                let sql_deposit = `SELECT * FROM depositaccount WHERE activestatus = "เปิดใช้งาน" AND SUBSTRING(accountNumber, LENGTH(accountNumber) - 4, 4) = ?`;
+                connection.query(sql_deposit, [`${last4DigitsUser}`], (error, depositData) => {
                     try {
                         if (error) {
                             console.log(error);
                             reject("ผิดพลาด");
                         }
                         else {
+                            console.log(resFinance.data.receiver.account.value)
                             const data = depositData;
                             if (data.length !== 0 || data.length > 0) {
                                 console.log('on1')
@@ -217,7 +218,6 @@ module.exports = class Post {
                                             console.log('on2')
                                             let sql_NameAccount = `SELECT * FROM member WHERE SUBSTRING(accountNumber, LENGTH(accountNumber) - 4, 4) = ? 
                                             AND bank = '${Bank}' AND phonenumber = '${dataUsers.phonenumber}'`;
-
                                             connection.query(sql_NameAccount, [last4Digits], async (error, nameAccount) => {
                                                 if (error) {
                                                     console.log(error);

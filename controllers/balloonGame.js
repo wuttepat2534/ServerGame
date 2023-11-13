@@ -363,7 +363,7 @@ exports.GameArcade = async (require, response) => {
                 .then(data => {
                     const randomPassword = generateRandomPassword(15);
                     const idUser = data.id;
-                    let sql_check = `SELECT * FROM user_play WHERE member_id ='${idUser}' AND game_feespin ='${true}'`;
+                    let sql_check = `SELECT * FROM user_play WHERE member_id ='${idUser}' AND game_feespin ='${true}' AND game_id = '${game_id}'`;
                     connection.query(sql_check, (error, results_check) => {
                         if (results_check.length > 0) {
                             response.json({

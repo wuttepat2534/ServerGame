@@ -348,7 +348,7 @@ function receive_Promotions(resultPromotion, dataUser, bill_number, quantity, fo
                     }
 
                     addRepostPromotion(dataUser.username, resultPromotion[0].passwordpromotion, resultPromotion[0].namepromotion,
-                        resultPromotion[0].promotionsupport, resultPromotion[0].multiplier, balancebunus, creditBunus, ipuser);
+                        resultPromotion[0].promotionsupport, resultPromotion[0].multiplier, balancebunus, creditBunus, ipuser, resultPromotion[0]);
 
                     let jsArray = { status: "รับโปรโมชั่นเรียบร้อย" };
                     resolve(jsArray);
@@ -364,13 +364,14 @@ function automaticFunctionTest() {
     console.log('Automatic function is running at 03:54 PM.');
 }
 
-function addRepostPromotion(username, passwordpromotion, namepromotion, promotionsupport, multiplier, bunus, userbalance, ipuser) {
+function addRepostPromotion(username, passwordpromotion, namepromotion, promotionsupport, multiplier, bunus, userbalance, ipuser, resultPromotion) {
     const currentTimeInThailand = moment().tz('Asia/Bangkok');
     const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
     try {
         let sql_before = `INSERT INTO repostPromotion (username, passwordpromotion, namepromotion, promotionsupport, multiplier, bunus, created_at, 
-            numbet_received, credit, ip_address) value 
-        ('${username}','${passwordpromotion}','${namepromotion}','${promotionsupport}','${multiplier}','${bunus}','${formattedDate}','${1}','${userbalance}','${ipuser}')`;
+            numbet_received, credit, ip_address, tpyepromotion, tpyebunus, 	startpromotion, endpromotion) value 
+        ('${username}','${passwordpromotion}','${namepromotion}','${promotionsupport}','${multiplier}','${bunus}','${formattedDate}','${1}','${userbalance}','${ipuser}',
+        'ฝาก','${resultPromotion.typebonus}','${resultPromotion.startpromotion}','${resultPromotion.endpromotion}')`;
         connection.query(sql_before, (error, resultDeposit) => {
             if (error) {
                 console.log(error);

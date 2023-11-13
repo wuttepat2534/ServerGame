@@ -81,7 +81,7 @@ exports.saveTestGame = async (require, response) => {
                 username: results_check[0].username, gameid: 'DOGZILLA', bet: bet, win: win, balance_credit: credit, userAgent: userAgent, platform: userAgentt
             }
             let repost = repostGame.uploadLogRepostGame(post)
-            let balanceturnover = hasSimilarData(results[0].gameplayturn, "DOGZILLA", results[0].turnover, bet)
+            let balanceturnover = hasSimilarData(results_check[0].gameplayturn, "DOGZILLA", results_check[0].turnover, bet)
             if (isWinFreeSpin === 'true') {
                 let totalWin = 0  //--ส่งไป client
                 let arrayTiles = [];

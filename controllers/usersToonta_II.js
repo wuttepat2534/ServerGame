@@ -707,7 +707,7 @@ exports.getlistAbs = (require, response) => {
 
 http: //localhost:5000/post/getOneAbs Add getOneAbs
 exports.getOneAbs = (require, response) => {
-    const password_ads = require.params.passwordpromotion;
+    const password_ads = require.params.password_ads;
     let sql = `SELECT * FROM abswebsite WHERE password_ads = '${password_ads}' AND status_abs = 'Y'`;
     connection.query(sql, async (error, results) => {
         if (error) { console.log(error); }
@@ -719,3 +719,45 @@ exports.getOneAbs = (require, response) => {
     });
 };
 
+http: //localhost:5000/post/upDateABSAll Add upDateABSAll
+exports.upDateABSAll = (req, res) => {
+    const data = JSON.parse(req.body.data);
+    const { name_abs, password_ads, start_abs, end_abs, imgAbs, details_abs } = data;
+    //let fileimg = '';
+    //console.log(req.file, imgPromotion);
+    if (req.file === undefined) {
+        let sql_update = `UPDATE abswebsite set filename = '${imgAbs}', name_abs = '${name_abs}', start_abs = '${start_abs}', start_abs = '${end_abs}', details_abs = '${details_abs}' 
+        WHERE password_ads ='${password_ads}'`;
+        connection.query(sql_update, (error, resultAfter) => {
+            try {
+                if (error) {
+                    console.log(error);
+                }
+                res.send({
+                    message: "Data created Success"
+                });
+                res.end();
+            } catch (err) {
+                if (!err.statusCode) { err.statusCode = 500; }
+                next(err);
+            }
+        });
+    } else {
+        let sql_update = `UPDATE abswebsite set filename = '${req.file.filename}, name_abs = '${name_abs}', start_abs = '${start_abs}', start_abs = '${end_abs}', details_abs = '${details_abs}' 
+        WHERE password_ads ='${password_ads}'`;
+        connection.query(sql_update, (error, resultAfter) => {
+            try {
+                if (error) {
+                    console.log(error);
+                }
+                res.send({
+                    message: "Data created Success"
+                });
+                res.end();
+            } catch (err) {
+                if (!err.statusCode) { err.statusCode = 500; }
+                next(err);
+            }
+        });
+    }
+};

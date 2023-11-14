@@ -96,6 +96,7 @@ router.post('/addAbsWeb', userstoonTaII.addAbsWeb) //Abs Website เพิ่ม
 router.post('/addImgAbsWeb', imageUpload.single('file'), userstoonTaII.imgAbsWeb) //Abs Img เพิ่มรปูภาพโฆษณา
 router.post('/getAbsWebsite', userstoonTaII.getAbsWebsite) //get AbsWebsite
 router.post('/getlistAbs', userstoonTaII.getlistAbs) //get getlistAbs
+router.post('/upDateABSAll', imageUpload.single('file'), userstoonTaII.upDateABSAll) //UpdateAbs
 
 router.get('/getDepositaccount/:agent_id', userToonta.getDepositaccount)
 router.get('/getWithdrawalaccount', userToonta.getWithdrawalaccount)

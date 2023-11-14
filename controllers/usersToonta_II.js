@@ -650,3 +650,72 @@ exports.imgAbsWeb = (req, res) => {
     });
 };
 
+http: //localhost:5000/post/creditImgPromotion Add creditImgPromotion
+exports.DeleteAbs = (req, res) => {
+    const password_ads = req.body.password_ads;
+
+    let sql_update = `UPDATE abswebsite set status_abs = 'N' WHERE password_ads ='${password_ads}'`;
+    connection.query(sql_update, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            res.send({
+                message: "Data Delete Success"
+            });
+            res.end();
+        } catch (err) {
+            if (!err.statusCode) { err.statusCode = 500; }
+            next(err);
+        }
+    });
+};
+
+http: //localhost:5000/post/getPromotion Add getPromotion
+exports.getAbsWebsite = (require, response) => {
+    const abs_type = require.body.abs_type;
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+
+    let sql = `SELECT * FROM abswebsite WHERE status_abs = 'Y' AND abs_type = '${abs_type}' LIMIT ${pageSize} OFFSET ${offset}`;
+    connection.query(sql, async (error, results) => {
+        if (error) { console.log(error); }
+        const totalCount = `SELECT COUNT(*) as count FROM abswebsite WHERE status_abs = 'Y' AND abs_type = '${abs_type}'`
+        connection.query(totalCount, (error, res) => {
+            if (error) { console.log(error); }
+            response.send({
+                message: 'Success',
+                data: results,
+                total: res[0].count
+            });
+            response.end();
+        });
+    });
+};
+
+http: //localhost:5000/post/getlistPromotion Get getPromotion
+exports.getlistAbs = (require, response) => {
+    let sql = `SELECT * FROM abswebsite WHERE status_abs = 'Y'`;
+    connection.query(sql, async (error, results) => {
+        if (error) { console.log(error); }
+        response.send({
+            message: 'Success',
+            data: results,
+        });
+        response.end();
+    });
+};
+
+http: //localhost:5000/post/getOneAbs Add getOneAbs
+exports.getOneAbs = (require, response) => {
+    const password_ads = require.params.passwordpromotion;
+    let sql = `SELECT * FROM abswebsite WHERE password_ads = '${password_ads}' AND status_abs = 'Y'`;
+    connection.query(sql, async (error, results) => {
+        if (error) { console.log(error); }
+        response.send({
+            message: `ABS Password '${password_ads}'`,
+            data: results,
+        });
+        response.end();
+    });
+};
+

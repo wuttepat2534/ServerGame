@@ -596,3 +596,57 @@ exports.getRepostPromotion = (require, response) => {
     }
 }
 
+http: //localhost:5000/post/addAbsWeb Add addAbsWeb
+exports.addAbsWeb = async (req, res, next) => {
+    const idwebsite_abs = req.body.idwebsite_abs;
+    const abs_type = req.body.abs_type;
+    const password_ads = req.body.password_ads;
+    const name_abs = req.body.name_abs;
+    const start_abs = req.body.start_abs;
+    const end_abs = req.body.end_abs;
+    const details_abs = req.body.details_abs;
+
+    //console.log(req.body)
+    let sql = `INSERT INTO abswebsite (idwebsite_abs, abs_type, password_ads, name_abs, start_abs, end_abs, details_abs) 
+        value ('${idwebsite_abs}','${abs_type}','${password_ads}','${name_abs}','${start_abs}','${end_abs}','${details_abs}')`;
+
+    connection.query(sql, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            res.send({
+                message: "Data created Success"
+            });
+            res.end();
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+
+    });
+};
+
+http: //localhost:5000/post/addImgAbsWeb Add addImgAbsWeb
+exports.imgAbsWeb = (req, res) => {
+    const data = JSON.parse(req.body.data);
+    const { name_abs, password_ads } = data;
+    const fileimg = req.file;
+
+    let sql_update = `UPDATE abswebsite set filename = '${fileimg.filename}', name_abs = '${name_abs}' WHERE password_ads ='${password_ads}'`;
+    connection.query(sql_update, (error, resultAfter) => {
+        try {
+            if (error) {
+                console.log(error);
+            }
+            res.send({
+                message: "Data created Success"
+            });
+            res.end();
+        } catch (err) {
+            if (!err.statusCode) { err.statusCode = 500; }
+            next(err);
+        }
+    });
+};
+

@@ -469,6 +469,7 @@ exports.getDatafinanceUser = (req, res) => {
 function formatNumber(num) {
     return String(num).padStart(5, '0');
 }
+
 //http://localhost:5000/post/financeUser financeUserMoney
 exports.financeUser = (req, res) => {
     //console.log(req.body);
@@ -633,8 +634,11 @@ exports.WinhdrawUser = (req, res) => {
     const currentTimeInThailand = moment().tz('Asia/Bangkok');
     const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
     const formattedTime = currentTimeInThailand.format('HH:mm:ss');
+
+    const statusWitdraw = req.body.statusWitdraw;
+    const withdrawStatus = req.body.withdrawStatus;
     const io = socket.getIO();
-    //console.log(statusFinance);
+    console.log(req.body);
     try {
         let sql_before = `SELECT * FROM member WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'  ORDER BY phonenumber ASC`;
         connection.query(sql_before, (error, resultUser) => {
@@ -655,8 +659,7 @@ exports.WinhdrawUser = (req, res) => {
                             } else { billnum += 1; }
                             const formattedNumber = formatNumber(billnum);
                             //console.log(formattedNumber)
-                            const statusWitdraw = 'ถอน';
-                            Finance.Withdrawmoney(resultUser[0], formattedDate, formattedNumber, billnum, quantity, resultUser[0].accountNumber, phonenumber, 'in_progress')
+                            Finance.Withdrawmoney(resultUser[0], formattedDate, formattedNumber, billnum, quantity, resultUser[0].accountNumber, phonenumber, withdrawStatus)
                                 .then(calculatedValues => {
                                     //console.log(calculatedValues);
                                 })
@@ -673,7 +676,7 @@ exports.WinhdrawUser = (req, res) => {
                                     let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
                                         balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value 
                                     ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${resultUser[0].accountNumber}','${phonenumber}','${'ถอน'}','${quantity}','${0}','${resultUser[0].credit}'
-                                    ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${'ยังไม่เรียบร้อย'}','${formattedDate}','${formattedTime}','${resultUser[0].bank}','${resultBank[0].images}'
+                                    ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${statusWitdraw}','${formattedDate}','${formattedTime}','${resultUser[0].bank}','${resultBank[0].images}'
                                     ,'${resultUser[0].accountName}','${resultUser[0].accountNumber}')`;
 
                                     connection.query(sql_before, (error, result) => {
@@ -682,16 +685,26 @@ exports.WinhdrawUser = (req, res) => {
                                         } else {
                                             const balanceNow = resultUser[0].credit - quantity;
                                             if (statusWitdraw === "สำเร็จ") {
-                                                let sql = `UPDATE member set credit = '${balanceNow}', recharge_times = '${resultUser[0].recharge_times + 1}'
-                                            WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'`;
+
+                                                const approval_person = req.body.approval_person
+                                                const tpyeApproval_person = req.body.tpye_Approval_person
+
+                                                let sql = `UPDATE member set credit = '${balanceNow}', withdraw_member = '${resultUser[0].withdraw_member + quantity}', latest_withdrawal = '${quantity}'
+                                                WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'`;
                                                 connection.query(sql, (error, resultAfter) => {
                                                     if (error) {
                                                         console.log(error);
                                                     }
-                                                    res.send({
-                                                        message: "ถอนเงินสำเร็จ",
-                                                    });
-                                                    res.end();
+
+                                                    let sql_Withdraw = `UPDATE logfinanceuser set trans_ref = '${approval_person}',qrcodeData = '${tpyeApproval_person}' 
+                                                    WHERE bill_number ='T${formattedDate}${formattedNumber}'`;
+                                                    connection.query(sql_Withdraw, (error, withdraw) => {
+                                                        let updateRepostFinance = Finance.UpdateLogRepostFinance(phonenumber, 'ถอน', quantity)
+                                                        res.send({
+                                                            message: "ถอนเงินสำเร็จ",
+                                                        });
+                                                        res.end();
+                                                    })
                                                 });
                                             }
                                             else {

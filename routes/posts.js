@@ -92,6 +92,8 @@ router.post('/GetOneBank', userstoonTaII.GetOneBank)
 router.post('/loginEnployee', userstoonTaII.LoginAgentWeb)
 router.post('/GetStatementUser', userstoonTaII.GetStatementUser)
 router.post('/getRepostPromotion', userstoonTaII.getRepostPromotion)
+router.post('/addAbsWeb', userstoonTaII.addAbsWeb) //Abs Website เพิ่มโฆษณา
+router.post('/addImgAbsWeb', imageUpload.single('file'), userstoonTaII.imgAbsWeb) //Abs Img เพิ่มรปูภาพโฆษณา
 
 router.get('/getDepositaccount/:agent_id', userToonta.getDepositaccount)
 router.get('/getWithdrawalaccount', userToonta.getWithdrawalaccount)

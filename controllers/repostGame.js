@@ -64,6 +64,7 @@ module.exports = class Post {
                 if (error) { console.log(error) }
                 else {
                     let turnoverrepostfun = turnoverrepost(post)
+                    
                     promotiontoonta.user_Leaked_promotion(post)
                     let datausername = result[0];
                     let sql_before = `INSERT INTO repostgame (iduser, username, gameid, bet, win, balance_credit, get_browser, platform, created_atdate, created_attime) value 

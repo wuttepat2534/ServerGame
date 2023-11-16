@@ -605,10 +605,10 @@ exports.addAbsWeb = async (req, res, next) => {
     const start_abs = req.body.start_abs;
     const end_abs = req.body.end_abs;
     const details_abs = req.body.details_abs;
-
+    const img = req.body.img_abs
     //console.log(req.body)
-    let sql = `INSERT INTO abswebsite (idwebsite_abs, abs_type, password_ads, name_abs, start_abs, end_abs, details_abs) 
-        value ('${idwebsite_abs}','${abs_type}','${password_ads}','${name_abs}','${start_abs}','${end_abs}','${details_abs}')`;
+    let sql = `INSERT INTO abswebsite (idwebsite_abs, abs_type, password_ads, name_abs, start_abs, end_abs, details_abs, filename) 
+        value ('${idwebsite_abs}','${abs_type}','${password_ads}','${name_abs}','${start_abs}','${end_abs}','${details_abs}','${img}')`;
 
     connection.query(sql, (error, result) => {
         try {
@@ -692,9 +692,10 @@ exports.getAbsWebsite = (require, response) => {
     });
 };
 
-http: //localhost:5000/post/getlistPromotion Get getPromotion
+http: //localhost:5000/post/getlistAbs:type Get getPromotion
 exports.getlistAbs = (require, response) => {
-    let sql = `SELECT * FROM abswebsite WHERE status_abs = 'Y'`;
+    const abs_type = require.params.tpye;
+    let sql = `SELECT * FROM abswebsite WHERE status_abs = 'Y' AND abs_type = '${abs_type}'`;
     connection.query(sql, async (error, results) => {
         if (error) { console.log(error); }
         response.send({
@@ -743,7 +744,7 @@ exports.upDateABSAll = (req, res) => {
             }
         });
     } else {
-        let sql_update = `UPDATE abswebsite set filename = '${req.file.filename}, name_abs = '${name_abs}', start_abs = '${start_abs}', start_abs = '${end_abs}', details_abs = '${details_abs}' 
+        let sql_update = `UPDATE abswebsite set filename = '${req.file.filename}', name_abs = '${name_abs}', start_abs = '${start_abs}', start_abs = '${end_abs}', details_abs = '${details_abs}' 
         WHERE password_ads ='${password_ads}'`;
         connection.query(sql_update, (error, resultAfter) => {
             try {
@@ -760,4 +761,99 @@ exports.upDateABSAll = (req, res) => {
             }
         });
     }
+};
+
+http: //localhost:5000/post/getPromotion Add getPromotion
+exports.getPromotionMember = (require, response) => {
+    const username = require.body.username;
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+
+    let sql = `SELECT * FROM repostpromotion WHERE username = '${username}' LIMIT ${pageSize} OFFSET ${offset}`;
+    connection.query(sql, async (error, results) => {
+        if (error) { console.log(error); }
+        const totalCount = `SELECT COUNT(*) as count FROM repostpromotion WHERE username = '${username}'`
+        connection.query(totalCount, (error, res) => {
+            if (error) { console.log(error); }
+            response.send({
+                message: 'Success',
+                data: results,
+                total: res[0].count
+            });
+            response.end();
+        });
+    });
+};
+
+http: //localhost:5000/post/creditImgPromotion Add creditImgPromotion
+exports.DeleteMemberPromotion = (req, res) => {
+    const username = req.body.username;
+    let sql_update = `UPDATE member set promotionuser = 'ไม่ได้รับโปรโมชั่น', passwordpromotion = 'ไม่ได้รับโปรโมชั่น', gameplayturn = 'PlayAllGame' 
+    WHERE username = '${username}'`;
+    connection.query(sql_update, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            res.send({
+                message: "Data Delete Success"
+            });
+            res.end();
+        } catch (err) {
+            if (!err.statusCode) { err.statusCode = 500; }
+            next(err);
+        }
+    });
+};
+
+http: //localhost:5000/post/updateTrasalationGroup PUT updateTrasalationGroup
+exports.updateTrasalationGroup = (req, res) => {
+
+    const idGroup = req.body.idGroup;
+    const action = req.body.action
+    let idGroupupdate = 0
+
+    if (action === 'Up') {
+        idGroupupdate = idGroup - 1;
+    } else {
+        idGroupupdate = idGroup + 1;
+    }
+    //console.log(idGroupupdate);
+
+    let sql_start = `UPDATE mastergroup set id = '${0}' WHERE id = '${idGroupupdate}'`;
+    connection.query(sql_start, (error, resultAfter) => {
+        try {
+            if (error) {
+                console.log(error);
+            } else {
+                let sql_update = `UPDATE mastergroup set id = CASE WHEN id = '${idGroup}' THEN '${idGroupupdate}' ELSE id END WHERE id = '${idGroup}'`;
+                connection.query(sql_update, (error, resultAfterI) => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        let sql_updateII = `UPDATE mastergroup set id = CASE WHEN id = '${0}' THEN '${idGroup}' ELSE id END WHERE id = '${0}'`;
+                        connection.query(sql_updateII, (error, resultAfterII) => {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                let sql = `SELECT * FROM mastergroup`;
+                                connection.query(sql, (error, resultIII) => {
+                                    if (error) {
+                                        console.log(error);
+                                    } else {
+                                        res.send({
+                                            data: resultIII,
+                                        });
+                                        res.end();
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+        } catch (err) {
+            if (!err.statusCode) { err.statusCode = 500; }
+            next(err);
+        }
+    });
 };

@@ -95,8 +95,9 @@ router.post('/getRepostPromotion', userstoonTaII.getRepostPromotion)
 router.post('/addAbsWeb', userstoonTaII.addAbsWeb) //Abs Website เพิ่มโฆษณา
 router.post('/addImgAbsWeb', imageUpload.single('file'), userstoonTaII.imgAbsWeb) //Abs Img เพิ่มรปูภาพโฆษณา
 router.post('/getAbsWebsite', userstoonTaII.getAbsWebsite) //get AbsWebsite
-router.post('/getlistAbs', userstoonTaII.getlistAbs) //get getlistAbs
+router.post('/getlistAbs/:tpye', userstoonTaII.getlistAbs) //get getlistAbs
 router.post('/upDateABSAll', imageUpload.single('file'), userstoonTaII.upDateABSAll) //UpdateAbs
+router.post('/getPromotionMember', userstoonTaII.getPromotionMember) //UpdateAbs
 
 router.get('/getDepositaccount/:agent_id', userToonta.getDepositaccount)
 router.get('/getWithdrawalaccount', userToonta.getWithdrawalaccount)
@@ -126,6 +127,8 @@ router.put('/DeletePromotion', userToonta.DeletePromotion)
 router.put('/DeleteAgentWeb', userstoonTaII.DeleteAgentWeb)
 router.put('/DeleteAccessDeposit', userstoonTaII.DeleteAccessDeposit)
 router.put('/DeleteAbs', userstoonTaII.DeleteAbs) //ลบโฆษณา 
+router.put('/deleteMemberPromotion', userstoonTaII.DeleteMemberPromotion) //ยกเลิกโปรโมชั่น 
+router.put('/updateTrasalationGroup', userstoonTaII.updateTrasalationGroup);
 
 // game
 router.post('/playGame/:user_id/:bet/:game_id', testGame.saveTestGame)

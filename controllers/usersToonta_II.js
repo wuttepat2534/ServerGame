@@ -770,10 +770,10 @@ exports.getPromotionMember = (require, response) => {
     const pageNumber = require.body.pageIndex;
     const offset = (pageNumber - 1) * pageSize;
 
-    let sql = `SELECT * FROM repostpromotion WHERE username = '${username}' LIMIT ${pageSize} OFFSET ${offset}`;
+    let sql = `SELECT * FROM repostPromotion WHERE username = '${username}' LIMIT ${pageSize} OFFSET ${offset}`;
     connection.query(sql, async (error, results) => {
         if (error) { console.log(error); }
-        const totalCount = `SELECT COUNT(*) as count FROM repostpromotion WHERE username = '${username}'`
+        const totalCount = `SELECT COUNT(*) as count FROM repostPromotion WHERE username = '${username}'`
         connection.query(totalCount, (error, res) => {
             if (error) { console.log(error); }
             response.send({

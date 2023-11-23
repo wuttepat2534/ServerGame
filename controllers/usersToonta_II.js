@@ -224,6 +224,7 @@ exports.signupEmployeeAgent = async (req, res, next) => {
     const levelRole = req.body.levelRole;
 
     const hashedPassword = md5(password);
+    console.log(levelRole);
     let sql_agent = `SELECT username FROM employee WHERE agent_id ='${agent_id}' AND username = '${username}'`;
     connection.query(sql_agent, (error, usernameAgent) => {
         try {

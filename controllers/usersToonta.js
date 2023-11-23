@@ -1727,7 +1727,7 @@ exports.PutUserGroupInformation = async (req, res, next) => {
     const secondaryaccountII = req.body.secondaryaccountII;
     const secondaryaccountIII = req.body.secondaryaccountIII;
     const account_number = req.body.account_number;
-
+    console.log(account_number)
     let sql_depositaccount = `SELECT * FROM depositaccount WHERE accountNumber = "${account_number}"`;
 
     connection.query(sql_depositaccount, (error, results) => {
@@ -1821,7 +1821,7 @@ exports.getOneGroup = (req, res) => {
     let sql = `SELECT * FROM mastergroup WHERE id = ${idGroup} AND status_delete='N'`;
     connection.query(sql, (error, results) => {
         if (error) { console.log(error) }
-        console.log(results)
+        console.log(results[0])
         res.send({
             data: results
         });
@@ -2063,6 +2063,7 @@ exports.getRepostGame = (require, response) => {
         });
 
     setTimeout(() => {
+        //console.log(date, endDate);
         if (searchPhones === '' && searcGameCamp === '') {
             let sql = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
             connection.query(sql, async (error, results) => {
@@ -2188,10 +2189,8 @@ exports.getRepostGame = (require, response) => {
                 }
             });
         } else {
-            //console.log(searcGameCamp, searchPhones)
             let sql_ = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND gameid LIKE '%${searcGameCamp}%' AND username LIKE ? LIMIT ? OFFSET ?`;
             const searchPattern = `%${searchPhones}%`;
-            //const searchPatternKey = `%${searcGameCamp}%`;
             const values = [searchPattern, pageSize, offset];
             connection.query(sql_, values, (error, results) => {
                 if (error) { console.log(error); }
@@ -2223,23 +2222,58 @@ exports.getMemberRegiter = (require, response) => {
     const date = require.body.dataDate;
     const endDate = require.body.dataEndDate;
 
-    let sql = `SELECT * FROM member WHERE created_at >='${date}' AND created_at <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
-    connection.query(sql, async (error, results) => {
-        if (error) { console.log(error); }
-        const totalCount = `SELECT COUNT(*) as count FROM member WHERE created_at >='${date}' AND created_at <= '${endDate}'`
-        connection.query(totalCount, (error, res) => {
-            if (error) { console.log(error); }
-            else {
-                response.send({
-                    data: results,
-                    valusData: results.length,
-                    total: res[0].count
+    try {
+        const getMemberQuery = `SELECT * FROM member WHERE created_at >= '${date}' AND created_at <= '${endDate}' LIMIT ${pageSize} OFFSET ${offset}`;
+        const getTotalCountQuery = `SELECT COUNT(*) as count FROM member WHERE created_at >= '${date}' AND created_at <= '${endDate}'`;
+
+        connection.query(getMemberQuery, async (error, results) => {
+            if (error) {
+                console.log(error);
+                response.status(500).send("Internal Server Error");
+            } else {
+                connection.query(getTotalCountQuery, async (error, totalCountResult) => {
+                    if (error) {
+                        console.log(error);
+                        response.status(500).send("Internal Server Error");
+                    } else {
+                        const totalCount = totalCountResult[0].count;
+
+                        const getDepositQuery = `SELECT * FROM member WHERE created_at >= '${date}' AND created_at <= '${endDate}' AND recharge_times >= '${1}' LIMIT ${pageSize} OFFSET ${offset}`;
+                        const getNoDepositQuery = `SELECT * FROM member WHERE created_at >= '${date}' AND created_at <= '${endDate}' AND recharge_times = '${0}' LIMIT ${pageSize} OFFSET ${offset}`;
+
+                        connection.query(getDepositQuery, async (error, resultsDeposit) => {
+                            if (error) {
+                                console.log(error);
+                                response.status(500).send("Internal Server Error");
+                            } else {
+                                connection.query(getNoDepositQuery, async (error, resultsNoDeposit) => {
+                                    if (error) {
+                                        console.log(error);
+                                        response.status(500).send("Internal Server Error");
+                                    } else {
+                                        response.send({
+                                            data: results,
+                                            valusData: results.length,
+                                            dataDeposit: resultsDeposit,
+                                            valusDataDeposit: resultsDeposit.length,
+                                            dataNoDeposit: resultsNoDeposit,
+                                            valusNoDataDeposit: resultsNoDeposit.length,
+                                            total: totalCount,
+                                        });
+                                        response.end();
+                                    }
+                                });
+                            }
+                        });
+                    }
                 });
-                response.end();
             }
         });
-    });
-}
+    } catch (error) {
+        console.log(error);
+        response.status(500).send("Internal Server Error");
+    }
+};
 
 
 //http://localhost:5000/post/getRepostDeposit getRepostDeposit

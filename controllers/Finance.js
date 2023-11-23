@@ -104,7 +104,7 @@ module.exports = class Post {
             const inputStringUser = resFinance.data.receiver.account.value;
             const last4DigitsUser = inputStringUser.replace(/\D/g, '').slice(-4);
 
-            if (Bank !== "ธนาคารกสิกรไทย" && Bank !== "ธนาคารกรุงศรีอยุธยา") {
+            if (Bank !== "ธนาคารกสิกรไทย" && Bank !== "ธนาคารกรุงศรีอยุธยา" && Bank !== "ธนาคารกรุงไทย") {
                 let sql_deposit = `SELECT * FROM depositaccount WHERE activestatus = "เปิดใช้งาน" AND accountNumber = "${resFinance.data.receiver.account.value}"`;
                 connection.query(sql_deposit, (error, depositData) => {
                     try {
@@ -195,7 +195,7 @@ module.exports = class Post {
                 })
             } else {
                 //let dataaccountNumber = resFinance.data.receiver.account.value;
-                let sql_deposit = `SELECT * FROM depositaccount WHERE activestatus = "เปิดใช้งาน" AND SUBSTRING(accountNumber, LENGTH(accountNumber) - 4, 4) = ?`;
+                let sql_deposit = `SELECT * FROM depositaccount WHERE activestatus = "เปิดใช้งาน" AND RIGHT(accountNumber, 4) = ?`;
                 connection.query(sql_deposit, [`${last4DigitsUser}`], (error, depositData) => {
                     try {
                         if (error) {
@@ -203,7 +203,7 @@ module.exports = class Post {
                             reject("ผิดพลาด");
                         }
                         else {
-                            console.log(resFinance.data.receiver.account.value)
+                            //console.log(resFinance.data.receiver.account.value)
                             const data = depositData;
                             if (data.length !== 0 || data.length > 0) {
                                 console.log('on1')
@@ -216,8 +216,8 @@ module.exports = class Post {
                                         const dataLog = logDeposit_transRef;
                                         if (dataLog.length < 1) {
                                             console.log('on2')
-                                            let sql_NameAccount = `SELECT * FROM member WHERE SUBSTRING(accountNumber, LENGTH(accountNumber) - 4, 4) = ? 
-                                            AND bank = '${Bank}' AND phonenumber = '${dataUsers.phonenumber}'`;
+                                            let sql_NameAccount = `SELECT * FROM member WHERE bank = '${Bank}' AND phonenumber = '${dataUsers.phonenumber}'
+                                            AND RIGHT(accountNumber, 4) = ? `;
                                             connection.query(sql_NameAccount, [last4Digits], async (error, nameAccount) => {
                                                 if (error) {
                                                     console.log(error);

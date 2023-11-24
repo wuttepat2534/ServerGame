@@ -8,7 +8,7 @@ const md5 = require('md5');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const useragent = require('express-useragent')
-
+const moment = require('moment-timezone')
 const logEdit = require('./logEditAll')
 const promotiontoonta = require('./promotiontoonta')
 const repostGame = require('./repostGame')
@@ -222,9 +222,7 @@ exports.signupEmployeeAgent = async (req, res, next) => {
     const phonenumber = req.body.phonenumber;
     const role = req.body.role;
     const levelRole = req.body.levelRole;
-
     const hashedPassword = md5(password);
-    console.log(levelRole);
     let sql_agent = `SELECT username FROM employee WHERE agent_id ='${agent_id}' AND username = '${username}'`;
     connection.query(sql_agent, (error, usernameAgent) => {
         try {

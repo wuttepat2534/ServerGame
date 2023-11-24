@@ -10,6 +10,7 @@ const upload = multer({ dest: 'uploads/' });
 const axios = require('axios'); //npm install axios
 const app = express();
 const socketIo = require('socket.io');
+const moment = require('moment-timezone')
 app.use(express.static('public'));
 require('dotenv').config()
 
@@ -40,6 +41,10 @@ module.exports = class Post {
             let baseURL = 'https://dogzilla.live/';
             //const baseURL = 'http://localhost:5000/';
 
+            const currentTimeInThailand = moment().tz('Asia/Bangkok');
+            const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
+            const formattedTime = currentTimeInThailand.format('HH:mm:ss');
+            let imgBank = ''
             //console.log(dataUsers , resFinance);
             let Bank;
             switch (resFinance.data.sendingBank) {
@@ -130,29 +135,32 @@ module.exports = class Post {
                                                     reject(error);
                                                 } else {
                                                     const dataUserAccount = nameAccount;
-                                                    //console.log(dataUserAccount[0], last4Digits, Bank, dataUsers.phonenumber)
                                                     if (dataUserAccount.length !== 0 || dataUserAccount.length > 0) {
-                                                        const response = await axios.post(baseURL + "post/financeUser", {
-                                                            resFinance: resFinance,
-                                                            type: dataUsers.type,
-                                                            quantity: resFinance.data.amount,
-                                                            accountNumber: dataUserAccount[0].accountNumber,
-                                                            destinationAccountName: resFinance.data.receiver.displayName,
-                                                            destinationAccountNumber: data[0].accountNumber,
-                                                            phonenumber: dataUsers.phonenumber,
-                                                            statusFinance: 'สำเร็จ',
-                                                            nameimg: dataUsers.filename,
-                                                            transRef: resFinance.data.transRef,
-                                                            qrcodeData: resFinance.data.qrcodeData,
-                                                            agent_id: dataUsers.agent_id,
-                                                            typePromotion: dataUsers.idPromotion
-                                                        });
-                                                        console.log(response.data.message)
-                                                        if (response.data.message === "เติมเงินสำเร็จ") {
-                                                            resolve("ฝากเงินสำเสร็จ")
-                                                        } else {
-                                                            resolve(response.data.message)
-                                                        }
+                                                        let sql_Bank = `SELECT images FROM banknames WHERE bankname_name ='${nameAccount[0].bank}' AND status = 'Y' AND status_delete = 'N'`;
+                                                        connection.query(sql_Bank, async (error, usernameAgent) => {
+                                                            const response = await axios.post(baseURL + "post/financeUser", {
+                                                                resFinance: resFinance,
+                                                                type: dataUsers.type,
+                                                                quantity: resFinance.data.amount,
+                                                                accountNumber: dataUserAccount[0].accountNumber,
+                                                                destinationAccountName: resFinance.data.receiver.displayName,
+                                                                destinationAccountNumber: data[0].accountNumber,
+                                                                phonenumber: dataUsers.phonenumber,
+                                                                statusFinance: 'สำเร็จ',
+                                                                nameimg: dataUsers.filename,
+                                                                transRef: resFinance.data.transRef,
+                                                                qrcodeData: resFinance.data.qrcodeData,
+                                                                agent_id: dataUsers.agent_id,
+                                                                typePromotion: dataUsers.idPromotion,
+                                                                imgBank: usernameAgent[0].images
+                                                            });
+                                                            //console.log(response.data.message)
+                                                            if (response.data.message === "เติมเงินสำเร็จ") {
+                                                                resolve("ฝากเงินสำเสร็จ")
+                                                            } else {
+                                                                resolve(response.data.message)
+                                                            }
+                                                        })
                                                     } else {
                                                         const response = await axios.post(baseURL + "post/financeUser", {
                                                             resFinance: resFinance,
@@ -167,9 +175,9 @@ module.exports = class Post {
                                                             transRef: resFinance.data.transRef,
                                                             qrcodeData: resFinance.data.qrcodeData,
                                                             agent_id: dataUsers.agent_id,
-                                                            typePromotion: dataUsers.idPromotion
+                                                            typePromotion: dataUsers.idPromotion,
+                                                            imgBank: 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-baac.png'
                                                         });
-                                                        console.log(response.data.message)
                                                         if (response.data.message === "บันทึกสำเร็จ") {
                                                             resolve("ชื่อบัญชีที่ได้ลงทะเบียนไม่ถูกต้อง กรุณาตรวจสอบ สลิปโอนเงิน ")
                                                         } else {
@@ -179,7 +187,14 @@ module.exports = class Post {
                                                 }
                                             })
                                         } else {
-                                            resolve("สลิปนี้เคยถูกใช้งานแล้ว")
+                                            let sql_depositFlash = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
+                                                balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber, trans_ref, qrcodeData, nameimg) value 
+                                                ('${dataUsers.id}','${dataUsers.agent_id}','${dataUsers.accountName}','${dataUsers.accountNumber}','${dataUsers.phonenumber}','${'ฝาก'}','${0}','${0}','${0}'
+                                                ,'${0}','${'00000'}${'00000'}','${0}','ไม่สำเร็จ','${formattedDate}','${formattedTime}','สลิปนี้เคยถูกใช้งานแล้ว','${"https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-baac.png"}'
+                                                ,'${resFinance.data.receiver.displayName}','${data[0].accountNumber}','สลิปนี้เคยถูกใช้งานแล้ว', 'สลิปนี้เคยถูกใช้งานแล้ว', '${dataUsers.filename}')`;
+                                            connection.query(sql_depositFlash, (error, result) => {
+                                                resolve("สลิปนี้เคยถูกใช้งานแล้ว")
+                                            })
                                         }
                                     }
                                 })
@@ -225,28 +240,31 @@ module.exports = class Post {
                                                 } else {
                                                     const dataUserAccount = nameAccount;
                                                     if (dataUserAccount.length !== 0 || dataUserAccount.length > 0) {
-                                                        console.log('on3')
-                                                        const response = await axios.post(baseURL + "post/financeUser", {
-                                                            resFinance: resFinance,
-                                                            type: dataUsers.type,
-                                                            quantity: resFinance.data.amount,
-                                                            accountNumber: dataUsers.accountNumber,
-                                                            destinationAccountName: resFinance.data.receiver.displayName,
-                                                            destinationAccountNumber: data[0].accountNumber,
-                                                            phonenumber: dataUsers.phonenumber,
-                                                            statusFinance: 'สำเร็จ',
-                                                            nameimg: dataUsers.filename,
-                                                            transRef: resFinance.data.transRef,
-                                                            qrcodeData: resFinance.data.qrcodeData,
-                                                            agent_id: dataUsers.agent_id,
-                                                            typePromotion: dataUsers.idPromotion
-                                                        });
-                                                        console.log(response.data.message)
-                                                        if (response.data.message === "เติมเงินสำเร็จ") {
-                                                            resolve("ฝากเงินสำเสร็จ")
-                                                        } else {
-                                                            resolve(response.data.message)
-                                                        }
+                                                        let sql_Bank = `SELECT images FROM banknames WHERE bankname_name ='${nameAccount[0].bank}' AND status = 'Y' AND status_delete = 'N'`;
+                                                        connection.query(sql_Bank, async (error, usernameAgent) => {
+                                                            const response = await axios.post(baseURL + "post/financeUser", {
+                                                                resFinance: resFinance,
+                                                                type: dataUsers.type,
+                                                                quantity: resFinance.data.amount,
+                                                                accountNumber: dataUsers.accountNumber,
+                                                                destinationAccountName: resFinance.data.receiver.displayName,
+                                                                destinationAccountNumber: data[0].accountNumber,
+                                                                phonenumber: dataUsers.phonenumber,
+                                                                statusFinance: 'สำเร็จ',
+                                                                nameimg: dataUsers.filename,
+                                                                transRef: resFinance.data.transRef,
+                                                                qrcodeData: resFinance.data.qrcodeData,
+                                                                agent_id: dataUsers.agent_id,
+                                                                typePromotion: dataUsers.idPromotion,
+                                                                imgBank: usernameAgent[0].images
+                                                            });
+                                                            //console.log(response.data.message)
+                                                            if (response.data.message === "เติมเงินสำเร็จ") {
+                                                                resolve("ฝากเงินสำเสร็จ")
+                                                            } else {
+                                                                resolve(response.data.message)
+                                                            }
+                                                        })
                                                     } else {
                                                         console.log('on4')
                                                         const response = await axios.post(baseURL + "post/financeUser", {
@@ -262,9 +280,10 @@ module.exports = class Post {
                                                             transRef: resFinance.data.transRef,
                                                             qrcodeData: resFinance.data.qrcodeData,
                                                             agent_id: dataUsers.agent_id,
-                                                            typePromotion: dataUsers.idPromotion
+                                                            typePromotion: dataUsers.idPromotion,
+                                                            imgBank: 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-baac.png'
                                                         });
-                                                        console.log(response.data.message)
+                                                        //console.log(response.data.message)
                                                         if (response.data.message === "เติมเงินไม่สำเร็จ") {
                                                             resolve("ชื่อบัญชีที่ได้ลงทะเบียนไม่ถูกต้อง กรุณาตรวจสอบ สลิปโอนเงิน ")
                                                         } else {
@@ -274,7 +293,14 @@ module.exports = class Post {
                                                 }
                                             })
                                         } else {
-                                            resolve("สลิปนี้เคยถูกใช้งานแล้ว")
+                                            let sql_depositFlash = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
+                                                balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber, trans_ref, qrcodeData, nameimg) value 
+                                                ('${dataUsers.id}','${dataUsers.agent_id}','${dataUsers.accountName}','${dataUsers.accountNumber}','${dataUsers.phonenumber}','${'ฝาก'}','${0}','${0}','${0}'
+                                                ,'${0}','${'00000'}${'00000'}','${0}','ไม่สำเร็จ','${formattedDate}','${formattedTime}','สลิปนี้เคยถูกใช้งานแล้ว','${"https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-baac.png"}'
+                                                ,'${resFinance.data.receiver.displayName}','${data[0].accountNumber}','สลิปนี้เคยถูกใช้งานแล้ว', 'สลิปนี้เคยถูกใช้งานแล้ว', '${dataUsers.filename}')`;
+                                            connection.query(sql_depositFlash, (error, result) => {
+                                                resolve("สลิปนี้เคยถูกใช้งานแล้ว")
+                                            })
                                         }
                                     }
                                 })
@@ -372,3 +398,7 @@ module.exports = class Post {
         })
     }
 };
+
+function logFlashDeposit() {
+
+}

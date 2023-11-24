@@ -36,7 +36,7 @@ module.exports = class Post {
         });
     }
 
-    static promotionDeposit(quantityUser, dataUser, idPromotion, bill_number, totaltopup, nameimg,
+    static promotionDeposit(quantityUser, dataUser, idPromotion, bill_number, totaltopup, nameimg, imgBank,
         statusFinance, qrcodeData, transRef, destinationAccount, destinationAccountNumber, formattedDate, formattedNumber) {
         return new Promise((resolve, reject) => {
             let ipuser = "192.168.1.1"
@@ -67,7 +67,7 @@ module.exports = class Post {
                                                         Check_conditions(receiving_data_typeII, dataUser, resultPromotion[0], quantityII, data_typeII, quantityUser, ipuser, resetII).then(calculatedValuesII => {
                                                             if (calculatedValuesII.status && calculatedValuesII.status.includes('OKPromotion')) {
                                                                 receive_Promotions(resultPromotion, dataUser, bill_number, quantityUser, formattedDate, formattedNumber,
-                                                                    statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser)
+                                                                    statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser, imgBank)
                                                                     .then(calculatedValues => {
                                                                         let jsArray = { status: calculatedValues.status };
                                                                         resolve(jsArray);
@@ -85,7 +85,7 @@ module.exports = class Post {
                                                     } else {
                                                         console.log('on3')
                                                         receive_Promotions(resultPromotion, dataUser, bill_number, quantityUser, formattedDate, formattedNumber,
-                                                            statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser)
+                                                            statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser, imgBank)
                                                             .then(calculatedValues => {
                                                                 let jsArray = { status: calculatedValues.status };
                                                                 resolve(jsArray);
@@ -105,7 +105,7 @@ module.exports = class Post {
                                         } else {
                                             console.log('on1.5')
                                             receive_Promotions(resultPromotion, dataUser, bill_number, quantityUser, formattedDate, formattedNumber,
-                                                statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser)
+                                                statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser, imgBank)
                                                 .then(calculatedValues => {
                                                     let jsArray = { status: calculatedValues.status };
                                                     resolve(jsArray);
@@ -289,10 +289,12 @@ module.exports = class Post {
     }
 };
 
-function receive_Promotions(resultPromotion, dataUser, bill_number, quantity, formattedDate, formattedNumber, statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser) {
+function receive_Promotions(resultPromotion, dataUser, bill_number, quantity, formattedDate, formattedNumber, statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser, imgBank) {
     return new Promise((resolve, reject) => {
         let rank = 'NewMember';
-
+        const currentTimeInThailand = moment().tz('Asia/Bangkok');
+        const datethai = currentTimeInThailand.format('YYYY-MM-DD');
+        const formattedTime = currentTimeInThailand.format('HH:mm:ss');
         switch (totaltopup) {
             case 200000:
                 rank = "Bronze";
@@ -329,7 +331,7 @@ function receive_Promotions(resultPromotion, dataUser, bill_number, quantity, fo
         let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
             balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber, trans_ref, qrcodeData, nameimg) value 
             ('${dataUser.id}','${dataUser.agent_id}','${dataUser.accountName}','${dataUser.accountNumber}','${dataUser.phonenumber}','${'ฝาก'}','${quantity}','${0}','${dataUser.credit}'
-            ,'${balance}','${formattedDate}${formattedNumber}','${bill_number}','${statusFinance}',now(),now(),'${dataUser.bank}','${dataUser.imgBank}'
+            ,'${balance}','T${formattedDate}${formattedNumber}','${bill_number}','${statusFinance}','${datethai}','${formattedTime}','${dataUser.bank}','${imgBank}'
             ,'${destinationAccount}','${destinationAccountNumber}','${transRef}', '${qrcodeData}', '${nameimg}')`;
 
         let totalamountdaily = logTotalAmount(dataUser, formattedDate, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
@@ -924,7 +926,7 @@ function logTotalAmount(resultUser, formattedDateBill, type, destinationAccount,
                     if (statusFinance === ('สำเร็จ')) {
                         //console.log(destinationAccount, destinationAccountNumber)
                         let sql = `UPDATE depositaccount set balance = '${resulttotaldeposit[0].billmatched + quantity}', billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated + quantity}'
-                    WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
+                    WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}'`;
                         connection.query(sql, (error, result) => {
                             if (error) {
                                 console.log(error)

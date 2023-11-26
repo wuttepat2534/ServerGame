@@ -2969,7 +2969,7 @@ exports.getRepostGameCamp = (require, response) => {
         connection.query(sql_, values, (error, results) => {
             if (error) { console.log(error); }
             else {
-                const totalCount = `SELECT COUNT(*) as count FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}' AND namegamecamp <= '${searchPattern}'`
+                const totalCount = `SELECT COUNT(*) as count FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}' AND namegamecamp LIKE '%${searcGameCamp}%'`
                 connection.query(totalCount, (error, res) => {
                     if (error) { console.log(error); }
                     else {

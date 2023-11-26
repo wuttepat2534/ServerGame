@@ -2925,7 +2925,6 @@ exports.getRepostGameCamp = (require, response) => {
     if (searcGameCamp === '') {
         let sql = `
         SELECT 
-        day,
         namegamecamp,
           SUM(grossComm) AS grossComm,
           SUM(turnover) AS turnover, 
@@ -2954,8 +2953,8 @@ exports.getRepostGameCamp = (require, response) => {
                 else {
                     response.send({
                         data: results,
-                        valusData: res[0].count,
-                        total: res[0].count,
+                        valusData: results.length,
+                        total: results.length,
                         startdate: date,
                         enddate: endDate
                     });

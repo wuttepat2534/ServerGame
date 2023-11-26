@@ -455,6 +455,8 @@ exports.saveTestGameBuy = async (require, response) => {
     let game_id = require.params.game_id;
     let isWinFreeSpinBuy = false//ชนะ freespin มั้ยรอบนี้
     let betFreeSpin = bet * 50//ราคาของการซื้อ freespin
+    const userAgent = require.headers['user-agent'];
+    const userAgentt = require.useragent;
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
     const sql_check = `SELECT id, member_code, name, username, credit, status FROM member WHERE id='${user_id}' AND status_delete='N' 
@@ -497,6 +499,11 @@ exports.saveTestGameBuy = async (require, response) => {
                         arrayCredit.push(user_credit);
                         arrayWinStyle.push(winStyle);
                         arrayWinCount.push(winCountArr)
+                        const post = {
+                            username: results_check[0].username, gameid: 'DOGZILLA', bet: betFreeSpin, win: win, balance_credit: user_credit, userAgent: userAgent, platform: userAgentt
+                        }
+                        let repost = repostGame.uploadLogRepostGame(post)
+                        let balanceturnover = hasSimilarData(results_check[0].gameplayturn, "DOGZILLA", results_check[0].turnover, betFreeSpin)
                         let sql_insert = `INSERT INTO user_play (member_id, game_id, bet, win, tiles, winline, winstyle, winCount, credit, created_at, game_feespin) 
             value ('${user_id}','${game_id}','${bet}','${win}','${tiles}','${winline}','${winStyle}','${winCount}','${user_credit}',now(), '${isWinFreeSpin}')`;
 
@@ -509,7 +516,7 @@ exports.saveTestGameBuy = async (require, response) => {
                                     if (error) {
                                         console.log(error)
                                     } else {
-                                        const sql_update = `UPDATE member set credit='${user_credit}',bet_latest='${bet}' WHERE id='${user_id}'`;
+                                        const sql_update = `UPDATE member set credit='${user_credit}',bet_latest='${bet}', turnover='${balanceturnover}' WHERE id='${user_id}'`;
                                         connection.query(sql_update, (error, result_update_user) => {
                                             if (error) {
                                                 console.log(error)
@@ -536,113 +543,113 @@ exports.saveTestGameBuy = async (require, response) => {
                                                                         if (error) { console.log(error) }
                                                                         else {
                                                                             // commissionGame----------------------------------------------------------------------------------------------------//
-                                                                            let selectSpl_commissionDay = `SELECT * FROM comgogoldplanet WHERE monthly = '${date}'`;
-                                                                            connection.query(selectSpl_commissionDay, (error, result_commissionDay) => {
-                                                                                if (error) {
-                                                                                    console.log(error)
-                                                                                } else {
-                                                                                    if (result_commissionDay.length === 0) { //INSERT comgogoldplanet
-                                                                                        if (game_id === '1') {
-                                                                                            let sql_insertCommission = `INSERT INTO comgogoldplanet (bet_gogold, win_gogold, day, monthly) 
-                                                                                                value ('${betFreeSpin}','${totalWin}','${date}','${date}')`;
-                                                                                            connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                                                                                if (error) {
-                                                                                                    console.log(error)
-                                                                                                }
-                                                                                            });
-                                                                                        }
-                                                                                        else if (game_id === '2') {
-                                                                                            let sql_insertCommission = `INSERT INTO comgogoldplanet (bet_luckybunny, win_luckybunny	, day, monthly) 
-                                                                                                value ('${betFreeSpin}','${totalWin}','${date}','${date}')`;
-                                                                                            connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                                                                                if (error) {
-                                                                                                    console.log(error)
-                                                                                                }
-                                                                                            });
-                                                                                        }
-                                                                                        else {
-                                                                                            let sql_insertCommission = `INSERT INTO comgogoldplanet (bet_aliens, win_aliens, day, monthly) 
-                                                                                                value ('${betFreeSpin}','${totalWin}','${date}','${date}')`;
-                                                                                            connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                                                                                if (error) {
-                                                                                                    console.log(error)
-                                                                                                }
-                                                                                            });
-                                                                                        }
-                                                                                    } else { //UpDate comgogoldplanet
-                                                                                        if (game_id === '1') {
-                                                                                            let sql_insertCommission = `UPDATE comgogoldplanet set 
-                                                                                                bet_gogold='${result_commissionDay[0].bet_gogold + betFreeSpin}',win_gogold='${result_commissionDay[0].win_gogold + totalWin}' WHERE monthly = '${date}'`;
-                                                                                            connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                                                                                if (error) {
-                                                                                                    console.log(error)
-                                                                                                }
-                                                                                            });
-                                                                                        }
-                                                                                        else if (game_id === '2') {
-                                                                                            let sql_insertCommission = `UPDATE comgogoldplanet set 
-                                                                                                bet_luckybunny='${result_commissionDay[0].bet_luckybunny + betFreeSpin}',win_luckybunny='${result_commissionDay[0].win_luckybunny + totalWin}' WHERE monthly = '${date}'`;
-                                                                                            connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                                                                                if (error) {
-                                                                                                    console.log(error)
-                                                                                                }
-                                                                                            });
-                                                                                        }
-                                                                                        else {
-                                                                                            let sql_insertCommission = `UPDATE comgogoldplanet set 
-                                                                                                bet_aliens='${result_commissionDay[0].bet_aliens + betFreeSpin}',win_aliens='${result_commissionDay[0].win_aliens + totalWin}' WHERE monthly = '${date}'`;
-                                                                                            connection.query(sql_insertCommission, (error, result_GameUpdate) => {
-                                                                                                if (error) {
-                                                                                                    console.log(error)
-                                                                                                }
-                                                                                            });
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            });
-                                                                            // commission----------------------------------------------------------------------------------------------------------------------------//
-                                                                            // LogDayGame----------------------------------------------------------------------------------------------------------------------------//
-                                                                            let select_logdayGame = `SELECT * FROM logdaygame WHERE day = '${date}' AND game_id = '${game_id}'`;
-                                                                            connection.query(select_logdayGame, (error, result_logGameDay) => {
-                                                                                if (result_logGameDay.length === 0) {
-                                                                                    if (game_id === '1') {
-                                                                                        let sql_logDayGame = `INSERT INTO logdaygame (namegame, game_id, play, bet, win, icon, day) 
-                                                                                        value ('Go Gold Planet','${1}','${11}','${beteArr}','${wineArr}','/img/thumbs/icontest3.png','${date}')`;
-                                                                                        connection.query(sql_logDayGame, (error, result_GameUpdate) => {
-                                                                                            if (error) {
-                                                                                                console.log(error)
-                                                                                            }
-                                                                                        });
-                                                                                    }
-                                                                                    else if (game_id === '2') {
-                                                                                        let sql_logDayGame = `INSERT INTO logdaygame (namegame, game_id, play, bet, win, icon, day) 
-                                                                                        value ('Lucky Bunny Gold','${2}','${11}','${beteArr}','${wineArr}','/img/thumbs/icontest2.png','${date}')`;
-                                                                                        connection.query(sql_logDayGame, (error, result_GameUpdate) => {
-                                                                                            if (error) {
-                                                                                                console.log(error)
-                                                                                            }
-                                                                                        });
-                                                                                    }
-                                                                                    else {
-                                                                                        let sql_logDayGame = `INSERT INTO logdaygame (namegame, game_id, play, bet, win, icon, day) 
-                                                                                        value ('CowBoys VS Aliens','${3}','${11}','${beteArr}','${wineArr}','/img/thumbs/icontest1.png','${date}')`;
-                                                                                        connection.query(sql_logDayGame, (error, result_GameUpdate) => {
-                                                                                            if (error) {
-                                                                                                console.log(error)
-                                                                                            }
-                                                                                        });
-                                                                                    }
-                                                                                } else {
-                                                                                    let sql_logDayGame = `UPDATE logdaygame set 
-                                                                                    play ='${result_logGameDay[0].play + 1}',bet ='${result_logGameDay[0].bet + beteArr}',win ='${result_logGameDay[0].win + wineArr}' 
-                                                                                    WHERE day = '${date}' AND game_id = '${game_id}'`;
-                                                                                    connection.query(sql_logDayGame, (error, result_GameUpdate) => {
-                                                                                        if (error) {
-                                                                                            console.log(error)
-                                                                                        }
-                                                                                    });
-                                                                                }
-                                                                            });
+                                                                            // let selectSpl_commissionDay = `SELECT * FROM comgogoldplanet WHERE monthly = '${date}'`;
+                                                                            // connection.query(selectSpl_commissionDay, (error, result_commissionDay) => {
+                                                                            //     if (error) {
+                                                                            //         console.log(error)
+                                                                            //     } else {
+                                                                            //         if (result_commissionDay.length === 0) { //INSERT comgogoldplanet
+                                                                            //             if (game_id === '1') {
+                                                                            //                 let sql_insertCommission = `INSERT INTO comgogoldplanet (bet_gogold, win_gogold, day, monthly) 
+                                                                            //                     value ('${betFreeSpin}','${totalWin}','${date}','${date}')`;
+                                                                            //                 connection.query(sql_insertCommission, (error, result_GameUpdate) => {
+                                                                            //                     if (error) {
+                                                                            //                         console.log(error)
+                                                                            //                     }
+                                                                            //                 });
+                                                                            //             }
+                                                                            //             else if (game_id === '2') {
+                                                                            //                 let sql_insertCommission = `INSERT INTO comgogoldplanet (bet_luckybunny, win_luckybunny	, day, monthly) 
+                                                                            //                     value ('${betFreeSpin}','${totalWin}','${date}','${date}')`;
+                                                                            //                 connection.query(sql_insertCommission, (error, result_GameUpdate) => {
+                                                                            //                     if (error) {
+                                                                            //                         console.log(error)
+                                                                            //                     }
+                                                                            //                 });
+                                                                            //             }
+                                                                            //             else {
+                                                                            //                 let sql_insertCommission = `INSERT INTO comgogoldplanet (bet_aliens, win_aliens, day, monthly) 
+                                                                            //                     value ('${betFreeSpin}','${totalWin}','${date}','${date}')`;
+                                                                            //                 connection.query(sql_insertCommission, (error, result_GameUpdate) => {
+                                                                            //                     if (error) {
+                                                                            //                         console.log(error)
+                                                                            //                     }
+                                                                            //                 });
+                                                                            //             }
+                                                                            //         } else { //UpDate comgogoldplanet
+                                                                            //             if (game_id === '1') {
+                                                                            //                 let sql_insertCommission = `UPDATE comgogoldplanet set 
+                                                                            //                     bet_gogold='${result_commissionDay[0].bet_gogold + betFreeSpin}',win_gogold='${result_commissionDay[0].win_gogold + totalWin}' WHERE monthly = '${date}'`;
+                                                                            //                 connection.query(sql_insertCommission, (error, result_GameUpdate) => {
+                                                                            //                     if (error) {
+                                                                            //                         console.log(error)
+                                                                            //                     }
+                                                                            //                 });
+                                                                            //             }
+                                                                            //             else if (game_id === '2') {
+                                                                            //                 let sql_insertCommission = `UPDATE comgogoldplanet set 
+                                                                            //                     bet_luckybunny='${result_commissionDay[0].bet_luckybunny + betFreeSpin}',win_luckybunny='${result_commissionDay[0].win_luckybunny + totalWin}' WHERE monthly = '${date}'`;
+                                                                            //                 connection.query(sql_insertCommission, (error, result_GameUpdate) => {
+                                                                            //                     if (error) {
+                                                                            //                         console.log(error)
+                                                                            //                     }
+                                                                            //                 });
+                                                                            //             }
+                                                                            //             else {
+                                                                            //                 let sql_insertCommission = `UPDATE comgogoldplanet set 
+                                                                            //                     bet_aliens='${result_commissionDay[0].bet_aliens + betFreeSpin}',win_aliens='${result_commissionDay[0].win_aliens + totalWin}' WHERE monthly = '${date}'`;
+                                                                            //                 connection.query(sql_insertCommission, (error, result_GameUpdate) => {
+                                                                            //                     if (error) {
+                                                                            //                         console.log(error)
+                                                                            //                     }
+                                                                            //                 });
+                                                                            //             }
+                                                                            //         }
+                                                                            //     }
+                                                                            // });
+                                                                            // // commission----------------------------------------------------------------------------------------------------------------------------//
+                                                                            // // LogDayGame----------------------------------------------------------------------------------------------------------------------------//
+                                                                            // let select_logdayGame = `SELECT * FROM logdaygame WHERE day = '${date}' AND game_id = '${game_id}'`;
+                                                                            // connection.query(select_logdayGame, (error, result_logGameDay) => {
+                                                                            //     if (result_logGameDay.length === 0) {
+                                                                            //         if (game_id === '1') {
+                                                                            //             let sql_logDayGame = `INSERT INTO logdaygame (namegame, game_id, play, bet, win, icon, day) 
+                                                                            //             value ('Go Gold Planet','${1}','${11}','${beteArr}','${wineArr}','/img/thumbs/icontest3.png','${date}')`;
+                                                                            //             connection.query(sql_logDayGame, (error, result_GameUpdate) => {
+                                                                            //                 if (error) {
+                                                                            //                     console.log(error)
+                                                                            //                 }
+                                                                            //             });
+                                                                            //         }
+                                                                            //         else if (game_id === '2') {
+                                                                            //             let sql_logDayGame = `INSERT INTO logdaygame (namegame, game_id, play, bet, win, icon, day) 
+                                                                            //             value ('Lucky Bunny Gold','${2}','${11}','${beteArr}','${wineArr}','/img/thumbs/icontest2.png','${date}')`;
+                                                                            //             connection.query(sql_logDayGame, (error, result_GameUpdate) => {
+                                                                            //                 if (error) {
+                                                                            //                     console.log(error)
+                                                                            //                 }
+                                                                            //             });
+                                                                            //         }
+                                                                            //         else {
+                                                                            //             let sql_logDayGame = `INSERT INTO logdaygame (namegame, game_id, play, bet, win, icon, day) 
+                                                                            //             value ('CowBoys VS Aliens','${3}','${11}','${beteArr}','${wineArr}','/img/thumbs/icontest1.png','${date}')`;
+                                                                            //             connection.query(sql_logDayGame, (error, result_GameUpdate) => {
+                                                                            //                 if (error) {
+                                                                            //                     console.log(error)
+                                                                            //                 }
+                                                                            //             });
+                                                                            //         }
+                                                                            //     } else {
+                                                                            //         let sql_logDayGame = `UPDATE logdaygame set 
+                                                                            //         play ='${result_logGameDay[0].play + 1}',bet ='${result_logGameDay[0].bet + beteArr}',win ='${result_logGameDay[0].win + wineArr}' 
+                                                                            //         WHERE day = '${date}' AND game_id = '${game_id}'`;
+                                                                            //         connection.query(sql_logDayGame, (error, result_GameUpdate) => {
+                                                                            //             if (error) {
+                                                                            //                 console.log(error)
+                                                                            //             }
+                                                                            //         });
+                                                                            //     }
+                                                                            // });
                                                                             // LogDayGame----------------------------------------------------------------------------------------------------------------------------//
                                                                             isWinFreeSpinBuy = false;
                                                                             response.send({

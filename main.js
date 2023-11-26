@@ -21,7 +21,7 @@ const FInance = require('./controllers/Finance');
 //const promotion = require('./controllers/promotiontoonta')
 var cors = require('cors');
 const cron = require('node-cron');
-const moment = require('moment-timezone');
+const moment = require('moment-timezone')
 // const fs = require('fs');
 // const path = require('path');
 // const FormData = require('form-data');
@@ -495,11 +495,15 @@ app.post('/login/member', async (require, response, next) => {
     else {
         browser = 'Google Chrome';
     }
-    // end check ip Browser
+    
+    const currentTimeInThailand = moment().tz('Asia/Bangkok');
+    const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
+
     let sql = `SELECT id, credit, name, password, phonenumber FROM member WHERE phonenumber='${phoneNumber}' AND status_delete='N' AND agent_id = '${agent_id}'`;
     connection.query(sql, async (error, results) => {
         try {
-            let update = `UPDATE member set ip_address = '${ipAddress}',browserlogin = '${browser}' WHERE id='${results[0].id}' AND agent_id = '${agent_id}' `;
+            let update = `UPDATE member set ip_address = '${ipAddress}', browserlogin = '${browser}', updated_at = '${formattedDate}'
+             WHERE id='${results[0].id}' AND agent_id = '${agent_id}' `;
             connection.query(update, async (error, results) => {
                 if (error) { console.log(error) }
             })

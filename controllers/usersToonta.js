@@ -571,7 +571,7 @@ exports.financeUser = (req, res) => {
                                     ,'${resultUser[0].bank}','${imgBank}'
                                     ,'${destinationAccount}','${destinationAccountNumber}','${transRef}', '${qrcodeData}', '${nameimg}')`;
                                 if (statusFinance === "สำเร็จ") {
-                                    
+
                                     logTotalAmount(resultUser, formattedDate, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
 
                                     connection.query(sql_before, (error, result) => {
@@ -2921,31 +2921,31 @@ exports.getRepostGameCamp = (require, response) => {
     const offset = (pageNumber - 1) * pageSize;
     const date = require.body.dataDate;
     const endDate = require.body.dataEndDate;
-
+    //console.log(searcGameCamp, date, endDate);
     if (searcGameCamp === '') {
-    //     let sql = `
-    //     SELECT 
-    //     day,
-    //     namegamecamp,
-    //       SUM(grossComm) AS grossComm,
-    //       SUM(turnover) AS turnover, 
-    //       SUM(win) AS win, 
-    //       SUM(lose) AS lose,
-    //       SUM(commmember) AS commmember,  
-    //       SUM(totalmamber) AS totalmamber, 
-    //       SUM(w_l_agent) AS w_l_agent,
-    //       SUM(comm_agent) AS comm_agent, 
-    //       SUM(tatal_agent) AS tatal_agent, 
-    //       SUM(w_l_commny) AS w_l_commny, 
-    //       SUM(comm_commny) AS comm_commny,
-    //       SUM(tatal_commny) AS tatal_commny,
-    //       SUM(roundplay) AS roundplay
-    //     FROM gamecamptotal 
-    //     WHERE day >= '${date}' AND day <= '${endDate}' 
-    //     GROUP BY namegamecamp 
-    //     LIMIT ${pageSize} OFFSET ${offset}
-    //   `;
-        let sql = `SELECT * FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
+        let sql = `
+        SELECT 
+        day,
+        namegamecamp,
+          SUM(grossComm) AS grossComm,
+          SUM(turnover) AS turnover, 
+          SUM(win) AS win, 
+          SUM(lose) AS lose,
+          SUM(commmember) AS commmember,  
+          SUM(totalmamber) AS totalmamber, 
+          SUM(w_l_agent) AS w_l_agent,
+          SUM(comm_agent) AS comm_agent, 
+          SUM(tatal_agent) AS tatal_agent, 
+          SUM(w_l_commny) AS w_l_commny, 
+          SUM(comm_commny) AS comm_commny,
+          SUM(tatal_commny) AS tatal_commny,
+          SUM(roundplay) AS roundplay
+        FROM gamecamptotal 
+        WHERE day >= '${date}' AND day <= '${endDate}' 
+        GROUP BY namegamecamp 
+        LIMIT ${pageSize} OFFSET ${offset}
+      `;
+        // let sql = `SELECT * FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
         connection.query(sql, async (error, results) => {
             if (error) { console.log(error); }
             const totalCount = `SELECT COUNT(*) as count FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'`
@@ -2964,13 +2964,13 @@ exports.getRepostGameCamp = (require, response) => {
             });
         });
     } else if (searcGameCamp !== '') {
-        let sql_ = `SELECT * FROM gamecamptotal WHERE day >= ? AND day <= ? AND gamecamp LIKE ? LIMIT ? OFFSET ?`;
+        let sql_ = `SELECT * FROM gamecamptotal WHERE day >= ? AND day <= ? AND namegamecamp LIKE ? LIMIT ? OFFSET ?`;
         const searchPattern = `%${searcGameCamp}%`;
         const values = [date, endDate, searchPattern, pageSize, offset];
         connection.query(sql_, values, (error, results) => {
             if (error) { console.log(error); }
             else {
-                const totalCount = `SELECT COUNT(*) as count FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'`
+                const totalCount = `SELECT COUNT(*) as count FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}' AND namegamecamp <= '${searchPattern}'`
                 connection.query(totalCount, (error, res) => {
                     if (error) { console.log(error); }
                     else {
@@ -3004,7 +3004,7 @@ exports.getRepostGameCamp = (require, response) => {
             }
         });
     } else if (searcGameCamp !== undefined) {
-        let sql_ = `SELECT * FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}' AND gamecamp LIKE ? LIMIT ? OFFSET ?`;
+        let sql_ = `SELECT * FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}' AND namegamecamp LIKE ? LIMIT ? OFFSET ?`;
         const values = [searcGameCamp, pageSize, offset];
         connection.query(sql_, values, (error, results) => {
             if (error) { console.log(error); }
@@ -3024,7 +3024,7 @@ exports.getRepostGameCamp = (require, response) => {
             }
         });
     } else {
-        let sql_ = `SELECT * FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}' AND gamecamp LIKE '%${searcGameCamp}%' AND usernameuser LIKE ? LIMIT ? OFFSET ?`;
+        let sql_ = `SELECT * FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}' AND namegamecamp LIKE '%${searcGameCamp}%' AND usernameuser LIKE ? LIMIT ? OFFSET ?`;
         const searchPattern = `%${searchPhones}%`;
         const values = [searchPattern, pageSize, offset];
         connection.query(sql_, values, (error, results) => {

@@ -2954,7 +2954,7 @@ exports.getRepostGameCamp = (require, response) => {
                 else {
                     response.send({
                         data: results,
-                        valusData: results.length,
+                        valusData: res[0].count,
                         total: res[0].count,
                         startdate: date,
                         enddate: endDate

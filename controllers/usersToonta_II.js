@@ -856,3 +856,205 @@ exports.updateTrasalationGroup = (req, res) => {
         }
     });
 };
+
+http: //localhost:5000/post/addCoupon Add addCoupon
+exports.addCoupon = async (req, res, next) => {
+    const idwebsite_coupon = req.body.idwebsite_coupon;
+    const password_coupon = req.body.password_coupon;
+    const typebonus = req.body.typebonus;
+    const valusbunus = req.body.valusbunus;
+    const couponpassword = req.body.couponpassword;
+    const namepromotion = req.body.namepromotion;
+    const startcoupon = req.body.startcoupon;
+    const endcoupon = req.body.endcoupon;
+    const maxbunus = req.body.maxbunus;
+    const withdrawalType = req.body.withdrawalType;
+    const withdraw_valus = req.body.withdraw_valus;
+    const valusconpon = req.body.valusconpon;
+
+    let sql = `INSERT INTO coupon (id_agent, password_coupon, typebonus, valusbunus, couponpassword, statu_coupon, namepromotion, startcoupon, endcoupon, maxbunus, withdrawalType
+        , valustrunover, valusconpon, coupon_balance)
+        value ('${idwebsite_coupon}','${password_coupon}','${typebonus}','${valusbunus}','${couponpassword}','${"Y"}','${namepromotion}','${startcoupon}','${endcoupon}','${maxbunus}',
+        '${withdrawalType}','${withdraw_valus}','${valusconpon}','${valusconpon}')`;
+
+    connection.query(sql, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            res.send({
+                message: "Data created Success"
+            });
+            res.end();
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+
+    });
+};
+
+http: //localhost:5000/post/getCoupon Add getCoupon
+exports.getCoupon = (require, response) => {
+    const idwebsite_coupon = require.body.idwebsite_coupon;
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+
+    let sql = `SELECT * FROM coupon WHERE id_agent = '${idwebsite_coupon}' AND statu_coupon = '${'Y'}' LIMIT ${pageSize} OFFSET ${offset}`;
+    connection.query(sql, async (error, results) => {
+        if (error) { console.log(error); }
+        const totalCount = `SELECT COUNT(*) as count FROM coupon WHERE id_agent = '${idwebsite_coupon}' AND statu_coupon = '${'Y'}'`
+        connection.query(totalCount, (error, res) => {
+            if (error) { console.log(error); }
+            response.send({
+                message: 'Success',
+                data: results,
+                total: res[0].count
+            });
+            response.end();
+        });
+    });
+};
+
+http: //localhost:5000/post/creditImgPromotion Add creditImgPromotion
+exports.DeleteCoupon = (req, res) => {
+    const password_coupon = req.body.password_coupon;
+    let sql_update = `UPDATE coupon set statu_coupon = 'N' WHERE password_coupon = '${password_coupon}'`;
+    connection.query(sql_update, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            res.send({
+                message: "Data Delete Success"
+            });
+            res.end();
+        } catch (err) {
+            if (!err.statusCode) { err.statusCode = 500; }
+            next(err);
+        }
+    });
+};
+
+http: //localhost:5000/post/getOneCoupon GET getOneCoupon
+exports.getOneCoupon = (require, response) => {
+    const password_coupon = require.params.password_coupon;
+    let sql = `SELECT * FROM coupon WHERE password_coupon = '${password_coupon}' AND statu_coupon = 'Y'`;
+    connection.query(sql, async (error, results) => {
+        if (error) { console.log(error); }
+        response.send({
+            message: `Coupon Password '${password_coupon}'`,
+            data: results,
+        });
+        response.end();
+    });
+};
+
+http: //localhost:5000/post/upDateCoupon Update upDateCoupon
+exports.upDateCoupon = async (req, res, next) => {
+    const password_coupon = req.body.password_coupon;
+    const typebonus = req.body.typebonus;
+    const valusbunus = req.body.valusbunus;
+    const couponpassword = req.body.couponpassword;
+    const namepromotion = req.body.namepromotion;
+    const startcoupon = req.body.startcoupon;
+    const endcoupon = req.body.endcoupon;
+    const maxbunus = req.body.maxbunus;
+    const withdrawalType = req.body.withdrawalType;
+    const withdraw_valus = req.body.withdraw_valus;
+    const valusconpon = req.body.valusconpon;
+    const coupon_balance = req.body.coupon_balance;
+
+    let sql = `UPDATE coupon set typebonus = '${typebonus}',valusbunus = '${valusbunus}',couponpassword = '${couponpassword}',
+    statu_coupon = '${"Y"}', namepromotion = '${namepromotion}', startcoupon = '${startcoupon}', endcoupon = '${endcoupon}', maxbunus = '${maxbunus}',
+    withdrawalType = '${withdrawalType}', valustrunover = '${withdraw_valus}', valusconpon = '${valusconpon}', coupon_balance = '${coupon_balance}' 
+    WHERE password_coupon = '${password_coupon}'`;
+    connection.query(sql, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            res.send({
+                message: "Data update Success"
+            });
+            res.end();
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+    });
+};
+
+http: //localhost:5000/post/GetCouponMember POST GetCouponMember
+exports.GetCouponMember = async (req, res, next) => {
+    const password_coupon = req.body.password_coupon;
+    const couponpassword = req.body.couponpassword;
+    const username = req.body.username;
+    const currentTimeInThailand = moment().tz('Asia/Bangkok');
+    const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
+    const formattedTime = currentTimeInThailand.format('HH:mm:ss');
+    let turnover = 0;
+    let sql = `SELECT * FROM member WHERE username = '${username}' AND status = 'Y'`;
+    connection.query(sql, (error, result) => {
+        try {
+            if (error) { console.log(error) }
+            else {
+                if (result[0].promotionuser.includes("ไม่ได้รับโปรโมชั่น")) {
+                    let sql_repost_coupon = `SELECT * FROM repost_coupon WHERE username = '${username}' AND password_coupon = '${password_coupon}'`;
+                    connection.query(sql_repost_coupon, (error, result_repost_coupon) => {
+                        if (result_repost_coupon.length <= 0) {
+
+                            let sql_conpon = `SELECT * FROM coupon WHERE password_coupon = '${password_coupon}' AND statu_coupon = 'Y'`;
+                            connection.query(sql_conpon, (error, result_coupon) => {
+
+                                if (result_coupon[0].couponpassword === couponpassword) {
+                                    let creditbonus = result[0].credit + result_coupon[0].valusbunus;
+                                    if (result_coupon[0].withdrawalType === 'Turnover Fixed') {
+                                        turnover = result[0].turnover + result_coupon[0].valusbunus
+                                    } else {
+                                        turnover = result[0].turnover + (result_coupon[0].valusbunus * result_coupon[0].valusbunus)
+                                    }
+                                    let sql_imsert_repost_coupon = `INSERT INTO repost_coupon (password_coupon, tpyebunus, valusbunus, coupon_password, namecoupon, 
+                                        startcoupon, endcoupon, created_at, credit, turnover, username)
+                                        value ('${password_coupon}','${result_coupon[0].typebonus}','${result_coupon[0].valusbunus}','${couponpassword}',
+                                        '${result_coupon[0].namepromotion}','${result_coupon[0].startcoupon}','${result_coupon[0].endcoupon}',
+                                        '${formattedDate} ${formattedTime}','${creditbonus}','${turnover}','${username}')`;
+
+                                    connection.query(sql_imsert_repost_coupon, (error, result_repostcoupon) => {
+                                        let sql_update = `UPDATE member set credit = '${creditbonus}', bonususer = '${result_coupon[0].valusbunus}', turnover = '${turnover}' 
+                                        WHERE username = '${username}' AND status = 'Y'`;
+                                        connection.query(sql_update, (error, result_memberupdate) => {
+                                            res.send({
+                                                message: "คุณรับคูปองสำเร็จ"
+                                            });
+                                            res.end();
+                                        })
+                                    })
+                                } else {
+                                    res.send({
+                                        message: "คุณไม่สามารถใช้คูปองได้ เนื่องจากคุณกรอกรหัสคูปองไม่ถูกต้อง"
+                                    });
+                                    res.end();
+                                }
+                            })
+                        } else {
+                            res.send({
+                                message: "คุณไม่สามารถใช้คูปองได้ เนื่องจากคุณได้ใช้คูปองนี้ไปแล้ว"
+                            });
+                            res.end();
+                        }
+                    })
+                } else {
+                    res.send({
+                        message: "คุณไม่สามารถใช้คูปองได้ เนื่องจากคุณได้รับโปรโมชั่นไว้แล้ว"
+                    });
+                    res.end();
+                }
+            }
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+    });
+};

@@ -459,7 +459,7 @@ exports.saveTestGameBuy = async (require, response) => {
     const userAgentt = require.useragent;
     const today = new Date();
     const date = today.toISOString().slice(0, 10);
-    const sql_check = `SELECT id, member_code, name, username, credit, status FROM member WHERE id='${user_id}' AND status_delete='N' 
+    const sql_check = `SELECT * FROM member WHERE id='${user_id}' AND status_delete='N' 
     ORDER BY member_code ASC`;
     const sql_logGame = `SELECT play, bet, win FROM loggame WHERE id='${game_id}'`;
     connection.query(sql_check, (error, results_check) => {

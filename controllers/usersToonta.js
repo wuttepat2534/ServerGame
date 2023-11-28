@@ -1730,7 +1730,7 @@ exports.PutUserGroupInformation = async (req, res, next) => {
     const secondaryaccountII = req.body.secondaryaccountII;
     const secondaryaccountIII = req.body.secondaryaccountIII;
     const account_number = req.body.account_number;
-    console.log(account_number)
+    //console.log(account_number)
     let sql_depositaccount = `SELECT * FROM depositaccount WHERE accountNumber = "${account_number}"`;
 
     connection.query(sql_depositaccount, (error, results) => {
@@ -2951,14 +2951,40 @@ exports.getRepostGameCamp = (require, response) => {
             connection.query(totalCount, (error, res) => {
                 if (error) { console.log(error); }
                 else {
-                    response.send({
-                        data: results,
-                        valusData: results.length,
-                        total: results.length,
-                        startdate: date,
-                        enddate: endDate
-                    });
-                    response.end();
+                    let sql_All = `
+                    SELECT 
+                    id,
+                      SUM(grossComm) AS grossComm,
+                      SUM(turnover) AS turnover, 
+                      SUM(win) AS win, 
+                      SUM(lose) AS lose,
+                      SUM(commmember) AS commmember,  
+                      SUM(totalmamber) AS totalmamber, 
+                      SUM(w_l_agent) AS w_l_agent,
+                      SUM(comm_agent) AS comm_agent, 
+                      SUM(tatal_agent) AS tatal_agent, 
+                      SUM(w_l_commny) AS w_l_commny, 
+                      SUM(comm_commny) AS comm_commny,
+                      SUM(tatal_commny) AS tatal_commny,
+                      SUM(roundplay) AS roundplay
+                    FROM gamecamptotal 
+                    WHERE day >= '${date}' AND day <= '${endDate}' 
+                    GROUP BY day >= '${date}' AND day <= '${endDate}'  
+                    LIMIT ${pageSize} OFFSET ${offset}
+                  `;
+                    // let sql = `SELECT * FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
+                    connection.query(sql_All, async (error, results_All) => {
+                        const combinedData = results.concat(results_All);
+                        //console.log(combinedData);
+                        response.send({
+                            data: combinedData,
+                            valusData: results.length,
+                            total: results.length,
+                            startdate: date,
+                            enddate: endDate
+                        });
+                        response.end();
+                    })
                 }
             });
         });

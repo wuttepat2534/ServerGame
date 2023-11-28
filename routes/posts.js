@@ -98,6 +98,9 @@ router.post('/getAbsWebsite', userstoonTaII.getAbsWebsite) //get AbsWebsite
 router.post('/getlistAbs/:tpye', userstoonTaII.getlistAbs) //get getlistAbs
 router.post('/upDateABSAll', imageUpload.single('file'), userstoonTaII.upDateABSAll) //UpdateAbs
 router.post('/getPromotionMember', userstoonTaII.getPromotionMember) //UpdateAbs
+router.post('/addCoupon', userstoonTaII.addCoupon) //addCoupon สร้าง coupon
+router.post('/getCoupon', userstoonTaII.getCoupon) //getCoupon เรียกดู coupon
+router.post('/GetCouponMember', userstoonTaII.GetCouponMember) //รับคูปองMember
 
 router.get('/getDepositaccount/:agent_id', userToonta.getDepositaccount)
 router.get('/getWithdrawalaccount', userToonta.getWithdrawalaccount)
@@ -111,6 +114,7 @@ router.get('/getTestTest', userToonta.testFuntion)
 router.get('/getOnePromotion/:passwordpromotion', userToonta.getOnePromotion)
 router.get('/GetOneAgentWeb/:id', userstoonTaII.GetOneAgentWeb)
 router.get('/getOneAbs/:password_ads', userstoonTaII.getOneAbs) //getone Get Abs เรียกดู Abs 
+router.get('/getOneCoupon/:password_coupon', userstoonTaII.getOneCoupon) //getone Get Abs เรียกดู Abs 
 
 router.put('/updateDepositaccount', userToonta.updateDepositaccount)
 router.put('/putUserGroupInformation', userToonta.PutUserGroupInformation)
@@ -129,6 +133,8 @@ router.put('/DeleteAccessDeposit', userstoonTaII.DeleteAccessDeposit)
 router.put('/DeleteAbs', userstoonTaII.DeleteAbs) //ลบโฆษณา 
 router.put('/deleteMemberPromotion', userstoonTaII.DeleteMemberPromotion) //ยกเลิกโปรโมชั่น 
 router.put('/updateTrasalationGroup', userstoonTaII.updateTrasalationGroup);
+router.put('/DeleteCoupon', userstoonTaII.DeleteCoupon) //ลบ Coupon
+router.put('/upDateCoupon', userstoonTaII.upDateCoupon); //แก้ไขคูปอง
 
 // game
 router.post('/playGame/:user_id/:bet/:game_id', testGame.saveTestGame)

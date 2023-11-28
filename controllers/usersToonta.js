@@ -1146,18 +1146,22 @@ exports.getDataDepositStatementBank = (req, res) => {
                                                                     //let sql = `SELECT * FROM totalamountdaily WHERE agentid = '${agent_ID}' AND date >='${date}' AND date <='${enddate}' AND typeaction = '${depositwithdrawal}'`;
                                                                     let sql = `
                                                                     SELECT
-                                                                    accountName,
-                                                                    accountNumber,
-                                                                    bankname,
-                                                                    imgbank,
-                                                                      SUM(billmatched) AS billmatched,
-                                                                      SUM(complated) AS complated, 
-                                                                      SUM(balance) AS balance, 
-                                                                    FROM totalamountdaily 
-                                                                    WHERE date >= '${date}' AND date <= '${enddate}' AND agentid = '${agent_ID}' AND typeaction = '${depositwithdrawal}'
-                                                                    GROUP BY date >= '${date}' AND date <= '${enddate}'  
+                                                                        accountName,
+                                                                        accountNumber,
+                                                                        bankname,
+                                                                        imgbank,
+                                                                        SUM(billmatched) AS billmatched,
+                                                                        SUM(complated) AS complated,
+                                                                        SUM(balance) AS balance
+                                                                    FROM
+                                                                        totalamountdaily
+                                                                    WHERE
+                                                                        date >= '${date}' AND date <= '${enddate}' AND agentid = '${agent_ID}' AND typeaction = '${depositwithdrawal}'
+                                                                    GROUP BY
+                                                                        accountName, accountNumber, bankname, imgbank
                                                                     LIMIT ${pageSize} OFFSET ${offset}`;
                                                                     connection.query(sql, (error, results) => {
+                                                                        //console.log(agent_ID);
                                                                         res.send({
                                                                             dataDeposit: resultDeposit,
                                                                             datastatusTrue: resultstatusTrue,
@@ -1251,18 +1255,21 @@ exports.getDataDepositStatementBank = (req, res) => {
                                                             } else {
                                                                 //let sql = `SELECT * FROM totalamountdaily WHERE agentid = '${agent_ID}' AND date = '${date}' AND date = '${enddate}' AND typeaction = '${depositwithdrawal}'`;
                                                                 let sql = `
-                                                                SELECT
-                                                                accountName,
-                                                                accountNumber,
-                                                                bankname,
-                                                                imgbank,
-                                                                  SUM(billmatched) AS billmatched,
-                                                                  SUM(complated) AS complated, 
-                                                                  SUM(balance) AS balance, 
-                                                                FROM totalamountdaily 
-                                                                WHERE date >= '${date}' AND date <= '${enddate}' AND agentid = '${agent_ID}' AND typeaction = '${depositwithdrawal}'
-                                                                GROUP BY date >= '${date}' AND date <= '${enddate}'  
-                                                                LIMIT ${pageSize} OFFSET ${offset}`;
+                                                                    SELECT
+                                                                        accountName,
+                                                                        accountNumber,
+                                                                        bankname,
+                                                                        imgbank,
+                                                                        SUM(billmatched) AS billmatched,
+                                                                        SUM(complated) AS complated,
+                                                                        SUM(balance) AS balance
+                                                                    FROM
+                                                                        totalamountdaily
+                                                                    WHERE
+                                                                        date >= '${date}' AND date <= '${enddate}' AND agentid = '${agent_ID}' AND typeaction = '${depositwithdrawal}'
+                                                                    GROUP BY
+                                                                        accountName, accountNumber, bankname, imgbank
+                                                                    LIMIT ${pageSize} OFFSET ${offset}`;
                                                                 connection.query(sql, (error, results) => {
                                                                     res.send({
                                                                         dataDeposit: resultDeposit,
@@ -1304,16 +1311,19 @@ exports.getDataDepositStatementBank = (req, res) => {
             //let sql = `SELECT * FROM totalamountdaily WHERE agentid = '${agent_ID}' AND date = '${date}' AND typeaction = '${depositwithdrawal}'`;
             let sql = `
             SELECT
-            accountName,
-            accountNumber,
-            bankname,
-            imgbank,
-              SUM(billmatched) AS billmatched,
-              SUM(complated) AS complated, 
-              SUM(balance) AS balance, 
-            FROM totalamountdaily 
-            WHERE date >= '${date}' AND date <= '${enddate}' AND agentid = '${agent_ID}' AND typeaction = '${depositwithdrawal}'
-            GROUP BY date >= '${date}' AND date <= '${enddate}'  
+                accountName,
+                accountNumber,
+                bankname,
+                imgbank,
+                SUM(billmatched) AS billmatched,
+                SUM(complated) AS complated,
+                SUM(balance) AS balance
+            FROM
+                totalamountdaily
+            WHERE
+                date >= '${date}' AND date <= '${enddate}' AND agentid = '${agent_ID}' AND typeaction = '${depositwithdrawal}'
+            GROUP BY
+                accountName, accountNumber, bankname, imgbank
             LIMIT ${pageSize} OFFSET ${offset}`;
             connection.query(sql, (error, results) => {
                 res.send({
@@ -1378,16 +1388,19 @@ exports.getDataDepositStatementBank = (req, res) => {
                                                             //let sql = `SELECT * FROM totalamountdaily WHERE agentid = '${agent_ID}' AND date = '${date}' AND typeaction = '${depositwithdrawal}'`;
                                                             let sql = `
                                                             SELECT
-                                                            accountName,
-                                                            accountNumber,
-                                                            bankname,
-                                                            imgbank,
-                                                              SUM(billmatched) AS billmatched,
-                                                              SUM(complated) AS complated, 
-                                                              SUM(balance) AS balance, 
-                                                            FROM totalamountdaily 
-                                                            WHERE date >= '${date}' AND date <= '${enddate}' AND agentid = '${agent_ID}' AND typeaction = '${depositwithdrawal}'
-                                                            GROUP BY date >= '${date}' AND date <= '${enddate}'  
+                                                                accountName,
+                                                                accountNumber,
+                                                                bankname,
+                                                                imgbank,
+                                                                SUM(billmatched) AS billmatched,
+                                                                SUM(complated) AS complated,
+                                                                SUM(balance) AS balance
+                                                            FROM
+                                                                totalamountdaily
+                                                            WHERE
+                                                                date >= '${date}' AND date <= '${enddate}' AND agentid = '${agent_ID}' AND typeaction = '${depositwithdrawal}'
+                                                            GROUP BY
+                                                                accountName, accountNumber, bankname, imgbank
                                                             LIMIT ${pageSize} OFFSET ${offset}`;
                                                             connection.query(sql, (error, results) => {
                                                                 res.send({
@@ -1479,18 +1492,21 @@ exports.getDataDepositStatementBank = (req, res) => {
                                                             } else {
                                                                 //let sql = `SELECT * FROM totalamountdaily WHERE agentid = '${agent_ID}' AND date = '${date}' AND date = '${enddate}' AND typeaction = '${depositwithdrawal}'`;
                                                                 let sql = `
-                                                                SELECT
-                                                                accountName,
-                                                                accountNumber,
-                                                                bankname,
-                                                                imgbank,
-                                                                  SUM(billmatched) AS billmatched,
-                                                                  SUM(complated) AS complated, 
-                                                                  SUM(balance) AS balance, 
-                                                                FROM totalamountdaily 
-                                                                WHERE date >= '${date}' AND date <= '${enddate}' AND agentid = '${agent_ID}' AND typeaction = '${depositwithdrawal}'
-                                                                GROUP BY date >= '${date}' AND date <= '${enddate}'  
-                                                                LIMIT ${pageSize} OFFSET ${offset}`;
+                                                                    SELECT
+                                                                        accountName,
+                                                                        accountNumber,
+                                                                        bankname,
+                                                                        imgbank,
+                                                                        SUM(billmatched) AS billmatched,
+                                                                        SUM(complated) AS complated,
+                                                                        SUM(balance) AS balance
+                                                                    FROM
+                                                                        totalamountdaily
+                                                                    WHERE
+                                                                        date >= '${date}' AND date <= '${enddate}' AND agentid = '${agent_ID}' AND typeaction = '${depositwithdrawal}'
+                                                                    GROUP BY
+                                                                        accountName, accountNumber, bankname, imgbank
+                                                                    LIMIT ${pageSize} OFFSET ${offset}`;
                                                                 connection.query(sql, (error, results) => {
                                                                     res.send({
                                                                         dataDeposit: resultDeposit,
@@ -1532,18 +1548,20 @@ exports.getDataDepositStatementBank = (req, res) => {
             //let sql = `SELECT * FROM totalamountdaily WHERE agentid = '${agent_ID}' AND date = '${date}' AND typeaction = '${depositwithdrawal}'`;
             let sql = `
             SELECT
-            accountName,
-            accountNumber,
-            bankname,
-            imgbank,
-              SUM(billmatched) AS billmatched,
-              SUM(complated) AS complated, 
-              SUM(balance) AS balance, 
-            FROM totalamountdaily 
-            WHERE date >= '${date}' AND date <= '${enddate}' AND agentid = '${agent_ID}' AND typeaction = '${depositwithdrawal}'
-            GROUP BY date >= '${date}' AND date <= '${enddate}'  
+                accountName,
+                accountNumber,
+                bankname,
+                imgbank,
+                SUM(billmatched) AS billmatched,
+                SUM(complated) AS complated,
+                SUM(balance) AS balance
+            FROM
+                totalamountdaily
+            WHERE
+                date >= '${date}' AND date <= '${enddate}' AND agentid = '${agent_ID}' AND typeaction = '${depositwithdrawal}'
+            GROUP BY
+                accountName, accountNumber, bankname, imgbank
             LIMIT ${pageSize} OFFSET ${offset}`;
-
             connection.query(sql, (error, results) => {
                 res.send({
                     dataDeposit: [],
@@ -2147,7 +2165,7 @@ exports.getRepostGame = (require, response) => {
     setTimeout(() => {
         //console.log(date, endDate);
         if (searchPhones === '' && searcGameCamp === '') {
-            let sql = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
+            let sql = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' ORDER BY created_atdate DESC LIMIT ${pageSize} OFFSET ${offset}`;
             connection.query(sql, async (error, results) => {
                 if (error) { console.log(error); }
                 const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`
@@ -2168,13 +2186,13 @@ exports.getRepostGame = (require, response) => {
                 });
             });
         } else if (searchPhones !== '' && searcGameCamp === '') {
-            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND username LIKE ? LIMIT ? OFFSET ?`;
+            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND username LIKE ? ORDER BY created_atdate DESC LIMIT ? OFFSET ?`;
             const searchPattern = `%${searchPhones}%`;
             const values = [searchPattern, pageSize, offset];
             connection.query(sql_, values, (error, results) => {
                 if (error) { console.log(error); }
                 else {
-                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`
+                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND username = '${searchPhones}'`
                     connection.query(totalCount, (error, res) => {
                         if (error) { console.log(error); }
                         else {
@@ -2190,13 +2208,13 @@ exports.getRepostGame = (require, response) => {
             });
         } else if (searchPhones === '' && searcGameCamp !== '') {
             //console.log(searcGameCamp, searchPhones)
-            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >= ? AND created_atdate <= ? AND gameid LIKE ? LIMIT ? OFFSET ?`;
+            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >= ? AND created_atdate <= ? AND gameid LIKE ? ORDER BY created_atdate DESC LIMIT ? OFFSET ?`;
             const searchPattern = `%${searcGameCamp}%`;
             const values = [date, endDate, searchPattern, pageSize, offset];
             connection.query(sql_, values, (error, results) => {
                 if (error) { console.log(error); }
                 else {
-                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`
+                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND gameid = '${searcGameCamp}'`
                     connection.query(totalCount, (error, res) => {
                         if (error) { console.log(error); }
                         else {
@@ -2211,7 +2229,7 @@ exports.getRepostGame = (require, response) => {
                 }
             });
         } else if (searchPhones === undefined && searcGameCamp === undefined) {
-            let sql = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' LIMIT ${pageSize} OFFSET ${offset}`;
+            let sql = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' ORDER BY created_atdate DESC LIMIT ${pageSize} OFFSET ${offset}`;
             connection.query(sql, async (error, results) => {
                 if (error) { console.log(error); }
                 else {
@@ -2230,13 +2248,13 @@ exports.getRepostGame = (require, response) => {
                 }
             });
         } else if (searchPhones !== undefined && searcGameCamp === undefined) {
-            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND username LIKE ? LIMIT ? OFFSET ?`;
+            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND username LIKE ? ORDER BY created_atdate DESC LIMIT ? OFFSET ?`;
             const searchPattern = `%${searchPhones}%`;
             const values = [date, searchPattern, pageSize, offset];
             connection.query(sql_, values, (error, results) => {
                 if (error) { console.log(error); }
                 else {
-                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`
+                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND username = '${searchPhones}'`
                     connection.query(totalCount, (error, res) => {
                         if (error) { console.log(error); }
                         else {
@@ -2251,12 +2269,12 @@ exports.getRepostGame = (require, response) => {
                 }
             });
         } else if (searchPhones === undefined && searcGameCamp !== undefined) {
-            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND gameid LIKE ? LIMIT ? OFFSET ?`;
+            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND gameid LIKE ? ORDER BY created_atdate DESC LIMIT ? OFFSET ?`;
             const values = [searcGameCamp, pageSize, offset];
             connection.query(sql_, values, (error, results) => {
                 if (error) { console.log(error); }
                 else {
-                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`
+                    const totalCount = `SELECT COUNT(*) as count FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND gameid = '${searcGameCamp}'`
                     connection.query(totalCount, (error, res) => {
                         if (error) { console.log(error); }
                         else {
@@ -2271,7 +2289,7 @@ exports.getRepostGame = (require, response) => {
                 }
             });
         } else {
-            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND gameid LIKE '%${searcGameCamp}%' AND username LIKE ? LIMIT ? OFFSET ?`;
+            let sql_ = `SELECT * FROM repostgame WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' AND gameid LIKE '%${searcGameCamp}%' AND username LIKE ? ORDER BY created_atdate DESC LIMIT ? OFFSET ?`;
             const searchPattern = `%${searchPhones}%`;
             const values = [searchPattern, pageSize, offset];
             connection.query(sql_, values, (error, results) => {
@@ -2293,7 +2311,7 @@ exports.getRepostGame = (require, response) => {
                 }
             });
         }
-    }, 500);
+    }, 200);
 }
 
 //http://localhost:5000/post/getMemberRegiter getMemberRegiter
@@ -2845,7 +2863,7 @@ exports.getRepostTurnoverGameCamp = (require, response) => {
 
     if (searchPhones === '' && searcGameCamp === '') {
 
-        let sql = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
+        let sql = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' ORDER BY day DESC LIMIT ${pageSize} OFFSET ${offset}`;
         connection.query(sql, async (error, results) => {
             if (error) { console.log(error); }
             const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'`
@@ -2864,7 +2882,7 @@ exports.getRepostTurnoverGameCamp = (require, response) => {
             });
         });
     } else if (searchPhones !== '' && searcGameCamp === '') {
-        let sql_ = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND 	usernameuser LIKE ? LIMIT ? OFFSET ?`;
+        let sql_ = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND 	usernameuser  LIKE ? ORDER BY day DESC LIMIT ? OFFSET ?`;
         const searchPattern = `%${searchPhones}%`;
         const values = [searchPattern, pageSize, offset];
         connection.query(sql_, values, (error, results) => {
@@ -2886,7 +2904,7 @@ exports.getRepostTurnoverGameCamp = (require, response) => {
         });
     } else if (searchPhones === '' && searcGameCamp !== '') {
         //console.log(searcGameCamp, searchPhones)
-        let sql_ = `SELECT * FROM turnoverrepost WHERE day >= ? AND day <= ? AND gamecamp LIKE ? LIMIT ? OFFSET ?`;
+        let sql_ = `SELECT * FROM turnoverrepost WHERE day >= ? AND day <= ? AND gamecamp LIKE ? ORDER BY day DESC LIMIT ? OFFSET ?`;
         const searchPattern = `%${searcGameCamp}%`;
         const values = [date, endDate, searchPattern, pageSize, offset];
         connection.query(sql_, values, (error, results) => {
@@ -2907,7 +2925,7 @@ exports.getRepostTurnoverGameCamp = (require, response) => {
             }
         });
     } else if (searchPhones === undefined && searcGameCamp === undefined) {
-        let sql = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' LIMIT ${pageSize} OFFSET ${offset}`;
+        let sql = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' ORDER BY day DESC LIMIT ${pageSize} OFFSET ${offset}`;
         connection.query(sql, async (error, results) => {
             if (error) { console.log(error); }
             else {
@@ -2926,7 +2944,7 @@ exports.getRepostTurnoverGameCamp = (require, response) => {
             }
         });
     } else if (searchPhones !== undefined && searcGameCamp === undefined) {
-        let sql_ = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND usernameuser LIKE ? LIMIT ? OFFSET ?`;
+        let sql_ = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND usernameuser LIKE ? ORDER BY day DESC LIMIT ? OFFSET ?`;
         const searchPattern = `%${searchPhones}%`;
         const values = [date, searchPattern, pageSize, offset];
         connection.query(sql_, values, (error, results) => {
@@ -2947,7 +2965,7 @@ exports.getRepostTurnoverGameCamp = (require, response) => {
             }
         });
     } else if (searchPhones === undefined && searcGameCamp !== undefined) {
-        let sql_ = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND gamecamp LIKE ? LIMIT ? OFFSET ?`;
+        let sql_ = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND gamecamp LIKE ? ORDER BY day DESC LIMIT ? OFFSET ?`;
         const values = [searcGameCamp, pageSize, offset];
         connection.query(sql_, values, (error, results) => {
             if (error) { console.log(error); }
@@ -2968,7 +2986,7 @@ exports.getRepostTurnoverGameCamp = (require, response) => {
         });
     } else {
         //console.log(searcGameCamp, searchPhones)
-        let sql_ = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND gamecamp LIKE '%${searcGameCamp}%' AND usernameuser LIKE ? LIMIT ? OFFSET ?`;
+        let sql_ = `SELECT * FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND gamecamp LIKE '%${searcGameCamp}%' AND usernameuser LIKE ? ORDER BY day DESC LIMIT ? OFFSET ?`;
         const searchPattern = `%${searchPhones}%`;
         //const searchPatternKey = `%${searcGameCamp}%`;
         const values = [searchPattern, pageSize, offset];

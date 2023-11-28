@@ -1005,7 +1005,7 @@ exports.GetCouponMember = async (req, res, next) => {
 
                             let sql_conpon = `SELECT * FROM coupon WHERE couponpassword = '${couponpassword}' AND statu_coupon = 'Y'`;
                             connection.query(sql_conpon, (error, result_coupon) => {
-                                if (result_coupon[0].length > 0) {
+                                if (result_coupon.length > 0) {
                                     if (result_coupon[0].couponpassword === couponpassword) {
                                         let creditbonus = result[0].credit + result_coupon[0].valusbunus;
                                         if (result_coupon[0].withdrawalType === 'Turnover Fixed') {

@@ -1005,30 +1005,36 @@ exports.GetCouponMember = async (req, res, next) => {
 
                             let sql_conpon = `SELECT * FROM coupon WHERE couponpassword = '${couponpassword}' AND statu_coupon = 'Y'`;
                             connection.query(sql_conpon, (error, result_coupon) => {
+                                if (result_coupon[0].length > 0) {
+                                    if (result_coupon[0].couponpassword === couponpassword) {
+                                        let creditbonus = result[0].credit + result_coupon[0].valusbunus;
+                                        if (result_coupon[0].withdrawalType === 'Turnover Fixed') {
+                                            turnover = result[0].turnover + result_coupon[0].valusbunus
+                                        } else {
+                                            turnover = result[0].turnover + (result_coupon[0].valusbunus * result_coupon[0].valusbunus)
+                                        }
+                                        let sql_imsert_repost_coupon = `INSERT INTO repost_coupon (password_coupon, tpyebunus, valusbunus, coupon_password, namecoupon, 
+                                            startcoupon, endcoupon, created_at, credit, turnover, username)
+                                            value ('${esult_coupon[0].password_coupon}','${result_coupon[0].typebonus}','${result_coupon[0].valusbunus}','${couponpassword}',
+                                            '${result_coupon[0].namepromotion}','${result_coupon[0].startcoupon}','${result_coupon[0].endcoupon}',
+                                            '${formattedDate} ${formattedTime}','${creditbonus}','${turnover}','${username}')`;
 
-                                if (result_coupon[0].couponpassword === couponpassword) {
-                                    let creditbonus = result[0].credit + result_coupon[0].valusbunus;
-                                    if (result_coupon[0].withdrawalType === 'Turnover Fixed') {
-                                        turnover = result[0].turnover + result_coupon[0].valusbunus
-                                    } else {
-                                        turnover = result[0].turnover + (result_coupon[0].valusbunus * result_coupon[0].valusbunus)
-                                    }
-                                    let sql_imsert_repost_coupon = `INSERT INTO repost_coupon (password_coupon, tpyebunus, valusbunus, coupon_password, namecoupon, 
-                                        startcoupon, endcoupon, created_at, credit, turnover, username)
-                                        value ('${password_coupon}','${result_coupon[0].typebonus}','${result_coupon[0].valusbunus}','${couponpassword}',
-                                        '${result_coupon[0].namepromotion}','${result_coupon[0].startcoupon}','${result_coupon[0].endcoupon}',
-                                        '${formattedDate} ${formattedTime}','${creditbonus}','${turnover}','${username}')`;
-
-                                    connection.query(sql_imsert_repost_coupon, (error, result_repostcoupon) => {
-                                        let sql_update = `UPDATE member set credit = '${creditbonus}', bonususer = '${result_coupon[0].valusbunus}', turnover = '${turnover}' 
-                                        WHERE username = '${username}' AND status = 'Y'`;
-                                        connection.query(sql_update, (error, result_memberupdate) => {
-                                            res.send({
-                                                message: "คุณรับคูปองสำเร็จ"
-                                            });
-                                            res.end();
+                                        connection.query(sql_imsert_repost_coupon, (error, result_repostcoupon) => {
+                                            let sql_update = `UPDATE member set credit = '${creditbonus}', bonususer = '${result_coupon[0].valusbunus}', turnover = '${turnover}' 
+                                            WHERE username = '${username}' AND status = 'Y'`;
+                                            connection.query(sql_update, (error, result_memberupdate) => {
+                                                res.send({
+                                                    message: "คุณรับคูปองสำเร็จ"
+                                                });
+                                                res.end();
+                                            })
                                         })
-                                    })
+                                    } else {
+                                        res.send({
+                                            message: "คุณไม่สามารถใช้คูปองได้ เนื่องจากคุณกรอกรหัสคูปองไม่ถูกต้อง"
+                                        });
+                                        res.end();
+                                    }
                                 } else {
                                     res.send({
                                         message: "คุณไม่สามารถใช้คูปองได้ เนื่องจากคุณกรอกรหัสคูปองไม่ถูกต้อง"

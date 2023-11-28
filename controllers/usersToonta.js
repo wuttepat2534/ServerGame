@@ -764,7 +764,7 @@ function logTotalAmount(resultUser, formattedDateBill, type, destinationAccount,
             connection.query(sql_deposit, (error, resulttotaldeposit) => {
                 if (resulttotal.length === 0) {
                     if (statusFinance === ('สำเร็จ')) {
-                        let sql = `UPDATE depositaccount set balance = '${resulttotaldeposit[0].billmatched + quantity}', billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated + quantity}'
+                        let sql = `UPDATE depositaccount set balance = '${resulttotaldeposit[0].billMatched + quantity}', billMatched = '${resulttotaldeposit[0].billMatched + quantity}', complated = '${resulttotaldeposit[0].complated + quantity}'
                     WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}'`;
                         connection.query(sql, (error, result) => {
                             if (error) {
@@ -785,7 +785,7 @@ function logTotalAmount(resultUser, formattedDateBill, type, destinationAccount,
                         });
 
                     } else {
-                        let sql = `UPDATE depositaccount set balance = '${resulttotaldeposit[0].billmatched + quantity}', billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated}'
+                        let sql = `UPDATE depositaccount set balance = '${resulttotaldeposit[0].billMatched + quantity}', billmatched = '${resulttotaldeposit[0].billMatched + quantity}', complated = '${resulttotaldeposit[0].complated}'
                         WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
                         connection.query(sql, (error, result) => {
                             if (error) {
@@ -845,7 +845,7 @@ function logTotalAmount(resultUser, formattedDateBill, type, destinationAccount,
                                         console.log(error)
                                     } else {
                                         console.log(resulttotaldeposit)
-                                        let sql = `UPDATE depositaccount set balance = '${resulttotaldeposit[0].billmatched + 0}', billmatched = '${resulttotaldeposit[0].billmatched + quantity}', complated = '${resulttotaldeposit[0].complated + 0}'
+                                        let sql = `UPDATE depositaccount set balance = '${resulttotaldeposit[0].billMatched + 0}', billMatched = '${resulttotaldeposit[0].billMatched + quantity}', complated = '${resulttotaldeposit[0].complated + 0}'
                                     WHERE accountName ='${destinationAccount}' AND accountNumber = '${destinationAccountNumber}' ORDER BY accountName ASC`;
                                         connection.query(sql, (error, resultDeposit) => {
                                             if (error) {

@@ -454,7 +454,7 @@ exports.saveTestGameBuy = async (require, response) => {
     let bet = require.params.bet;
     let game_id = require.params.game_id;
     let isWinFreeSpinBuy = false//ชนะ freespin มั้ยรอบนี้
-    let betFreeSpin = bet * 50//ราคาของการซื้อ freespin
+    let betFreeSpin = bet * 20//ราคาของการซื้อ freespin
     const userAgent = require.headers['user-agent'];
     const userAgentt = require.useragent;
     const today = new Date();

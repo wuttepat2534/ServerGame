@@ -999,11 +999,11 @@ exports.GetCouponMember = async (req, res, next) => {
             if (error) { console.log(error) }
             else {
                 if (result[0].promotionuser.includes("ไม่ได้รับโปรโมชั่น")) {
-                    let sql_repost_coupon = `SELECT * FROM repost_coupon WHERE username = '${username}' AND password_coupon = '${password_coupon}'`;
+                    let sql_repost_coupon = `SELECT * FROM repost_coupon WHERE username = '${username}' AND coupon_password = '${couponpassword}'`;
                     connection.query(sql_repost_coupon, (error, result_repost_coupon) => {
                         if (result_repost_coupon.length <= 0) {
 
-                            let sql_conpon = `SELECT * FROM coupon WHERE password_coupon = '${password_coupon}' AND statu_coupon = 'Y'`;
+                            let sql_conpon = `SELECT * FROM coupon WHERE couponpassword = '${couponpassword}' AND statu_coupon = 'Y'`;
                             connection.query(sql_conpon, (error, result_coupon) => {
 
                                 if (result_coupon[0].couponpassword === couponpassword) {

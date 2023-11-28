@@ -2925,7 +2925,7 @@ exports.getRepostGameCamp = (require, response) => {
     if (searcGameCamp === '') {
         let sql = `
         SELECT 
-        namegamecamp,
+          namegamecamp,
           SUM(grossComm) AS grossComm,
           SUM(turnover) AS turnover, 
           SUM(win) AS win, 
@@ -2942,50 +2942,59 @@ exports.getRepostGameCamp = (require, response) => {
         FROM gamecamptotal 
         WHERE day >= '${date}' AND day <= '${endDate}' 
         GROUP BY namegamecamp 
-        LIMIT ${pageSize} OFFSET ${offset}
-      `;
-        // let sql = `SELECT * FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
+        LIMIT ${pageSize} OFFSET ${offset}`;
+
         connection.query(sql, async (error, results) => {
-            if (error) { console.log(error); }
-            const totalCount = `SELECT COUNT(*) as count FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'`
+            if (error) {
+                console.log(error);
+                response.send({ error: 'Failed to fetch data' });
+                return;
+            }
+
+            const totalCount = `SELECT COUNT(*) as count FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'`;
             connection.query(totalCount, (error, res) => {
-                if (error) { console.log(error); }
-                else {
-                    let sql_All = `
-                    SELECT 
-                    id,
-                      SUM(grossComm) AS grossComm,
-                      SUM(turnover) AS turnover, 
-                      SUM(win) AS win, 
-                      SUM(lose) AS lose,
-                      SUM(commmember) AS commmember,  
-                      SUM(totalmamber) AS totalmamber, 
-                      SUM(w_l_agent) AS w_l_agent,
-                      SUM(comm_agent) AS comm_agent, 
-                      SUM(tatal_agent) AS tatal_agent, 
-                      SUM(w_l_commny) AS w_l_commny, 
-                      SUM(comm_commny) AS comm_commny,
-                      SUM(tatal_commny) AS tatal_commny,
-                      SUM(roundplay) AS roundplay
-                    FROM gamecamptotal 
-                    WHERE day >= '${date}' AND day <= '${endDate}' 
-                    GROUP BY day >= '${date}' AND day <= '${endDate}'  
-                    LIMIT ${pageSize} OFFSET ${offset}
-                  `;
-                    // let sql = `SELECT * FROM gamecamptotal WHERE day >='${date}' AND day <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
-                    connection.query(sql_All, async (error, results_All) => {
-                        const combinedData = results.concat(results_All);
-                        //console.log(combinedData);
-                        response.send({
-                            data: combinedData,
-                            valusData: results.length,
-                            total: results.length,
-                            startdate: date,
-                            enddate: endDate
-                        });
-                        response.end();
-                    })
+                if (error) {
+                    console.log(error);
+                    response.send({ error: 'Failed to fetch total count' });
+                    return;
                 }
+
+                let sql_All = `
+            SELECT 
+              SUM(grossComm) AS grossComm,
+              SUM(turnover) AS turnover, 
+              SUM(win) AS win, 
+              SUM(lose) AS lose,
+              SUM(commmember) AS commmember,  
+              SUM(totalmamber) AS totalmamber, 
+              SUM(w_l_agent) AS w_l_agent,
+              SUM(comm_agent) AS comm_agent, 
+              SUM(tatal_agent) AS tatal_agent, 
+              SUM(w_l_commny) AS w_l_commny, 
+              SUM(comm_commny) AS comm_commny,
+              SUM(tatal_commny) AS tatal_commny,
+              SUM(roundplay) AS roundplay
+            FROM gamecamptotal 
+            WHERE day >= '${date}' AND day <= '${endDate}' 
+            GROUP BY day >= '${date}' AND day <= '${endDate}'  
+            LIMIT ${pageSize} OFFSET ${offset}`;
+
+                connection.query(sql_All, async (error, results_All) => {
+                    if (error) {
+                        console.log(error);
+                        response.send({ error: 'Failed to fetch additional data' });
+                        return;
+                    }
+                    const combinedData = (results && results_All) ? results.concat(results_All) : (results || results_All);
+                    response.send({
+                        data: combinedData || [], // If no data found, send an empty array
+                        valusData: combinedData ? combinedData.length : 0,
+                        total: res[0].count || 0,
+                        startdate: date,
+                        enddate: endDate
+                    });
+                    response.end();
+                });
             });
         });
     } else if (searcGameCamp !== '') {

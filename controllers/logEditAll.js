@@ -83,8 +83,8 @@ module.exports = class Post {
     }
 
     static uploadLogEditUser(post, dataMenber) {
-        /* console.log(post)
-         console.log(dataMenber)*/
+        //console.log(post)
+        //console.log(post.edittype)
         const sql = `SELECT * FROM ${post.edittype} WHERE id = ?`;
         connection.query(sql, [post.idedit], (error, resultBefore) => {
             try {
@@ -93,10 +93,10 @@ module.exports = class Post {
                     let nametpyeEdit = resultBefore[0].username
                     let sql_before = `INSERT INTO logedit (edittype, idedit, idmember, name, editbefore, editafter, created_atdate, created_attime) value 
               ('${post.edittype}','${post.idedit}','${post.id}','${nametpyeEdit}',
-              '${'ชื่อจริง' + ' ' + dataMenber.accountName + ' ' + 'นามสกุล' + ' ' + dataMenber.lastName + ' ' + 'กลุ่มลูกค้า' + ' ' + dataMenber.groupmember + ' ' + 'Renk' +
-                        ' ' + dataMenber.userrank + ' ' + 'username' + ' ' + dataMenber.username + ' ' + 'ไลน์' + ' ' + dataMenber.lineid}',
-              '${'ชื่อจริง' + ' ' + post.accountName + ' ' + 'นามสกุล' + ' ' + post.lastName + ' ' + 'กลุ่มลูกค้า' + ' ' + post.customerGroup + ' ' + 'Rank' +
-                        ' ' + post.Rank + ' ' + 'username' + ' ' + post.contact_number + ' ' + 'ไลน์' + ' ' + post.IDLIne + 'แก้ไขโดย' + ' ' + nametpyeEdit}'
+              '${'ชื่อจริง' + ' ' + dataMenber.accountName + ' ' + 'นามสกุล' + ' ' + dataMenber.lastName + ' ' + 'กลุ่มลูกค้า' + ' ' + dataMenber.groupmember + ' '
+               + dataMenber.userrank + ' ' + 'username' + ' ' + dataMenber.username + ' ' + 'ไลน์' + ' ' + dataMenber.lineid}',
+              '${'ชื่อจริง' + ' ' + post.accountName + ' ' + 'นามสกุล' + ' ' + post.lastName + ' ' + 'กลุ่มลูกค้า' + ' ' + post.customerGroup + ' ' 
+               + 'username' + ' ' + post.contact_number + ' ' + 'ไลน์' + ' ' + post.IDLIne + 'แก้ไขโดย' + ' ' + nametpyeEdit}'
               ,now(), now())`;
                     connection.query(sql_before, (error, resultAfter) => {
                         console.log(dataMenber.lastName)

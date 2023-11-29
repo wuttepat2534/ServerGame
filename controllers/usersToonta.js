@@ -490,6 +490,7 @@ exports.financeUser = (req, res) => {
     const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
     const formattedTime = currentTimeInThailand.format('HH:mm:ss');
     const imgBank = req.body.imgBank
+    const actualize = req.body.actualize
     let promotiontres = ''
 
     //console.log(statusFinance);
@@ -534,7 +535,7 @@ exports.financeUser = (req, res) => {
 
                             if (typePromotion !== '0') {
                                 promotiontoonta.promotionDeposit(quantity, resultUser[0], typePromotion, formattedNumber, totaltopup, nameimg, imgBank,
-                                    statusFinance, qrcodeData, transRef, destinationAccount, destinationAccountNumber, formattedDate, formattedNumber)
+                                    statusFinance, qrcodeData, transRef, destinationAccount, destinationAccountNumber, formattedDate, formattedNumber, actualize)
                                     .then(calculatedValues => {
                                         //console.log(calculatedValues.status)
                                         if (calculatedValues.status === 'ไม่สามารถรับโปรโมชั่นได้') {
@@ -565,11 +566,11 @@ exports.financeUser = (req, res) => {
                             } else {
 
                                 let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
-                                    balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber, trans_ref, qrcodeData, nameimg) value 
+                                    balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber, trans_ref, qrcodeData, nameimg, actualize) value 
                                     ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${accountNumber}','${phonenumber}','${'ฝาก'}','${quantity}','${0}','${resultUser[0].credit}'
                                     ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${statusFinance}','${formattedDate}','${formattedTime}'
                                     ,'${resultUser[0].bank}','${imgBank}'
-                                    ,'${destinationAccount}','${destinationAccountNumber}','${transRef}', '${qrcodeData}', '${nameimg}')`;
+                                    ,'${destinationAccount}','${destinationAccountNumber}','${transRef}','${qrcodeData}','${nameimg}','${actualize}')`;
                                 if (statusFinance === "สำเร็จ") {
 
                                     logTotalAmount(resultUser, formattedDate, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
@@ -633,6 +634,7 @@ exports.WinhdrawUser = (req, res) => {
     const phonenumber = req.body.phonenumber;
     //const statusFinance = req.body.statusFinance;
     const agent_id = req.body.agent_id;
+    const actualize = req.body.actualize;
     const currentTimeInThailand = moment().tz('Asia/Bangkok');
     const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
     const formattedTime = currentTimeInThailand.format('HH:mm:ss');
@@ -640,7 +642,7 @@ exports.WinhdrawUser = (req, res) => {
     const statusWitdraw = req.body.statusWitdraw;
     const withdrawStatus = req.body.withdrawStatus;
     const io = socket.getIO();
-    console.log(req.body);
+    //console.log(req.body);
     try {
         let sql_before = `SELECT * FROM member WHERE phonenumber ='${phonenumber}' AND agent_id = '${agent_id}'  ORDER BY phonenumber ASC`;
         connection.query(sql_before, (error, resultUser) => {
@@ -676,10 +678,10 @@ exports.WinhdrawUser = (req, res) => {
                                     console.log(error)
                                 } else {
                                     let sql_before = `INSERT INTO logfinanceuser (idUser, agent_id, accountName, accountNumber, phonenumber, tpyefinance, quantity, creditbonus, 
-                                        balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber) value 
+                                        balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber, actualize) value 
                                     ('${resultUser[0].id}','${resultUser[0].agent_id}','${resultUser[0].accountName}','${resultUser[0].accountNumber}','${phonenumber}','${'ถอน'}','${quantity}','${0}','${resultUser[0].credit}'
                                     ,'${balance}','T${formattedDate}${formattedNumber}','${billnum}','${statusWitdraw}','${formattedDate}','${formattedTime}','${resultUser[0].bank}','${resultBank[0].images}'
-                                    ,'${resultUser[0].accountName}','${resultUser[0].accountNumber}')`;
+                                    ,'${resultUser[0].accountName}','${resultUser[0].accountNumber}','${actualize}')`;
 
                                     connection.query(sql_before, (error, result) => {
                                         if (error) {
@@ -2083,7 +2085,7 @@ exports.getTransaction_History = (require, response) => {
     const offset = (pageNumber - 1) * pageSize;
     const date = require.body.dataDate;
     if (searchPhones === '') {
-        let sql = `SELECT * FROM logfinanceuser WHERE phonenumber = "${usernanme}" LIMIT ${pageSize} OFFSET ${offset}`;
+        let sql = `SELECT * FROM logfinanceuser WHERE phonenumber = "${usernanme}" ORDER BY transaction_date DESC LIMIT ${pageSize} OFFSET ${offset}`;
         connection.query(sql, async (error, results) => {
             if (error) { console.log(error); }
             const totalCount = `SELECT COUNT(*) as count FROM logfinanceuser WHERE phonenumber = "${usernanme}" `
@@ -2104,24 +2106,27 @@ exports.getTransaction_History = (require, response) => {
             });
         });
     } else {
-        //console.log(searchPhones);
-        let sql_ = `SELECT * FROM logfinanceuser WHERE  phonenumber = ? AND transaction_date = ?
-        AND phonenumber LIKE ? LIMIT ? OFFSET ?`;
+        let sql_ = `SELECT * FROM logfinanceuser WHERE phonenumber = ? AND phonenumber LIKE ? 
+        ORDER BY transaction_date DESC LIMIT ? OFFSET ?`;
         const searchPattern = `%${searchPhones}%`;
-        const values = [usernanme, date, searchPattern, pageSize, offset];
+        const values = [usernanme, searchPattern, pageSize, offset];
+
         connection.query(sql_, values, (error, resultstatusFalse) => {
-            if (error) { console.log(error); }
-            else {
+            if (error) {
+                console.log(error);
+            } else {
                 let sqlmember = `SELECT * FROM member WHERE username = "${usernanme}"`;
                 connection.query(sqlmember, async (error, resultsdataMenber) => {
-                    if (error) { console.log(error); }
+                    if (error) {
+                        console.log(error);
+                    }
                     response.send({
                         data: resultstatusFalse,
                         datamenber: resultsdataMenber,
                         total: resultstatusFalse.length
                     });
                     response.end();
-                })
+                });
             }
         });
     }
@@ -2888,7 +2893,7 @@ exports.getRepostTurnoverGameCamp = (require, response) => {
         connection.query(sql_, values, (error, results) => {
             if (error) { console.log(error); }
             else {
-                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'`
+                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND usernameuser LIKE '%${searchPhones}%'`
                 connection.query(totalCount, (error, res) => {
                     if (error) { console.log(error); }
                     else {
@@ -2910,7 +2915,7 @@ exports.getRepostTurnoverGameCamp = (require, response) => {
         connection.query(sql_, values, (error, results) => {
             if (error) { console.log(error); }
             else {
-                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'`
+                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND gamecamp LIKE '%${searcGameCamp}%'`
                 connection.query(totalCount, (error, res) => {
                     if (error) { console.log(error); }
                     else {
@@ -2950,7 +2955,7 @@ exports.getRepostTurnoverGameCamp = (require, response) => {
         connection.query(sql_, values, (error, results) => {
             if (error) { console.log(error); }
             else {
-                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'`
+                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND usernameuser LIKE '%${searchPhones}%'`
                 connection.query(totalCount, (error, res) => {
                     if (error) { console.log(error); }
                     else {
@@ -2970,7 +2975,7 @@ exports.getRepostTurnoverGameCamp = (require, response) => {
         connection.query(sql_, values, (error, results) => {
             if (error) { console.log(error); }
             else {
-                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'`
+                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND gamecamp LIKE '%${searcGameCamp}%'`
                 connection.query(totalCount, (error, res) => {
                     if (error) { console.log(error); }
                     else {
@@ -2993,7 +2998,7 @@ exports.getRepostTurnoverGameCamp = (require, response) => {
         connection.query(sql_, values, (error, results) => {
             if (error) { console.log(error); }
             else {
-                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}'`
+                const totalCount = `SELECT COUNT(*) as count FROM turnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND  gamecamp LIKE '%${searcGameCamp}%' AND usernameuser LIKE '%${searchPhones}%'`
                 connection.query(totalCount, (error, res) => {
                     if (error) { console.log(error); }
                     else {

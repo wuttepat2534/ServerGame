@@ -37,7 +37,7 @@ module.exports = class Post {
     }
 
     static promotionDeposit(quantityUser, dataUser, idPromotion, bill_number, totaltopup, nameimg, imgBank,
-        statusFinance, qrcodeData, transRef, destinationAccount, destinationAccountNumber, formattedDate, formattedNumber) {
+        statusFinance, qrcodeData, transRef, destinationAccount, destinationAccountNumber, formattedDate, formattedNumber, actualize) {
         return new Promise((resolve, reject) => {
             let ipuser = "192.168.1.1"
             if (dataUser.promotionuser.includes("ไม่ได้รับโปรโมชั่น")) {
@@ -67,7 +67,7 @@ module.exports = class Post {
                                                         Check_conditions(receiving_data_typeII, dataUser, resultPromotion[0], quantityII, data_typeII, quantityUser, ipuser, resetII).then(calculatedValuesII => {
                                                             if (calculatedValuesII.status && calculatedValuesII.status.includes('OKPromotion')) {
                                                                 receive_Promotions(resultPromotion, dataUser, bill_number, quantityUser, formattedDate, formattedNumber,
-                                                                    statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser, imgBank)
+                                                                    statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser, imgBank, actualize)
                                                                     .then(calculatedValues => {
                                                                         let jsArray = { status: calculatedValues.status };
                                                                         resolve(jsArray);
@@ -85,7 +85,7 @@ module.exports = class Post {
                                                     } else {
                                                         console.log('on3')
                                                         receive_Promotions(resultPromotion, dataUser, bill_number, quantityUser, formattedDate, formattedNumber,
-                                                            statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser, imgBank)
+                                                            statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser, imgBank, actualize)
                                                             .then(calculatedValues => {
                                                                 let jsArray = { status: calculatedValues.status };
                                                                 resolve(jsArray);
@@ -105,7 +105,7 @@ module.exports = class Post {
                                         } else {
                                             console.log('on1.5')
                                             receive_Promotions(resultPromotion, dataUser, bill_number, quantityUser, formattedDate, formattedNumber,
-                                                statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser, imgBank)
+                                                statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser, imgBank, actualize)
                                                 .then(calculatedValues => {
                                                     let jsArray = { status: calculatedValues.status };
                                                     resolve(jsArray);
@@ -289,7 +289,7 @@ module.exports = class Post {
     }
 };
 
-function receive_Promotions(resultPromotion, dataUser, bill_number, quantity, formattedDate, formattedNumber, statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser, imgBank) {
+function receive_Promotions(resultPromotion, dataUser, bill_number, quantity, formattedDate, formattedNumber, statusFinance, destinationAccount, destinationAccountNumber, transRef, qrcodeData, nameimg, totaltopup, ipuser, imgBank, actualize) {
     return new Promise((resolve, reject) => {
         let rank = 'NewMember';
         const currentTimeInThailand = moment().tz('Asia/Bangkok');
@@ -332,7 +332,7 @@ function receive_Promotions(resultPromotion, dataUser, bill_number, quantity, fo
             balance_before, balance, bill_number, numberbill, status, transaction_date, time, bank, imgBank, destinationAccount, destinationAccountNumber, trans_ref, qrcodeData, nameimg) value 
             ('${dataUser.id}','${dataUser.agent_id}','${dataUser.accountName}','${dataUser.accountNumber}','${dataUser.phonenumber}','${'ฝาก'}','${quantity}','${0}','${dataUser.credit}'
             ,'${balance}','T${formattedDate}${formattedNumber}','${bill_number}','${statusFinance}','${datethai}','${formattedTime}','${dataUser.bank}','${imgBank}'
-            ,'${destinationAccount}','${destinationAccountNumber}','${transRef}', '${qrcodeData}', '${nameimg}')`;
+            ,'${destinationAccount}','${destinationAccountNumber}','${transRef}', '${qrcodeData}','${nameimg}','${actualize}')`;
 
         let totalamountdaily = logTotalAmount(dataUser, formattedDate, 'ฝาก', destinationAccount, destinationAccountNumber, quantity, statusFinance)
         let updateRepostFinance = Finance.UpdateLogRepostFinance(dataUser.username, 'ฝาก', quantity)

@@ -833,6 +833,7 @@ app.put('/member/:id', async (req, res, next) => {
             if (error) { console.log(error) }
             else {
                 const dataMenber = resultBefore[0]
+                //console.log(post, dataMenber);
                 const logFuntion = logEdit.uploadLogEditUser(post, dataMenber);
 
                 let sql = `UPDATE member set name = '${firstName}', username = '${contact_number}', status = '${statuscheck}',

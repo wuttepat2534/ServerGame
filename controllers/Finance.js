@@ -152,7 +152,8 @@ module.exports = class Post {
                                                                 qrcodeData: resFinance.data.qrcodeData,
                                                                 agent_id: dataUsers.agent_id,
                                                                 typePromotion: dataUsers.idPromotion,
-                                                                imgBank: usernameAgent[0].images
+                                                                imgBank: usernameAgent[0].images,
+                                                                actualize: "ฝากโดย member จากเว็บไซต์"
                                                             });
                                                             //console.log(response.data.message)
                                                             if (response.data.message === "เติมเงินสำเร็จ") {
@@ -256,7 +257,8 @@ module.exports = class Post {
                                                                 qrcodeData: resFinance.data.qrcodeData,
                                                                 agent_id: dataUsers.agent_id,
                                                                 typePromotion: dataUsers.idPromotion,
-                                                                imgBank: usernameAgent[0].images
+                                                                imgBank: usernameAgent[0].images,
+                                                                actualize: "ฝากโดย member จากเว็บไซต์"
                                                             });
                                                             //console.log(response.data.message)
                                                             if (response.data.message === "เติมเงินสำเร็จ") {

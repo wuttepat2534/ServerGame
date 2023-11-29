@@ -60,7 +60,7 @@ exports.saveTestGame = async (require, response) => {
             if (user_credit == "") { user_credit = 0; }
             user_credit -= bet
             let jsonGame = MainGame(user_credit, bet, true);
-            console.log(jsonGame)
+            //console.log(jsonGame)
             let isWinFreeSpin = jsonGame.isWinFreeSpin;
             let credit = jsonGame.credit;
             let win = jsonGame.win;
@@ -73,7 +73,7 @@ exports.saveTestGame = async (require, response) => {
             const winCountArr = winCount.split(",").map(Number)
             const wineArr = parseFloat(win);
             const beteArr = parseFloat(bet);
-            console.log(win);
+            //console.log(win);
             let sql_insert = `INSERT INTO user_play (member_id, game_id, bet, win, tiles, winline, winstyle, winCount, credit, created_at, game_feespin) 
             value ('${user_id}','${game_id}','${bet}','${win}','${tiles}','${winline}','${winStyle}','${winCount}','${credit}',now(), '${isWinFreeSpin}')`;
 
@@ -122,7 +122,6 @@ exports.saveTestGame = async (require, response) => {
                         arrayWinLine.push(winlineArrLoop);
                         let sql_insert = `INSERT INTO user_play (member_id, game_id, bet, win, tiles, winline, winstyle, winCount, credit, created_at, game_feespin) 
             value ('${user_id}','${game_id}','${bet}','${win}','${tiles}','${winlineArrLoop}','${winStyle}','${winCount}','${credit}',now(), '${isWinFreeSpin}')`;
-                        console.log('run')
                         connection.query(sql_insert, (error, result_insert_play) => {
                             if (error) {
                                 response.sendStatus(500);

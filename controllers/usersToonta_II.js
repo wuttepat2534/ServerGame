@@ -1002,7 +1002,6 @@ exports.GetCouponMember = async (req, res, next) => {
                     let sql_repost_coupon = `SELECT * FROM repost_coupon WHERE username = '${username}' AND coupon_password = '${couponpassword}'`;
                     connection.query(sql_repost_coupon, (error, result_repost_coupon) => {
                         if (result_repost_coupon.length <= 0) {
-
                             let sql_conpon = `SELECT * FROM coupon WHERE couponpassword = '${couponpassword}' AND statu_coupon = 'Y'`;
                             connection.query(sql_conpon, (error, result_coupon) => {
                                 if (result_coupon.length > 0) {
@@ -1013,10 +1012,13 @@ exports.GetCouponMember = async (req, res, next) => {
                                         } else {
                                             turnover = result[0].turnover + (result_coupon[0].valusbunus * result_coupon[0].valusbunus)
                                         }
+                                        const formattedDateStart = result_coupon[0].startcoupon.toISOString().substring(0, 10);
+                                        const formattedDateEnd = result_coupon[0].startcoupon.toISOString().substring(0, 10);
+
                                         let sql_imsert_repost_coupon = `INSERT INTO repost_coupon (password_coupon, tpyebunus, valusbunus, coupon_password, namecoupon, 
                                             startcoupon, endcoupon, created_at, credit, turnover, username)
                                             value ('${result_coupon[0].password_coupon}','${result_coupon[0].typebonus}','${result_coupon[0].valusbunus}','${couponpassword}',
-                                            '${result_coupon[0].namepromotion}','${result_coupon[0].startcoupon}','${result_coupon[0].endcoupon}',
+                                            '${result_coupon[0].namepromotion}','${formattedDateStart}','${formattedDateEnd}',
                                             '${formattedDate} ${formattedTime}','${creditbonus}','${turnover}','${username}')`;
                                         connection.query(sql_imsert_repost_coupon, (error, result_repostcoupon) => {
                                             if (error) { console.log(error) } else {

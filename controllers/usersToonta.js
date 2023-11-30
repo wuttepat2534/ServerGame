@@ -2059,12 +2059,12 @@ exports.banUserToonta = async (require, response) => {
     const useranme = require.params.username;
     const notinfo = require.body.notinfo
 
-    let sql = `UPDATE member set  ban = 'Y', noteinfo = '${notinfo}' WHERE username = "${useranme}"`;
+    let sql = `UPDATE member set  status = 'Y', note = '${notinfo}' WHERE username = "${useranme}"`;
     connection.query(sql, (error, result) => {
         try {
             if (error) { console.log(error) }
             response.send({
-                message: "User Member editPassword Success"
+                message: "User Member Ban Success"
             });
             res.end();
         } catch (err) {
@@ -2728,7 +2728,15 @@ exports.getRepostTurnover = (require, response) => {
             });
         });
     } else if (searchPhones !== '') {
-        let sql_deposit = `SELECT * FROM totalturnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND usernameuser LIKE ?
+        let sql_deposit = `SELECT usernameuser, 
+            SUM(turnover) AS turnover, 
+            SUM(win) AS win, 
+            SUM(lose) AS lose, 
+            SUM(roundplay) AS roundplay, 
+            SUM(ag_winlose) AS ag_winlose, 
+            SUM(ag_comm) AS ag_comm, 
+            SUM(ag_total) AS ag_total, 
+            SUM(comny_total) AS comny_total FROM totalturnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND usernameuser LIKE ? GROUP BY usernameuser
                 LIMIT ? OFFSET ?`;
         const searchPattern = `%${searchPhones}%`;
         const values = [searchPattern, pageSize, offset];
@@ -2791,7 +2799,16 @@ exports.getRepostTurnover = (require, response) => {
             }
         });
     } else if (searchPhones !== undefined) {
-        let sql_ = `SELECT * FROM totalturnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND usernameuser LIKE ? LIMIT ? OFFSET ?`;
+        let sql_deposit = `SELECT usernameuser, 
+            SUM(turnover) AS turnover, 
+            SUM(win) AS win, 
+            SUM(lose) AS lose, 
+            SUM(roundplay) AS roundplay, 
+            SUM(ag_winlose) AS ag_winlose, 
+            SUM(ag_comm) AS ag_comm, 
+            SUM(ag_total) AS ag_total, 
+            SUM(comny_total) AS comny_total FROM totalturnoverrepost WHERE day >='${date}' AND day <= '${endDate}' AND usernameuser LIKE ? GROUP BY usernameuser
+                LIMIT ? OFFSET ?`;
         const searchPattern = `%${searchPhones}%`;
         const values = [searchPattern, pageSize, offset];
         connection.query(sql_, values, (error, results) => {

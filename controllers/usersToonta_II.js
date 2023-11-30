@@ -1015,7 +1015,7 @@ exports.GetCouponMember = async (req, res, next) => {
                                         }
                                         let sql_imsert_repost_coupon = `INSERT INTO repost_coupon (password_coupon, tpyebunus, valusbunus, coupon_password, namecoupon, 
                                             startcoupon, endcoupon, created_at, credit, turnover, username)
-                                            value ('${esult_coupon[0].password_coupon}','${result_coupon[0].typebonus}','${result_coupon[0].valusbunus}','${couponpassword}',
+                                            value ('${result_coupon[0].password_coupon}','${result_coupon[0].typebonus}','${result_coupon[0].valusbunus}','${couponpassword}',
                                             '${result_coupon[0].namepromotion}','${result_coupon[0].startcoupon}','${result_coupon[0].endcoupon}',
                                             '${formattedDate} ${formattedTime}','${creditbonus}','${turnover}','${username}')`;
 

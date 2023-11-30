@@ -93,9 +93,9 @@ module.exports = class Post {
                     let nametpyeEdit = resultBefore[0].username
                     let sql_before = `INSERT INTO logedit (edittype, idedit, idmember, name, editbefore, editafter, created_atdate, created_attime) value 
               ('${post.edittype}','${post.idedit}','${post.id}','${nametpyeEdit}',
-              '${'ชื่อจริง' + ' ' + dataMenber.accountName + ' ' + 'นามสกุล' + ' ' + dataMenber.lastName + ' ' + 'กลุ่มลูกค้า' + ' ' + dataMenber.groupmember + ' '
+              '${'ชื่อจริง-นามสุกุล' + ' ' + dataMenber.accountName + ' ' + 'กลุ่มลูกค้า' + ' ' + dataMenber.groupmember + ' '
                + dataMenber.userrank + ' ' + 'username' + ' ' + dataMenber.username + ' ' + 'ไลน์' + ' ' + dataMenber.lineid}',
-              '${'ชื่อจริง' + ' ' + post.accountName + ' ' + 'นามสกุล' + ' ' + post.lastName + ' ' + 'กลุ่มลูกค้า' + ' ' + post.customerGroup + ' ' 
+              '${'ชื่อจริง-นามสุกุล' + ' ' + post.accountName + ' ' + 'กลุ่มลูกค้า' + ' ' + post.customerGroup + ' ' 
                + 'username' + ' ' + post.contact_number + ' ' + 'ไลน์' + ' ' + post.IDLIne + 'แก้ไขโดย' + ' ' + nametpyeEdit}'
               ,now(), now())`;
                     connection.query(sql_before, (error, resultAfter) => {

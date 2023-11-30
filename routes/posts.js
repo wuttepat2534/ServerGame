@@ -101,6 +101,8 @@ router.post('/getPromotionMember', userstoonTaII.getPromotionMember) //UpdateAbs
 router.post('/addCoupon', userstoonTaII.addCoupon) //addCoupon สร้าง coupon
 router.post('/getCoupon', userstoonTaII.getCoupon) //getCoupon เรียกดู coupon
 router.post('/GetCouponMember', userstoonTaII.GetCouponMember) //รับคูปองMember
+router.post('/getRepostCoupon', userstoonTaII.getRepostCoupon)
+router.post('/getRepostCouponPassword', userstoonTaII.getRepostCouponPassword)
 
 router.get('/getDepositaccount/:agent_id', userToonta.getDepositaccount)
 router.get('/getWithdrawalaccount', userToonta.getWithdrawalaccount)

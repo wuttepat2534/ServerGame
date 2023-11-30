@@ -1013,13 +1013,13 @@ exports.GetCouponMember = async (req, res, next) => {
                                             turnover = result[0].turnover + (result_coupon[0].valusbunus * result_coupon[0].valusbunus)
                                         }
                                         const formattedDateStart = result_coupon[0].startcoupon.toISOString().substring(0, 10);
-                                        const formattedDateEnd = result_coupon[0].startcoupon.toISOString().substring(0, 10);
+                                        const formattedDateEnd = result_coupon[0].endcoupon.toISOString().substring(0, 10);
 
                                         let sql_imsert_repost_coupon = `INSERT INTO repost_coupon (password_coupon, tpyebunus, valusbunus, coupon_password, namecoupon, 
-                                            startcoupon, endcoupon, created_at, credit, turnover, username)
+                                            startcoupon, endcoupon, created_at, time_at, credit, turnover, username)
                                             value ('${result_coupon[0].password_coupon}','${result_coupon[0].typebonus}','${result_coupon[0].valusbunus}','${couponpassword}',
                                             '${result_coupon[0].namepromotion}','${formattedDateStart}','${formattedDateEnd}',
-                                            '${formattedDate} ${formattedTime}','${creditbonus}','${turnover}','${username}')`;
+                                            '${formattedDate}','${formattedTime}','${creditbonus}','${turnover}','${username}')`;
                                         connection.query(sql_imsert_repost_coupon, (error, result_repostcoupon) => {
                                             if (error) { console.log(error) } else {
                                                 let sql_update = `UPDATE member set credit = '${creditbonus}', bonususer = '${result_coupon[0].valusbunus}', turnover = '${turnover}' 
@@ -1067,3 +1067,152 @@ exports.GetCouponMember = async (req, res, next) => {
         }
     });
 };
+
+//http://localhost:5000/post/getRepostCoupon getRepostCoupon
+exports.getRepostCoupon = (require, response) => {
+    const searcPromotion = require.body.searcPromotion;
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+    const date = require.body.dataDate;
+    const endDate = require.body.dataEndDate;
+    if (searcPromotion === '') {
+        let sql = `SELECT * FROM repost_coupon WHERE created_at >='${date}' AND created_at <= '${endDate}' ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}`;
+        connection.query(sql, async (error, results) => {
+            if (error) { console.log(error); }
+            const totalCount = `SELECT COUNT(*) as count FROM repost_coupon WHERE created_at >='${date}' AND created_at <= '${endDate}'`
+            connection.query(totalCount, (error, res) => {
+                if (error) { console.log(error); }
+                else {
+                    response.send({
+                        data: results,
+                        valusData: results.length,
+                        total: res[0].count,
+                        startdate: date,
+                        enddate: endDate
+                    });
+                    response.end();
+                }
+            });
+        });
+    } else if (searcPromotion !== '') {
+        let sql_ = `SELECT * FROM repost_coupon WHERE created_at >= ? AND created_at <= ? AND username LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searcPromotion}%`;
+        const values = [date, endDate, searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM repost_coupon WHERE created_at >='${date}' AND created_at <= '${endDate}' AND username LIKE '%${searcPromotion}%' `
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else if (searcPromotion === undefined) {
+        let sql = `SELECT * FROM repost_coupon WHERE created_at >='${date}' AND created_at <= '${endDate}' ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}`;
+        connection.query(sql, async (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM repost_coupon WHERE created_at >='${date}' AND created_at <= '${endDate}'`
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else if (searcPromotion !== undefined) {
+        let sql_ = `SELECT * FROM repost_coupon WHERE created_at >= ? AND created_at <= ? AND username LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searcPromotion}%`;
+        const values = [date, endDate, searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM repost_coupon WHERE created_at >='${date}' AND created_at <= '${endDate}' AND username LIKE '%${searcPromotion}%' `
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    } else {
+        let sql_ = `SELECT * FROM repost_coupon WHERE created_at >= ? AND created_at <= ? AND username LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?`;
+        const searchPattern = `%${searcPromotion}%`;
+        const values = [date, endDate, searchPattern, pageSize, offset];
+        connection.query(sql_, values, (error, results) => {
+            if (error) { console.log(error); }
+            else {
+                const totalCount = `SELECT COUNT(*) as count FROM repost_coupon WHERE created_at >='${date}' AND created_at <= '${endDate}' AND username LIKE '%${searcPromotion}%' `
+                connection.query(totalCount, (error, res) => {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                })
+            }
+        });
+    }
+}
+
+//http://localhost:5000/post/getRepostCouponPassword getRepostCouponPassword
+exports.getRepostCouponPassword = (require, response) => {
+    const searcCoupon = require.body.searcCoupon;
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+
+    let sql_ = `SELECT * FROM repost_coupon WHERE password_coupon = '${searcCoupon}' ORDER BY created_at DESC LIMIT ? OFFSET ?`;
+    const values = [pageSize, offset];
+    connection.query(sql_, values, (error, results) => {
+
+        if (error) { console.log(error); }
+        else {
+            const totalCount = `SELECT COUNT(*) as count FROM repost_coupon WHERE password_coupon = '${searcCoupon}' `
+            connection.query(totalCount, (error, res) => {
+                try {
+                    if (error) { console.log(error); }
+                    else {
+                        response.send({
+                            data: results,
+                            valusData: results.length,
+                            total: res[0].count
+                        });
+                        response.end();
+                    }
+                }
+                catch (err) {
+                    if (!err.statusCode) {
+                        err.statusCode = 500;
+                    }
+                    next(err);
+                }
+            })
+        }
+    });
+}

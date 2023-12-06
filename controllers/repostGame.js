@@ -129,8 +129,8 @@ module.exports = class Post {
                             //console.log(resulttransID.length);
                             if (resulttransID.length !== 0) {
                                 const postII = {
-                                    username: post.usernameGame, gameid: post.gameid, bet: resulttransID[0].bet, win: post.win, balance_credit: post.balance_credit, 
-                                    userAgent: post.userAgent, platform: post.userAgentt, namegame: post.namegame
+                                    username: post.username, gameid: post.gameid, bet: resulttransID[0].bet, win: post.win, balance_credit: post.balance_credit, 
+                                    userAgent: post.userAgent, platform: post.platform, namegame: post.namegame
                                 }
                                 let turnoverrepostfun = turnoverrepost(postII)
                                 promotiontoonta.user_Leaked_promotion(post)

@@ -1216,3 +1216,78 @@ exports.getRepostCouponPassword = (require, response) => {
         }
     });
 }
+
+//http://localhost:5000/post/getRepostDeposit getRepostDeposit
+exports.getRepostGameList = (require, response) => {
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+    const date = require.body.dataDate;
+    const endDate = require.body.dataEndDate;
+    let sql = `SELECT 
+        usernameuser,
+        currency,
+        namegamecamp,
+        namegame,
+          SUM(roundplay) AS roundplay,
+          SUM(bet) AS bet, 
+          SUM(w_user) AS w_user, 
+          SUM(l_user) AS l_user, 
+          SUM(w_agent) AS w_agent, 
+          SUM(l_agent) AS l_agent, 
+          SUM(w_company) AS w_company, 
+          SUM(l_company) AS l_company
+        FROM repostlistgame 
+        WHERE date >= '${date}' AND date <= '${endDate}' 
+        GROUP BY namegame 
+        LIMIT ${pageSize} OFFSET ${offset}`;
+    connection.query(sql, async (error, results) => {
+        try {
+            if (error) { console.log(error); }
+            const totalCount = `SELECT COUNT(*) as count FROM repostlistgame WHERE date >='${date}' AND date <= '${endDate}'`
+            connection.query(totalCount, (error, res) => {
+                if (error) { console.log(error); }
+                else {
+                    // console.log(results)
+                    response.send({
+                        data: results,
+                        valusData: results.length,
+                        total: results.length,
+                    });
+                    response.end();
+                }
+            });
+        } catch (err) {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        }
+    });
+}
+
+//http://localhost:5000/post/getRepostDeposit getRepostDeposit
+exports.getRepostEdit = (require, response) => {
+    const pageSize = require.body.pageSize;
+    const pageNumber = require.body.pageIndex;
+    const offset = (pageNumber - 1) * pageSize;
+    const date = require.body.dataDate;
+    const endDate = require.body.dataEndDate;
+
+    let sql = `SELECT * FROM logfinanceuser WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
+    connection.query(sql, async (error, results) => {
+        if (error) { console.log(error); }
+        const totalCount = `SELECT COUNT(*) as count FROM logfinanceuser WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`
+        connection.query(totalCount, (error, res) => {
+            if (error) { console.log(error); }
+            else {
+                response.send({
+                    data: results,
+                    valusData: results.length,
+                    total: res[0].count
+                });
+                response.end();
+            }
+        });
+    });
+}

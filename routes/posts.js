@@ -103,6 +103,8 @@ router.post('/getCoupon', userstoonTaII.getCoupon) //getCoupon เรียก�
 router.post('/GetCouponMember', userstoonTaII.GetCouponMember) //รับคูปองMember
 router.post('/getRepostCoupon', userstoonTaII.getRepostCoupon)
 router.post('/getRepostCouponPassword', userstoonTaII.getRepostCouponPassword)
+router.post('/getRepostGameList', userstoonTaII.getRepostGameList)
+router.post('/getRepostEdit', userstoonTaII.getRepostEdit)
 
 router.get('/getDepositaccount/:agent_id', userToonta.getDepositaccount)
 router.get('/getWithdrawalaccount', userToonta.getWithdrawalaccount)

@@ -155,7 +155,7 @@ exports.GamePlaceBets = async (req, res) => {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
             else {
-                console.log(results)
+                //console.log(results)
                 const balanceUser = parseFloat(results[0].credit);
                 const betPlay = txnsGame[0].betAmount;
                 const balanceNow = balanceUser - betPlay;
@@ -197,11 +197,12 @@ exports.GameSettleBets = async (req, res) => {
     const userAgent = req.headers['user-agent'];
     const userAgentt = req.useragent;
 
-    let spl = `SELECT credit, turnover, gameplayturn FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
+    let spl = `SELECT credit, turnover, gameplayturn, playgameuser FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
             else {
+                const namegame = results[0].playgameuser;
                 const balanceUser = parseFloat(results[0].credit);
                 const betAmount = txnsGame[0].payoutAmount;
                 const betPlay = txnsGame[0].betAmount;
@@ -213,7 +214,8 @@ exports.GameSettleBets = async (req, res) => {
                 let balanceturnover = hasSimilarData(results[0].gameplayturn, productId, results[0].turnover, betPlay)
 
                 const post = {
-                    username: usernameGame, gameid: productId, bet: betPlay, win: betAmount, balance_credit: balanceNow, userAgent: userAgent, platform: userAgentt
+                    username: usernameGame, gameid: productId, bet: betPlay, win: betAmount, balance_credit: balanceNow, 
+                    userAgent: userAgent, platform: userAgentt, namegame: namegame
                 }
                 let repost = repostGame.uploadLogRepostGame(post)
 
@@ -566,7 +568,7 @@ exports.GameBetCQ9 = async (req, res) => {
     const platform = req.body.platform;
     const roundid = req.body.roundid;
     const userAgent = req.headers['user-agent'];
-    let spl = `SELECT credit FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
+    let spl = `SELECT credit, playgameuser FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N'`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
@@ -574,9 +576,9 @@ exports.GameBetCQ9 = async (req, res) => {
                 const balanceUser = parseFloat(results[0].credit);
                 const amountGame = parseFloat(amount);
                 const balanceNow = balanceUser - amountGame
-
+                const namegame = (results[0].playgameuser);
                 const post = {
-                    username: usernameGame, gameid: "CQ9V2", bet: amountGame, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: mtcode
+                    username: usernameGame, gameid: "CQ9V2", bet: amountGame, win: 0, balance_credit: balanceNow, userAgent: userAgent, platform: userAgent, trans_id: mtcode, namegame: namegame
                 }
                 let repost = repostGame.uploadLogRepostGameAsk(post)
 

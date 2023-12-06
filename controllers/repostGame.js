@@ -64,11 +64,11 @@ module.exports = class Post {
                 if (error) { console.log(error) }
                 else {
                     let turnoverrepostfun = turnoverrepost(post)
-                    
+
                     promotiontoonta.user_Leaked_promotion(post)
                     let datausername = result[0];
-                    let sql_before = `INSERT INTO repostgame (iduser, username, gameid, bet, win, balance_credit, get_browser, platform, created_atdate, created_attime) value 
-              ('${datausername.id}','${post.username}','${post.gameid}','${post.bet}','${post.win}','${post.balance_credit}','${browser}','${platform}','${formattedDate}','${formattedTime}')`;
+                    let sql_before = `INSERT INTO repostgame (iduser, username, gameid, namegame, bet, win, balance_credit, get_browser, platform, created_atdate, created_attime) value 
+              ('${datausername.id}','${post.username}','${post.gameid}','${post.namegame}','${post.bet}','${post.win}','${post.balance_credit}','${browser}','${platform}','${formattedDate}','${formattedTime}')`;
                     connection.query(sql_before, (error, resultAfter) => {
                         if (error) { console.log(error); }
                         else {
@@ -126,7 +126,7 @@ module.exports = class Post {
                     connection.query(sql, [post.trans_id], (error, resulttransID) => {
                         if (error) { console.log(error) }
                         else {
-                            console.log(resulttransID.length);
+                            //console.log(resulttransID.length);
                             if (resulttransID.length !== 0) {
                                 let turnoverrepostfun = turnoverrepost(post)
                                 promotiontoonta.user_Leaked_promotion(post)
@@ -137,8 +137,8 @@ module.exports = class Post {
                                 });
                             } else {
                                 promotiontoonta.user_Leaked_promotion(post)
-                                let sql_before = `INSERT INTO repostgame (iduser, username, gameid, bet, win, balance_credit, get_browser, platform, trans_id, created_atdate, created_attime) value 
-                                ('${datausername.id}','${post.username}','${post.gameid}','${post.bet}','${0}','${post.balance_credit}','${browser}','${platform}'
+                                let sql_before = `INSERT INTO repostgame (iduser, username, gameid, namegame, bet, win, balance_credit, get_browser, platform, trans_id, created_atdate, created_attime) value 
+                                ('${datausername.id}','${post.username}','${post.gameid}','${post.namegame}','${post.bet}','${0}','${post.balance_credit}','${browser}','${platform}'
                                 ,'${post.trans_id}','${formattedDate}','${formattedTime}')`;
                                 connection.query(sql_before, (error, resultAfter) => {
                                     if (error) { console.log(error); }
@@ -495,6 +495,7 @@ function turnoverrepost(post) {
     const floatbet = parseFloat(post.bet);
     let total = totalTurnoverrepost(post);
     let totlgameCamp = gamecamptotal(post);
+    let gamelist = repostlistgame(post);
     const currentTimeInThailand = moment().tz('Asia/Bangkok');
     const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
     const formattedTime = currentTimeInThailand.format('HH:mm:ss');
@@ -654,6 +655,47 @@ function turnoverUser(post) {
             let sql = `UPDATE member set turnover_playuser = '${results[0].turnover_playuser + floatbet}'
             WHERE username = '${post.username}' AND agent_id = '2'`;
             connection.query(sql, (error, resultAfter) => {
+                if (error) { console.log(error); }
+                return 'OK';
+            });
+        }
+    })
+}
+
+function repostlistgame(post) {
+    const floatwit = parseFloat(post.win);
+    const floatbet = parseFloat(post.bet);
+    const winlose = floatwit - floatbet;
+    const currentTimeInThailand = moment().tz('Asia/Bangkok');
+    const formattedDate = currentTimeInThailand.format('YYYY-MM-DD');
+    const formattedTime = currentTimeInThailand.format('HH:mm:ss');
+    let a_w = 0;
+    let a_l = 0;
+    let c_w = 0;
+    let c_l = 0;
+    let sqlpercentagegame = `SELECT percentagegame FROM gameweb WHERE password_img = '${post.gameid}'`;
+    connection.query(sqlpercentagegame, (error, resultspercen) => {
+        if (error) {
+            console.log(error);
+        } else {
+            if (winlose < 0){ //ผู้เล่นแพ้
+                const losewin = floatbet - floatwit;
+                a_w = losewin * (resultspercen[0].percentagegame / 100);
+                a_l = 0;
+                c_w = 0;
+                c_l = losewin - (losewin * (resultspercen[0].percentagegame / 100));
+            } else { //ผู้เล่นชนะ
+                a_w = 0;
+                a_l = winlose * (resultspercen[0].percentagegame / 100); //4.5
+                c_w = winlose - (winlose * (resultspercen[0].percentagegame / 100)); //0.5
+                c_l = 0;
+            }
+
+            let sql_before = `INSERT INTO repostlistgame (usernameuser, namegame, namegamecamp, currency, bet, grosscomm, 
+                w_user, l_user, w_agent, l_agent, w_company, l_company, date, time) value 
+                ('${post.username}','${post.namegame}','${post.gameid}','${'THB'}','${floatbet}','${0.00}','${floatwit}','${floatbet}',
+                '${a_w}','${a_l}','${c_w}','${c_l}','${formattedDate}','${formattedTime}')`;
+            connection.query(sql_before, (error, resultAfter) => {
                 if (error) { console.log(error); }
                 return 'OK';
             });

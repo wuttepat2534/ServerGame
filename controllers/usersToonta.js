@@ -1939,10 +1939,12 @@ exports.resetPasswordUserToonta = async (require, response, next) => {
     const idUser = require.body.idUser;
     const idedit = require.body.idedit;
     const typeedit = require.body.typeedit;
+    const agent_id = require.body.agent_id;
+    const note = require.body.note;
 
     const hashedPassword = md5(newPassword);
-    const logFuntion = logEdit.uploadLogResetPasswordMenber(idUser, idedit, username, typeedit);
-    let sql = `UPDATE member set password = '${hashedPassword}' WHERE username = "${username}"`;
+    const logFuntion = logEdit.uploadLogResetPasswordMenber(idUser, idedit, username, typeedit, note, agent_id);
+    let sql = `UPDATE member set password = '${hashedPassword}' WHERE username = "${username}" AND agent_id = "${agent_id}"`;
     connection.query(sql, (error, result) => {
         try {
             if (error) { console.log(error) }
@@ -1965,7 +1967,8 @@ exports.resetPasswordUserToontaWeb = async (require, response, next) => {
     const newPassword = require.body.passwordConfirm;
     const passwordOle = require.body.passwordOle;
     const typeedit = require.body.typeedit;
-
+    const agent_id = require.body.agent_id;
+    const note = require.body.note;
     const hashedPassword = md5(newPassword);
     const olePassword = md5(passwordOle);
 
@@ -1973,9 +1976,9 @@ exports.resetPasswordUserToontaWeb = async (require, response, next) => {
     connection.query(sqluser, (error, resultID) => {
         console.log(olePassword, resultID[0].password)
         if (olePassword === resultID[0].password) {
-            const logFuntion = logEdit.uploadLogResetPasswordMenber(resultID[0].id, resultID[0].id, username, typeedit);
+            const logFuntion = logEdit.uploadLogResetPasswordMenber(resultID[0].id, resultID[0].id, username, typeedit, note, agent_id);
 
-            let sql = `UPDATE member set password = '${hashedPassword}' WHERE username = "${username}"`;
+            let sql = `UPDATE member set password = '${hashedPassword}' WHERE username = "${username}" AND agent_id = "${agent_id}"`;
             connection.query(sql, (error, result) => {
                 try {
                     if (error) { console.log(error) }
@@ -2007,9 +2010,11 @@ exports.PutCreditUserToonta = async (require, response, next) => {
     const typeedit = require.body.typeedit;
     const creditnew = require.body.credit;
     const creditBefore = require.body.creditBefore;
+    const agent_id = require.body.agent_id;
+    const note = require.body.note;
 
-    const logFuntion = logEdit.uploadLogEditCredit(idUser, idedit, typeedit, creditnew, creditBefore);
-    let sql = `UPDATE member set  credit = '${creditnew}' WHERE username = "${useranme}"`;
+    const logFuntion = logEdit.uploadLogEditCredit(idUser, idedit, typeedit, creditnew, creditBefore, note, agent_id);
+    let sql = `UPDATE member set  credit = '${creditnew}' WHERE username = "${useranme}" AND agent_id = "${agent_id}"`;
     connection.query(sql, (error, result) => {
         try {
             if (error) { console.log(error) }
@@ -2035,8 +2040,9 @@ exports.PutUserTurnOver = async (require, response, next) => {
     const turnovernew = require.body.turnover;
     const turnoverBefore = require.body.turnoverBefore;
     const agent_id = require.body.agent_id;
+    const note = require.body.note;
 
-    const logFuntion = logEdit.uploadLogEditTurnOver(idUser, idedit, typeedit, turnovernew, turnoverBefore);
+    const logFuntion = logEdit.uploadLogEditTurnOver(idUser, idedit, typeedit, turnovernew, turnoverBefore, note, agent_id);
     let sql = `UPDATE member set  turnover = '${turnovernew}' WHERE username = "${useranme}" AND agent_id = "${agent_id}"`;
     connection.query(sql, (error, result) => {
         try {
@@ -2058,6 +2064,13 @@ http://localhost:5000/post/banUserToonta put banUserToonta
 exports.banUserToonta = async (require, response) => {
     const useranme = require.params.username;
     const notinfo = require.body.notinfo
+    const idUser = require.body.idUser;
+    const idedit = require.body.idedit;
+    const typeedit = require.body.typeedit;
+    const turnovernew = require.body.turnover;
+    const turnoverBefore = require.body.turnoverBefore;
+    const agent_id = require.body.agent_id;
+    const logFuntion = logEdit.uploadLogBan(idUser, idedit, typeedit, turnovernew, turnoverBefore, notinfo, agent_id);
 
     let sql = `UPDATE member set  status = 'Y', note = '${notinfo}' WHERE username = "${useranme}"`;
     connection.query(sql, (error, result) => {

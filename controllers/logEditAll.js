@@ -28,7 +28,7 @@ module.exports = class Post {
         this.role = role;
     }
 
-    static uploadLogResetPasswordMenber(id, idedit, name, type) {
+    static uploadLogResetPasswordMenber(id, idedit, name, type, note, agent_id) {
         const iduser = id;
         const ideditAcc = idedit;
 
@@ -38,9 +38,10 @@ module.exports = class Post {
                 if (error) { console.log(error) }
                 else {
                     let nametpyeEdit = resultBefore[0].username
-                    let sql_before = `INSERT INTO logedit (edittype, idedit, idmember, name, editbefore, editafter, created_atdate, created_attime) value 
-              ('${type}','${ideditAcc}','${iduser}','${nametpyeEdit}','${'ไม่เปิดเผยรหัสผ่านเก่า'}
-              ','${'มีการเปลี่ยนรหัสผ่านโดย' + " " + type + " " + 'ชื่อ' + " " + nametpyeEdit}',now(), now())`;
+                    let sql_before = `INSERT INTO logedit (agent_id, edittype, idedit, idmember, name, what_fix, editbefore, editafter, 
+                    created_atdate, created_attime, note) value 
+              ('${agent_id}','${type}','${ideditAcc}','${iduser}','${nametpyeEdit}','รหัสผ่าน','${'ไม่เปิดเผยรหัสผ่านเก่า'}
+              ','${'มีการเปลี่ยนรหัสผ่านโดย' + " " + type + " " + 'ชื่อ' + " " + nametpyeEdit}',now(), now(),'${note}')`;
                     connection.query(sql_before, (error, resultAfter) => {
                         if (error) { console.log(error); }
                     });
@@ -54,19 +55,20 @@ module.exports = class Post {
         });
     }
 
-    static uploadLogEditCredit(idUser, idedit, typeedit, creditnew, creditBefore) {
+    static uploadLogEditCredit(idUser, idedit, typeedit, creditnew, creditBefore, note, agent_id) {
         const iduser = idUser;
         const ideditAcc = idedit;
-        console.log(idUser, idedit, typeedit, creditnew, creditBefore)
+        //console.log(idUser, idedit, typeedit, creditnew, creditBefore)
         const sql = `SELECT * FROM ${typeedit} WHERE id = ?`;
         connection.query(sql, [ideditAcc], (error, resultBefore) => {
             try {
                 if (error) { console.log(error) }
                 else {
                     let nametpyeEdit = resultBefore[0].username
-                    let sql_before = `INSERT INTO logedit (edittype, idedit, idmember, name, editbefore, editafter, created_atdate, created_attime) value 
-              ('${typeedit}','${ideditAcc}','${iduser}','${nametpyeEdit}','${'Credit ก่อนหน้า   ' + creditBefore}
-              ','${'Credit ปัจจุบัน = ' + creditnew + 'มีการเปลี่ยนโดย' + " " + typeedit + " " + 'ชื่อ' + " " + nametpyeEdit}',now(), now())`;
+                    let sql_before = `INSERT INTO logedit (agent_id, edittype, idedit, idmember, name, what_fix, editbefore, editafter, 
+                    created_atdate, created_attime, note) value 
+              ('${agent_id}','${typeedit}','${ideditAcc}','${iduser}','${nametpyeEdit}','credit','${'Credit ก่อนหน้า   ' + creditBefore}
+              ','${'Credit ปัจจุบัน = ' + creditnew + 'มีการเปลี่ยนโดย' + " " + typeedit + " " + 'ชื่อ' + " " + nametpyeEdit}',now(), now(), '${note}')`;
 
                     connection.query(sql_before, (error, resultAfter) => {
                         if (error) { console.log(error); }
@@ -82,7 +84,7 @@ module.exports = class Post {
         });
     }
 
-    static uploadLogEditUser(post, dataMenber) {
+    static uploadLogEditUser(post, dataMenber, note, agent_id) {
         //console.log(post)
         //console.log(post.edittype)
         const sql = `SELECT * FROM ${post.edittype} WHERE id = ?`;
@@ -91,13 +93,14 @@ module.exports = class Post {
                 if (error) { console.log(error) }
                 else {
                     let nametpyeEdit = resultBefore[0].username
-                    let sql_before = `INSERT INTO logedit (edittype, idedit, idmember, name, editbefore, editafter, created_atdate, created_attime) value 
-              ('${post.edittype}','${post.idedit}','${post.id}','${nametpyeEdit}',
+                    let sql_before = `INSERT INTO logedit (agent_id, edittype, idedit, idmember, name, what_fix, editbefore, editafter, 
+                    created_atdate, created_attime, note) value 
+              ('${agent_id}','${post.edittype}','${post.idedit}','${post.id}','${nametpyeEdit}','ข้อมูลmember',
               '${'ชื่อจริง-นามสุกุล' + ' ' + dataMenber.accountName + ' ' + 'กลุ่มลูกค้า' + ' ' + dataMenber.groupmember + ' '
                + dataMenber.userrank + ' ' + 'username' + ' ' + dataMenber.username + ' ' + 'ไลน์' + ' ' + dataMenber.lineid}',
               '${'ชื่อจริง-นามสุกุล' + ' ' + post.accountName + ' ' + 'กลุ่มลูกค้า' + ' ' + post.customerGroup + ' ' 
                + 'username' + ' ' + post.contact_number + ' ' + 'ไลน์' + ' ' + post.IDLIne + 'แก้ไขโดย' + ' ' + nametpyeEdit}'
-              ,now(), now())`;
+              ,now(), now(),'${note}')`;
                     connection.query(sql_before, (error, resultAfter) => {
                         console.log(dataMenber.lastName)
                         if (error) { console.log(error); }
@@ -113,7 +116,7 @@ module.exports = class Post {
         });
     }
 
-    static uploadLogEditTurnOver(idUser, idedit, typeedit, turnovernew, turnoverBefore) {
+    static uploadLogEditTurnOver(idUser, idedit, typeedit, turnovernew, turnoverBefore, note, agent_id) {
         const iduser = idUser;
         const ideditAcc = idedit;
         //console.log(idUser, idedit, typeedit, creditnew, creditBefore)
@@ -123,9 +126,10 @@ module.exports = class Post {
                 if (error) { console.log(error) }
                 else {
                     let nametpyeEdit = resultBefore[0].username
-                    let sql_before = `INSERT INTO logedit (edittype, idedit, idmember, name, editbefore, editafter, created_atdate, created_attime) value 
-              ('${typeedit}','${ideditAcc}','${iduser}','${nametpyeEdit}','${'turnover ก่อนหน้า   ' + turnoverBefore}
-              ','${'turnover ปัจจุบัน = ' + turnovernew + 'มีการเปลี่ยนโดย' + " " + typeedit + " " + 'ชื่อ' + " " + nametpyeEdit}',now(), now())`;
+                    let sql_before = `INSERT INTO logedit (agent_id, edittype, idedit, idmember, name, what_fix, editbefore, 
+                    editafter, created_atdate, created_attime, note) value 
+              ('${agent_id}','${typeedit}','${ideditAcc}','${iduser}','${nametpyeEdit}','turnover','${'turnover ก่อนหน้า   ' + turnoverBefore}
+              ','${'turnover ปัจจุบัน = ' + turnovernew + 'มีการเปลี่ยนโดย' + " " + typeedit + " " + 'ชื่อ' + " " + nametpyeEdit}',now(), now(),'${note}')`;
 
                     connection.query(sql_before, (error, resultAfter) => {
                         if (error) { console.log(error); }
@@ -141,4 +145,32 @@ module.exports = class Post {
         });
     }
 
+    static uploadLogBan(idUser, idedit, typeedit, note, agent_id) {
+        const iduser = idUser;
+        const ideditAcc = idedit;
+        //console.log(idUser, idedit, typeedit, creditnew, creditBefore)
+        const sql = `SELECT * FROM ${typeedit} WHERE id = ?`;
+        connection.query(sql, [ideditAcc], (error, resultBefore) => {
+            try {
+                if (error) { console.log(error) }
+                else {
+                    let nametpyeEdit = resultBefore[0].username
+                    let sql_before = `INSERT INTO logedit (agent_id, edittype, idedit, idmember, name, what_fix, editbefore, 
+                    editafter, created_atdate, created_attime, note) value 
+              ('${agent_id}','${typeedit}','${ideditAcc}','${iduser}','${nametpyeEdit}','ban','${'banmember'}
+              ','${'banmember'}',now(), now(),'${note}')`;
+
+                    connection.query(sql_before, (error, resultAfter) => {
+                        if (error) { console.log(error); }
+                        return 'OK';
+                    });
+                }
+
+            } catch (err) {
+                if (!err.statusCode) {
+                    err.statusCode = 500;
+                }
+            }
+        });
+    }
 };

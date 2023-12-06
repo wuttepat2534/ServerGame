@@ -813,6 +813,7 @@ app.put('/member/:id', async (req, res, next) => {
     const withdraw_member = req.body.withdraw_member;
     const total_top_up_amount = req.body.total_top_up_amount;
     const turnover = req.body.turnover;
+    const agent_id = req.body.agent_id;
 
     let statuscheck = 'N';
     if (listCheckBox === 'เปิดใช้งาน') {
@@ -834,12 +835,13 @@ app.put('/member/:id', async (req, res, next) => {
             else {
                 const dataMenber = resultBefore[0]
                 //console.log(post, dataMenber);
-                const logFuntion = logEdit.uploadLogEditUser(post, dataMenber);
+                const logFuntion = logEdit.uploadLogEditUser(post, dataMenber, note, agent_id);
 
                 let sql = `UPDATE member set name = '${firstName}', username = '${contact_number}', status = '${statuscheck}',
                  lastName = '${lastName}', groupmember = '${customerGroup}', userrank = '${Rank}', phonenumber = '${contact_number}',
                 lineid = '${IDLIne}', note = '${note}', bank = '${bank}', accountName = '${accountName}', accountNumber = '${accountNumber}',
-                withdraw_member = '${withdraw_member}', total_top_up_amount = '${total_top_up_amount}', turnover = '${turnover}' WHERE id='${id}'`;
+                withdraw_member = '${withdraw_member}', total_top_up_amount = '${total_top_up_amount}', turnover = '${turnover}' 
+                WHERE id='${id}' AND agent_id = '${agent_id}'`;
                 connection.query(sql, (error, result) => {
                     if (error) { console.log(error) }
                     else {
@@ -1076,6 +1078,21 @@ app.get('/listGame/:productId', (require, response) => {
         });
 });
 
+app.post('/userplayGame', async (req, res) => {
+    const username = req.body.username;
+    const agent_id = req.body.agent_id;
+    const nameGame = req.body.nameGame;
+    
+    let sql_member = `UPDATE member set playgameuser = '${nameGame}' WHERE username ='${username}' AND agent_id = '${agent_id}'`;
+    connection.query(sql_member, async (error, results) => {
+        if (error) { console.log(error); }
+        res.send({
+            message: 'saveNameGame',
+        });
+        res.end();
+    });
+})
+
 //http://localhost:5000/list_webgame
 app.post('/list_webgame', async (require, response) => {
     const searchKeyword = require.body.name;
@@ -1219,11 +1236,8 @@ app.post('/depositToonta', async (req, res) => { //ทดลองอัพโ�
          console.error(error.data);
      });*/
     try {
-        const YOUR_FILE_LOCATION = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/testkrungthai.jpg';
-        //const SletTest = 'https://websitehui.s3.ap-southeast-1.amazonaws.com/slip/377334005_1411687959690621_3265644401220670990_n.jpg';
+        const YOUR_FILE_LOCATION = 'https://drive.google.com/uc?id=1-0jzNTFncLV387CesORZ2Iur4B5zirBZ';
         const Url = `https://dogzilla.live/images/${req.body.filename}`
-        //const Url = `http://localhost:5000/images/${req.body.filename}`
-        //console.log(Url);
         const restest = await axios.post(
             'https://api.slipok.com/api/line/apikey/9496',
             { url: Url},
@@ -1234,7 +1248,7 @@ app.post('/depositToonta', async (req, res) => { //ทดลองอัพโ�
                 },
             }
         )
-        //console.log(restest.data.data.receiver.account);
+       // console.log(restest.data.data.receiver.account);
         const financeToonta = FInance.CheckInformation(restest.data, req.body)
             .then(calculatedValues => {
                 res.send({ message: calculatedValues });

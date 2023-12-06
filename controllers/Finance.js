@@ -109,8 +109,10 @@ module.exports = class Post {
             const inputStringUser = resFinance.data.receiver.account.value;
             const last4DigitsUser = inputStringUser.replace(/\D/g, '').slice(-4);
 
+            //console.log(last4Digits, last4DigitsUser)
+            //console.log(Bank, resFinance.data.receiver.account.value);
             if (Bank !== "ธนาคารกสิกรไทย" && Bank !== "ธนาคารกรุงศรีอยุธยา" && Bank !== "ธนาคารกรุงไทย") {
-                let sql_deposit = `SELECT * FROM depositaccount WHERE activestatus = "เปิดใช้งาน" AND accountNumber = "${resFinance.data.receiver.account.value}"`;
+                let sql_deposit = `SELECT * FROM depositaccount WHERE activestatus = "เปิดใช้งาน" AND SUBSTRING(accountNumber, 6, 4) = '${last4DigitsUser}'`;
                 connection.query(sql_deposit, (error, depositData) => {
                     try {
                         if (error) {
@@ -211,8 +213,8 @@ module.exports = class Post {
                 })
             } else {
                 //let dataaccountNumber = resFinance.data.receiver.account.value;
-                let sql_deposit = `SELECT * FROM depositaccount WHERE activestatus = "เปิดใช้งาน" AND RIGHT(accountNumber, 4) = ?`;
-                connection.query(sql_deposit, [`${last4DigitsUser}`], (error, depositData) => {
+                let sql_deposit = `SELECT * FROM depositaccount WHERE activestatus = "เปิดใช้งาน" AND SUBSTRING(accountNumber, 6, 4) = '${last4DigitsUser}'`;
+                connection.query(sql_deposit, (error, depositData) => {
                     try {
                         if (error) {
                             console.log(error);
@@ -222,7 +224,7 @@ module.exports = class Post {
                             //console.log(resFinance.data.receiver.account.value)
                             const data = depositData;
                             if (data.length !== 0 || data.length > 0) {
-                                console.log('on1')
+                                //console.log('on1')
                                 let sql_LogDeposit = `SELECT * FROM logfinanceuser WHERE trans_ref ='${resFinance.data.transRef}'`;
                                 connection.query(sql_LogDeposit, async (error, logDeposit_transRef) => {
                                     if (error) {
@@ -231,9 +233,9 @@ module.exports = class Post {
                                     } else {
                                         const dataLog = logDeposit_transRef;
                                         if (dataLog.length < 1) {
-                                            console.log('on2')
+                                            //console.log('on2')
                                             let sql_NameAccount = `SELECT * FROM member WHERE bank = '${Bank}' AND phonenumber = '${dataUsers.phonenumber}'
-                                            AND RIGHT(accountNumber, 4) = ? `;
+                                            AND SUBSTRING(accountNumber, 6, 4) = ? `;
                                             connection.query(sql_NameAccount, [last4Digits], async (error, nameAccount) => {
                                                 if (error) {
                                                     console.log(error);
@@ -243,6 +245,7 @@ module.exports = class Post {
                                                     if (dataUserAccount.length !== 0 || dataUserAccount.length > 0) {
                                                         let sql_Bank = `SELECT images FROM banknames WHERE bankname_name ='${nameAccount[0].bank}' AND status = 'Y' AND status_delete = 'N'`;
                                                         connection.query(sql_Bank, async (error, usernameAgent) => {
+                                                            //console.log('on6')
                                                             const response = await axios.post(baseURL + "post/financeUser", {
                                                                 resFinance: resFinance,
                                                                 type: dataUsers.type,
@@ -260,7 +263,6 @@ module.exports = class Post {
                                                                 imgBank: usernameAgent[0].images,
                                                                 actualize: "ฝากโดย member จากเว็บไซต์"
                                                             });
-                                                            //console.log(response.data.message)
                                                             if (response.data.message === "เติมเงินสำเร็จ") {
                                                                 resolve("ฝากเงินสำเสร็จ")
                                                             } else {
@@ -268,7 +270,7 @@ module.exports = class Post {
                                                             }
                                                         })
                                                     } else {
-                                                        console.log('on4')
+                                                        //console.log('on4')
                                                         const response = await axios.post(baseURL + "post/financeUser", {
                                                             resFinance: resFinance,
                                                             type: dataUsers.type,
@@ -285,7 +287,6 @@ module.exports = class Post {
                                                             typePromotion: dataUsers.idPromotion,
                                                             imgBank: 'https://asset.cloudigame.co/build/admin/img/wt_theme/ezc/payment-logo-baac.png'
                                                         });
-                                                        //console.log(response.data.message)
                                                         if (response.data.message === "เติมเงินไม่สำเร็จ") {
                                                             resolve("ชื่อบัญชีที่ได้ลงทะเบียนไม่ถูกต้อง กรุณาตรวจสอบ สลิปโอนเงิน ")
                                                         } else {

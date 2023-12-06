@@ -128,7 +128,11 @@ module.exports = class Post {
                         else {
                             //console.log(resulttransID.length);
                             if (resulttransID.length !== 0) {
-                                let turnoverrepostfun = turnoverrepost(post)
+                                const postII = {
+                                    username: post.usernameGame, gameid: post.productId, bet: resulttransID[0].bet, win: post.win, balance_credit: post.balance_credit, 
+                                    userAgent: post.userAgent, platform: post.userAgentt, namegame: post.namegame
+                                }
+                                let turnoverrepostfun = turnoverrepost(postII)
                                 promotiontoonta.user_Leaked_promotion(post)
                                 let sql = `UPDATE repostgame set  win = '${post.win}', balance_credit = '${post.balance_credit}' WHERE trans_id = "${post.trans_id}"`;
                                 connection.query(sql, (error, resultAfter) => {

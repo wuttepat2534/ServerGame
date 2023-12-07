@@ -1274,7 +1274,7 @@ exports.getRepostEdit = (require, response) => {
     const date = require.body.dataDate;
     const endDate = require.body.dataEndDate;
 
-    let sql = `SELECT * FROM logedit WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'  LIMIT ${pageSize} OFFSET ${offset}`;
+    let sql = `SELECT * FROM logedit WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}' LIMIT ${pageSize} OFFSET ${offset}`;
     connection.query(sql, async (error, results) => {
         if (error) { console.log(error); }
         const totalCount = `SELECT COUNT(*) as count FROM logedit WHERE created_atdate >='${date}' AND created_atdate <= '${endDate}'`

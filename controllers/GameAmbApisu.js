@@ -149,18 +149,22 @@ exports.GamePlaceBets = async (req, res) => {
     const currency = req.body.currency;
     const usernameGame = req.body.username;
     const txnsGame = req.body.txns;
-
     let spl = `SELECT credit, turnover FROM member WHERE phonenumber ='${usernameGame}' AND status_delete='N' ORDER BY phonenumber ASC`;
     try {
         connection.query(spl, (error, results) => {
             if (error) { console.log(error) }
             else {
                 //console.log(results)
+                let status = 0;
                 const balanceUser = parseFloat(results[0].credit);
                 const betPlay = txnsGame[0].betAmount;
                 const balanceNow = balanceUser - betPlay;
                 if (balanceNow < 0) {
                     balanceNow = 0;
+                    status = 10002;
+                }
+                if (balanceUser < betPlay){
+                    status = 10002;
                 }
                 const sql_update = `UPDATE member set credit='${balanceNow}',bet_latest='${betPlay}' WHERE phonenumber ='${usernameGame}'`;
                 connection.query(sql_update, (error, resultsGame) => {
@@ -168,7 +172,7 @@ exports.GamePlaceBets = async (req, res) => {
                     else {
                         res.status(201).json({
                             id: id,
-                            statusCode: 0,
+                            statusCode: status,
                             timestampMillis: timestampMillis,
                             productId: productId,
                             currency: currency,

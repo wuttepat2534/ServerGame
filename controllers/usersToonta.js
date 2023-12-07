@@ -2013,7 +2013,7 @@ exports.PutCreditUserToonta = async (require, response, next) => {
     const agent_id = require.body.agent_id;
     const note = require.body.note;
 
-    const logFuntion = logEdit.uploadLogEditCredit(idUser, idedit, typeedit, creditnew, creditBefore, note, agent_id);
+    const logFuntion = logEdit.uploadLogEditCredit(idUser, idedit, typeedit, creditnew, creditBefore, note, agent_id, useranme);
     let sql = `UPDATE member set  credit = '${creditnew}' WHERE username = "${useranme}" AND agent_id = "${agent_id}"`;
     connection.query(sql, (error, result) => {
         try {
@@ -2033,7 +2033,7 @@ exports.PutCreditUserToonta = async (require, response, next) => {
 
 http://localhost:5000/post/PutUserTurnOver put PutUserTurnOver
 exports.PutUserTurnOver = async (require, response, next) => {
-    const useranme = require.body.username;
+    const username = require.body.username;
     const idUser = require.body.idUser;
     const idedit = require.body.idedit;
     const typeedit = require.body.typeedit;
@@ -2042,8 +2042,8 @@ exports.PutUserTurnOver = async (require, response, next) => {
     const agent_id = require.body.agent_id;
     const note = require.body.note;
 
-    const logFuntion = logEdit.uploadLogEditTurnOver(idUser, idedit, typeedit, turnovernew, turnoverBefore, note, agent_id);
-    let sql = `UPDATE member set  turnover = '${turnovernew}' WHERE username = "${useranme}" AND agent_id = "${agent_id}"`;
+    const logFuntion = logEdit.uploadLogEditTurnOver(idUser, idedit, typeedit, turnovernew, turnoverBefore, note, agent_id, username);
+    let sql = `UPDATE member set  turnover = '${turnovernew}' WHERE username = "${username}" AND agent_id = "${agent_id}"`;
     connection.query(sql, (error, result) => {
         try {
             if (error) { console.log(error) }

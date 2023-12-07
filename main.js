@@ -839,7 +839,7 @@ app.put('/member/:id', async (req, res, next) => {
 
                 let sql = `UPDATE member set name = '${firstName}', username = '${contact_number}', status = '${statuscheck}',
                  lastName = '${lastName}', groupmember = '${customerGroup}', userrank = '${Rank}', phonenumber = '${contact_number}',
-                lineid = '${IDLIne}', note = '${note}', bank = '${bank}', accountName = '${accountName}', accountNumber = '${accountNumber}',
+                lineid = '${IDLIne}', bank = '${bank}', accountName = '${accountName}', accountNumber = '${accountNumber}',
                 withdraw_member = '${withdraw_member}', total_top_up_amount = '${total_top_up_amount}', turnover = '${turnover}' 
                 WHERE id='${id}' AND agent_id = '${agent_id}'`;
                 connection.query(sql, (error, result) => {

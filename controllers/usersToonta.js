@@ -2070,7 +2070,7 @@ exports.banUserToonta = async (require, response) => {
     const turnovernew = require.body.turnover;
     const turnoverBefore = require.body.turnoverBefore;
     const agent_id = require.body.agent_id;
-    const logFuntion = logEdit.uploadLogBan(idUser, idedit, typeedit, turnovernew, turnoverBefore, notinfo, agent_id);
+    const logFuntion = logEdit.uploadLogBan(idUser, idedit, typeedit, turnovernew, turnoverBefore, notinfo, agent_id, useranme);
 
     let sql = `UPDATE member set  status = 'Y', note = '${notinfo}' WHERE username = "${useranme}"`;
     connection.query(sql, (error, result) => {

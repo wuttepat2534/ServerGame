@@ -835,7 +835,7 @@ app.put('/member/:id', async (req, res, next) => {
             else {
                 const dataMenber = resultBefore[0]
                 //console.log(post, dataMenber);
-                const logFuntion = logEdit.uploadLogEditUser(post, dataMenber, note, agent_id);
+                const logFuntion = logEdit.uploadLogEditUser(post, dataMenber, note, agent_id, username);
 
                 let sql = `UPDATE member set name = '${firstName}', username = '${contact_number}', status = '${statuscheck}',
                  lastName = '${lastName}', groupmember = '${customerGroup}', userrank = '${Rank}', phonenumber = '${contact_number}',

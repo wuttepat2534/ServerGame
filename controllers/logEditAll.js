@@ -84,7 +84,7 @@ module.exports = class Post {
         });
     }
 
-    static uploadLogEditUser(post, dataMenber, note, agent_id) {
+    static uploadLogEditUser(post, dataMenber, note, agent_id, username) {
         //console.log(post)
         //console.log(post.edittype)
         const sql = `SELECT * FROM ${post.edittype} WHERE id = ?`;
@@ -93,9 +93,9 @@ module.exports = class Post {
                 if (error) { console.log(error) }
                 else {
                     let nametpyeEdit = resultBefore[0].username
-                    let sql_before = `INSERT INTO logedit (agent_id, edittype, idedit, idmember, name, what_fix, editbefore, editafter, 
+                    let sql_before = `INSERT INTO logedit (agent_id, edittype, idedit, username, idmember, name, what_fix, editbefore, editafter, 
                     created_atdate, created_attime, note) value 
-              ('${agent_id}','${post.edittype}','${post.idedit}','${post.id}','${nametpyeEdit}','ข้อมูลmember',
+              ('${agent_id}','${post.edittype}','${post.idedit}','${username}','${post.id}','${nametpyeEdit}','ข้อมูลmember',
               '${'ชื่อจริง-นามสุกุล' + ' ' + dataMenber.accountName + ' ' + 'กลุ่มลูกค้า' + ' ' + dataMenber.groupmember
                 + ' ' + 'username' + ' ' + dataMenber.username + ' ' + 'ไลน์' + ' ' + dataMenber.lineid}',
               '${'ชื่อจริง-นามสุกุล' + ' ' + post.accountName + ' ' + 'กลุ่มลูกค้า' + ' ' + post.customerGroup + ' ' 
@@ -145,7 +145,7 @@ module.exports = class Post {
         });
     }
 
-    static uploadLogBan(idUser, idedit, typeedit, note, agent_id) {
+    static uploadLogBan(idUser, idedit, typeedit, note, agent_id, useranme) {
         const iduser = idUser;
         const ideditAcc = idedit;
         //console.log(idUser, idedit, typeedit, creditnew, creditBefore)
@@ -155,9 +155,9 @@ module.exports = class Post {
                 if (error) { console.log(error) }
                 else {
                     let nametpyeEdit = resultBefore[0].username
-                    let sql_before = `INSERT INTO logedit (agent_id, edittype, idedit, idmember, name, what_fix, editbefore, 
+                    let sql_before = `INSERT INTO logedit (agent_id, edittype, idedit, useranme, idmember, name, what_fix, editbefore, 
                     editafter, created_atdate, created_attime, note) value 
-              ('${agent_id}','${typeedit}','${ideditAcc}','${iduser}','${nametpyeEdit}','ban','${'banmember'}
+              ('${agent_id}','${typeedit}','${ideditAcc}','${useranme}','${iduser}','${nametpyeEdit}','ban','${'banmember'}
               ','${'banmember'}',now(), now(),'${note}')`;
 
                     connection.query(sql_before, (error, resultAfter) => {

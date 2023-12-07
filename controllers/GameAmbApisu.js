@@ -211,9 +211,14 @@ exports.GameSettleBets = async (req, res) => {
                 const betAmount = txnsGame[0].payoutAmount;
                 const betPlay = txnsGame[0].betAmount;
                 let balanceNow = (balanceUser - betPlay) + betAmount;
+                let status = 0;
                 console.log(balanceNow);
                 if (balanceNow < 0) {
                     balanceNow = 0;
+                    status = 10002;
+                }
+                if (balanceUser < betPlay){
+                    status = 10002;
                 }
                 let balanceturnover = hasSimilarData(results[0].gameplayturn, productId, results[0].turnover, betPlay)
 
@@ -231,7 +236,7 @@ exports.GameSettleBets = async (req, res) => {
                     else {
                         res.status(201).json({
                             id: id,
-                            statusCode: 0,
+                            statusCode: status,
                             timestampMillis: timestampMillis,
                             productId: productId,
                             currency: currency,

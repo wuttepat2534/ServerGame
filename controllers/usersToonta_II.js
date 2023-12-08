@@ -1224,6 +1224,7 @@ exports.getRepostGameList = (require, response) => {
     const offset = (pageNumber - 1) * pageSize;
     const date = require.body.dataDate;
     const endDate = require.body.dataEndDate;
+    const campGame = require.body.campGame;
     let sql = `SELECT 
         usernameuser,
         currency,
@@ -1238,13 +1239,13 @@ exports.getRepostGameList = (require, response) => {
           SUM(w_company) AS w_company, 
           SUM(l_company) AS l_company
         FROM repostlistgame 
-        WHERE date >= '${date}' AND date <= '${endDate}' 
+        WHERE date >= '${date}' AND date <= '${endDate}' AND namegamecamp = '${campGame}'
         GROUP BY namegame 
         LIMIT ${pageSize} OFFSET ${offset}`;
     connection.query(sql, async (error, results) => {
         try {
             if (error) { console.log(error); }
-            const totalCount = `SELECT COUNT(*) as count FROM repostlistgame WHERE date >='${date}' AND date <= '${endDate}'`
+            const totalCount = `SELECT COUNT(*) as count FROM repostlistgame WHERE date >='${date}' AND date <= '${endDate}' AND namegamecamp = '${campGame}'`
             connection.query(totalCount, (error, res) => {
                 if (error) { console.log(error); }
                 else {
